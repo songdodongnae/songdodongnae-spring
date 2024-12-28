@@ -39,3 +39,6 @@ out/
 ### Custom ###
 logs/
 src/main/resources
+
+### Mac OS ###
+.DS_Store
