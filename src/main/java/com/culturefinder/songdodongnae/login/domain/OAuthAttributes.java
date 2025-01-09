@@ -13,6 +13,13 @@ public enum OAuthAttributes {
                 (String) response.get("name"),
                 (String) response.get("email")
         );
+    }),
+    GOOGLE("google", (attributes) -> {
+        return new UserProfile(
+                (String) attributes.get("sub"),
+                (String) attributes.get("name"),
+                (String) attributes.get("email")
+        );
     });
 
     private final String registrationId;
@@ -23,7 +30,7 @@ public enum OAuthAttributes {
         this.of = of;
     }
 
-    public static UserProfile extract(String registrationId, Map<String, Object> attributes){
+    public static UserProfile extract(String registrationId, Map<String, Object> attributes) {
         return Arrays.stream(values())
                 .filter(provider -> registrationId.equals(provider.registrationId))
                 .findFirst()
