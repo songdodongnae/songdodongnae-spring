@@ -20,7 +20,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/index.html", "/oauth2/**").permitAll()  // 로그인 페이지 및 OAuth 경로는 인증 없이 접근 가능
+                        .requestMatchers("/api/login", "/index.html", "/oauth2/**").permitAll()  // 로그인 페이지 및 OAuth 경로는 인증 없이 접근 가능
                         .anyRequest().authenticated()  // 그 외의 경로는 인증 필요
                 )
                 .oauth2Login(oauth2 -> oauth2
