@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.login.config;
 
+import com.culturefinder.songdodongnae.login.service.OAuthService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
