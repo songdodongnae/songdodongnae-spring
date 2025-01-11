@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.login.domain;
+package com.culturefinder.songdodongnae.user.domain;
 
 import java.util.Arrays;
 import java.util.Map;

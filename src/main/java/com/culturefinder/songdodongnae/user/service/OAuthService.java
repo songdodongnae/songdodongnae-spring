@@ -1,7 +1,7 @@
-package com.culturefinder.songdodongnae.login.service;
+package com.culturefinder.songdodongnae.user.service;
 
-import com.culturefinder.songdodongnae.login.domain.OAuthAttributes;
-import com.culturefinder.songdodongnae.login.domain.UserProfile;
+import com.culturefinder.songdodongnae.user.domain.OAuthAttributes;
+import com.culturefinder.songdodongnae.user.domain.UserProfile;
 import com.culturefinder.songdodongnae.user.domain.Role;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -21,7 +21,6 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
-
         String registrationId = userRequest
                 .getClientRegistration()
                 .getRegistrationId();
