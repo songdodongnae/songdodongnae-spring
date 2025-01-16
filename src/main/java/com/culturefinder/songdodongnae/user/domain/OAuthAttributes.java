@@ -10,13 +10,15 @@ public enum OAuthAttributes {
         return new UserProfile(
                 (String) response.get("id"),
                 (String) response.get("name"),
-                (String) response.get("email")
+                (String) response.get("email"),
+                "naver"
         );
     }),
     GOOGLE("google", (attributes) -> new UserProfile(
             (String) attributes.get("sub"),
             (String) attributes.get("name"),
-            (String) attributes.get("email")
+            (String) attributes.get("email"),
+            "google"
     ));
 
     private final String registrationId;

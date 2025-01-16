@@ -1,9 +1,13 @@
 package com.culturefinder.songdodongnae.user.service;
 
 import com.culturefinder.songdodongnae.user.domain.OAuthAttributes;
+import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.domain.UserProfile;
 import com.culturefinder.songdodongnae.user.domain.Role;
+import com.culturefinder.songdodongnae.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -17,8 +21,11 @@ import java.util.Collections;
 import java.util.Map;
 
 @Service
-@Slf4j
+@RequiredArgsConstructor
 public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+
+    private final UserRepository userRepository;
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService delegate = new DefaultOAuth2UserService();
@@ -37,13 +44,21 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
 
         UserProfile userProfile = OAuthAttributes.extract(registrationId, attributes);
 
-        // UserFile을 User로 변환하는 작업 + DB에 업데이트 하는 작업 필요
-
+        User user = saveOrUpdate(userProfile);
 
         return new DefaultOAuth2User(
                 //Collections.singleton(new SimpleGrantedAuthority(member.getRoleKey()))
                 Collections.singleton(new SimpleGrantedAuthority(Role.ROLE_USER.name())),
                 attributes,
                 userNameAttributeName);
+    }
+
+    private User saveOrUpdate(UserProfile userProfile){
+        User user = userRepository.findByProviderIdAndProvider(userProfile.getOauthId(), userProfile.getProvider())
+                .map(u -> u.update(
+                        userProfile.getName(), userProfile.getEmail()))
+                .orElse(userProfile.toUser());
+
+        return userRepository.saveUser(user);
     }
 }

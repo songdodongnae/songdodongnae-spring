@@ -16,7 +16,7 @@ public class UserRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public User findByProviderIdAndProvider(String providerId, String provider){
+    public Optional<User> findByProviderIdAndProvider(String providerId, String provider){
         return em.createQuery(
                         "select user from User user " +
                                 "where user.providerId = :providerId and provider = :provider"
@@ -25,12 +25,12 @@ public class UserRepository {
                 .setParameter("provider", provider)
                 .getResultList()
                 .stream()
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 
     @Transactional
-    public void saveUser(User user){
-        em.persist(user);
+    public User saveUser(User user){
+        em.merge(user);
+        return user;
     }
 }
