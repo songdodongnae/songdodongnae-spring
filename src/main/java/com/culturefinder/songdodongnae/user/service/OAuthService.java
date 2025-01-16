@@ -44,9 +44,6 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
 
         UserProfile userProfile = OAuthAttributes.extract(registrationId, attributes);
 
-        User user1 = new User(userProfile);
-        System.out.println(user1);
-
         if (!isUserExist(userProfile)) {
             User user = new User(userProfile);
             userRepository.saveUser(user);
