@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 
-
 public enum OAuthAttributes {
     NAVER("naver", (attributes) -> {
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
@@ -14,13 +13,11 @@ public enum OAuthAttributes {
                 (String) response.get("email")
         );
     }),
-    GOOGLE("google", (attributes) -> {
-        return new UserProfile(
-                (String) attributes.get("sub"),
-                (String) attributes.get("name"),
-                (String) attributes.get("email")
-        );
-    });
+    GOOGLE("google", (attributes) -> new UserProfile(
+            (String) attributes.get("sub"),
+            (String) attributes.get("name"),
+            (String) attributes.get("email")
+    ));
 
     private final String registrationId;
     private final Function<Map<String, Object>, UserProfile> of;
