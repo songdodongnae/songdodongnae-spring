@@ -1,8 +1,12 @@
 package com.culturefinder.songdodongnae.user.service;
 
 import com.culturefinder.songdodongnae.user.domain.OAuthAttributes;
+import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.domain.UserProfile;
 import com.culturefinder.songdodongnae.user.domain.Role;
+import com.culturefinder.songdodongnae.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -15,8 +19,13 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.Map;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+
+    private final UserRepository userRepository;
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService delegate = new DefaultOAuth2UserService();
@@ -35,12 +44,23 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
 
         UserProfile userProfile = OAuthAttributes.extract(registrationId, attributes);
 
-        // UserFile을 통해 User로 변환하는 작업 + DB에 업데이트 하는 작업 필요
+        User user1 = new User(userProfile);
+        System.out.println(user1);
+
+        if (!isUserExist(userProfile)) {
+            User user = new User(userProfile);
+            userRepository.saveUser(user);
+            log.info("유저 저장 유저 = {}", user.toString());
+        }
 
         return new DefaultOAuth2User(
-                //Collections.singleton(new SimpleGrantedAuthority(member.getRoleKey()))
                 Collections.singleton(new SimpleGrantedAuthority(Role.ROLE_USER.name())),
                 attributes,
                 userNameAttributeName);
+    }
+
+    private boolean isUserExist(UserProfile userProfile) {
+        User findUser = userRepository.findUserByEmail(userProfile.getEmail());
+        return findUser != null;
     }
 }
