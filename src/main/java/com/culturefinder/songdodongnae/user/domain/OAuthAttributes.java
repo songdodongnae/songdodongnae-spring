@@ -20,6 +20,21 @@ public enum OAuthAttributes {
                 (String) attributes.get("name"),
                 (String) attributes.get("email")
         );
+    }),
+    KAKAO("kakao", (attributes) -> {
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+        if (kakaoAccount == null) {
+            throw new IllegalStateException("Kakao account error.");
+        }
+        Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+        if (profile == null) {
+            throw new IllegalStateException("Profile error.");
+        }
+        return new UserProfile(
+                String.valueOf(attributes.get("id")),
+                (String) profile.get("nickname"),
+                (String) kakaoAccount.get("email")
+        );
     });
 
     private final String registrationId;
