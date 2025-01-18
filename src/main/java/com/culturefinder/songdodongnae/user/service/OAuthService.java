@@ -3,7 +3,6 @@ package com.culturefinder.songdodongnae.user.service;
 import com.culturefinder.songdodongnae.user.domain.OAuthAttributes;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.domain.UserProfile;
-import com.culturefinder.songdodongnae.user.domain.Role;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -45,12 +45,13 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         UserProfile userProfile = OAuthAttributes.extract(registrationId, attributes);
 
         User user = new User(userProfile);
+        Optional<User> findUser = userRepository.findByProviderIdAndProvider(user.getProviderId(), user.getProvider());
 
-        if (userRepository.findByProviderIdAndProvider(user.getProviderId(), user.getProvider()).get() == null) {
+        if (findUser.isEmpty()) {
             userRepository.saveUser(user);
             log.info("유저 저장 유저 = {}", user.toString());
         } else {
-            userRepository.updateUser(user);
+            userRepository.updateUser(findUser.get());
         }
 
         return new DefaultOAuth2User(

@@ -38,7 +38,6 @@ public class UserRepository {
     }
 
     public User updateUser(User user) {
-        System.out.println("UserRepository.update");
         User findUser = em.find(User.class, user.getId());
         findUser.update(user.getNickname(), user.getEmail());
         em.persist(findUser);
