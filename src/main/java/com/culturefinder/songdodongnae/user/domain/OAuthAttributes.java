@@ -4,21 +4,36 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 
-
 public enum OAuthAttributes {
     NAVER("naver", (attributes) -> {
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
         return new UserProfile(
                 (String) response.get("id"),
                 (String) response.get("name"),
-                (String) response.get("email")
+                (String) response.get("email"),
+                "naver"
         );
     }),
-    GOOGLE("google", (attributes) -> {
+    GOOGLE("google", (attributes) -> new UserProfile(
+            (String) attributes.get("sub"),
+            (String) attributes.get("name"),
+            (String) attributes.get("email"),
+            "google"
+    )),
+    KAKAO("kakao", (attributes) -> {
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+        if (kakaoAccount == null) {
+            throw new IllegalStateException("Kakao account error.");
+        }
+        Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+        if (profile == null) {
+            throw new IllegalStateException("Profile error.");
+        }
         return new UserProfile(
-                (String) attributes.get("sub"),
-                (String) attributes.get("name"),
-                (String) attributes.get("email")
+                String.valueOf(attributes.get("id")),
+                (String) profile.get("nickname"),
+                (String) kakaoAccount.get("email"),
+                "kakao"
         );
     });
 

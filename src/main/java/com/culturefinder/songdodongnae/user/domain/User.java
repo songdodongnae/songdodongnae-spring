@@ -2,6 +2,7 @@ package com.culturefinder.songdodongnae.user.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @ToString
+@NoArgsConstructor
 public class User {
 
     @Id @GeneratedValue
@@ -25,7 +27,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public User() {}
+    private String providerId;
+
+    private String provider;
+
 
     public User(UserProfile userProfile) {
         this.nickname = userProfile.getName();
@@ -33,6 +38,14 @@ public class User {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.role = Role.ROLE_USER;
+        this.providerId = userProfile.getOauthId();
+        this.provider = userProfile.getProvider();
     }
 
+    public User update(String nickname, String email) {
+        this.nickname = nickname;
+        this.email = email;
+        this.updatedAt = LocalDateTime.now();
+        return this;
+    }
 }

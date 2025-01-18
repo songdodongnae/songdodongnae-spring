@@ -44,20 +44,18 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
 
         UserProfile userProfile = OAuthAttributes.extract(registrationId, attributes);
 
-        if (!isUserExist(userProfile)) {
-            User user = new User(userProfile);
+        User user = new User(userProfile);
+
+        if (userRepository.findByProviderIdAndProvider(user.getProviderId(), user.getProvider()).get() == null) {
             userRepository.saveUser(user);
             log.info("유저 저장 유저 = {}", user.toString());
+        } else {
+            userRepository.updateUser(user);
         }
 
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority(Role.ROLE_USER.name())),
+                Collections.singleton(new SimpleGrantedAuthority(user.getRole().name())),
                 attributes,
                 userNameAttributeName);
-    }
-
-    private boolean isUserExist(UserProfile userProfile) {
-        User findUser = userRepository.findUserByEmail(userProfile.getEmail());
-        return findUser != null;
     }
 }
