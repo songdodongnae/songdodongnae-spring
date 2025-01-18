@@ -13,16 +13,21 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     private final OAuthService oAuthService;
     private final OAuthSuccessHandler oAuthSuccessHandler;
-    private final String[] allowUris = {"/api/login", "/index.html", "/oauth2/**", "/**"};
+    private final String[] whiteList = {
+            "/api/login",
+            "/index.html",
+            "/oauth2/**",
+            "/"
+    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(allowUris)
-                        .permitAll()
+                        .requestMatchers(whiteList).permitAll()
                         .anyRequest()
                         .authenticated()
                 )

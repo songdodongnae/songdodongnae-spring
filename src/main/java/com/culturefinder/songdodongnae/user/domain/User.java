@@ -2,11 +2,15 @@ package com.culturefinder.songdodongnae.user.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@ToString
+@NoArgsConstructor
 public class User {
 
     @Id @GeneratedValue
@@ -27,10 +31,8 @@ public class User {
 
     private String provider;
 
-    public User() {
-    }
 
-    public User(UserProfile userProfile){
+    public User(UserProfile userProfile) {
         this.nickname = userProfile.getName();
         this.email = userProfile.getEmail();
         this.createdAt = LocalDateTime.now();
@@ -40,10 +42,10 @@ public class User {
         this.provider = userProfile.getProvider();
     }
 
-    public User update(String nickname, String email){
+    public User update(String nickname, String email) {
         this.nickname = nickname;
         this.email = email;
-        //updateAt 도 업데이트 해야할지
+        this.updatedAt = LocalDateTime.now();
         return this;
     }
 }

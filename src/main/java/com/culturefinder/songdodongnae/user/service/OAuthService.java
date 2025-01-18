@@ -7,7 +7,6 @@ import com.culturefinder.songdodongnae.user.domain.Role;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -20,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -44,20 +44,18 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
 
         UserProfile userProfile = OAuthAttributes.extract(registrationId, attributes);
 
-        User user = saveOrUpdate(userProfile);
+        User user = new User(userProfile);
+
+        if (userRepository.findByProviderIdAndProvider(user.getProviderId(), user.getProvider()).get() == null) {
+            userRepository.saveUser(user);
+            log.info("유저 저장 유저 = {}", user.toString());
+        } else {
+            userRepository.updateUser(user);
+        }
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(user.getRole().name())),
                 attributes,
                 userNameAttributeName);
-    }
-
-    private User saveOrUpdate(UserProfile userProfile){
-        User user = userRepository.findByProviderIdAndProvider(userProfile.getOauthId(), userProfile.getProvider())
-                .map(u -> u.update(
-                        userProfile.getName(), userProfile.getEmail()))
-                .orElse(new User(userProfile));
-
-        return userRepository.saveUser(user);
     }
 }
