@@ -30,14 +30,14 @@ public class User {
     public User() {
     }
 
-    public User(String nickname, String email, LocalDateTime createdAt, LocalDateTime updatedAt, Role role, String providerId, String provider) {
-        this.nickname = nickname;
-        this.email = email;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.role = role;
-        this.providerId = providerId;
-        this.provider = provider;
+    public User(UserProfile userProfile){
+        this.nickname = userProfile.getName();
+        this.email = userProfile.getEmail();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.role = Role.ROLE_USER;
+        this.providerId = userProfile.getOauthId();
+        this.provider = userProfile.getProvider();
     }
 
     public User update(String nickname, String email){
