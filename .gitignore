@@ -40,7 +40,6 @@ out/
 logs/
 src/main/resources
 .pem
-*.pem
 
 ### Mac OS ###
 .DS_Store
