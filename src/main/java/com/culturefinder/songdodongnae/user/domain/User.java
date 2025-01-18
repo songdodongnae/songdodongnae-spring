@@ -27,6 +27,9 @@ public class User {
 
     private String provider;
 
+    public User() {
+    }
+
     public User(String nickname, String email, LocalDateTime createdAt, LocalDateTime updatedAt, Role role, String providerId, String provider) {
         this.nickname = nickname;
         this.email = email;

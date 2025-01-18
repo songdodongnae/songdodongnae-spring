@@ -47,8 +47,7 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         User user = saveOrUpdate(userProfile);
 
         return new DefaultOAuth2User(
-                //Collections.singleton(new SimpleGrantedAuthority(member.getRoleKey()))
-                Collections.singleton(new SimpleGrantedAuthority(Role.ROLE_USER.name())),
+                Collections.singleton(new SimpleGrantedAuthority(user.getRole().name())),
                 attributes,
                 userNameAttributeName);
     }
