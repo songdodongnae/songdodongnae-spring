@@ -82,16 +82,14 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private void checkAccessToken(HttpServletRequest request,
                                   HttpServletResponse response,
                                   FilterChain filterChain) throws ServletException, IOException {
-        Optional<String> accessToken = jwtService.extractAccessToken(request);
-        log.info("accessToken : {}", accessToken);
-        accessToken
+        jwtService.extractAccessToken(request)
                 .filter(jwtService::isTokenValid)
                 .ifPresentOrElse(
-                        ac -> {
-                            jwtService.extractId(ac)
+                        accessToken -> {
+                            jwtService.extractId(accessToken)
                                     .flatMap(userRepository::findById)
                                     .ifPresent(this::saveAuthentication);
-                            log.info("access token 만으로 접근");
+                            log.info("access token 으로 접근");
                         },
                         () -> {
                             log.info("처음 저장");
