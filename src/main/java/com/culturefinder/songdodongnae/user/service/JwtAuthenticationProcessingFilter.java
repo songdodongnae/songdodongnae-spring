@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -18,8 +19,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Optional;
 
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private static final String[] whiteList = {
@@ -63,6 +66,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                                     jwtService.createAccessToken(user.getId()),
                                     reIssuedRefreshToken
                             );
+                            log.info("access 재발급");
                         },
                         () -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -71,36 +75,41 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private String reIssueRefreshToken(User user){
         String reIssuedRefreshToken = jwtService.createRefreshToken();
-        user.setRefreshToken(reIssuedRefreshToken);
-        userRepository.saveUser(user);
+        userRepository.updateUserRefreshToken(user, reIssuedRefreshToken);
         return reIssuedRefreshToken;
     }
 
     private void checkAccessToken(HttpServletRequest request,
                                   HttpServletResponse response,
                                   FilterChain filterChain) throws ServletException, IOException {
-        jwtService.extractAccessToken(request)
+        Optional<String> accessToken = jwtService.extractAccessToken(request);
+        log.info("accessToken : {}", accessToken);
+        accessToken
                 .filter(jwtService::isTokenValid)
                 .ifPresentOrElse(
-                        accessToken -> {
-                            jwtService.extractId(accessToken)
+                        ac -> {
+                            jwtService.extractId(ac)
                                     .flatMap(userRepository::findById)
                                     .ifPresent(this::saveAuthentication);
+                            log.info("access token 만으로 접근");
                         },
                         () -> {
+                            log.info("처음 저장");
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//                            String ac = jwtService.createAccessToken(1L);
+//                            String refreshToken = jwtService.createRefreshToken();
+//                            User savedUser = userRepository.findById(1L).get();
+//                            userRepository.updateUserRefreshToken(savedUser, refreshToken);
+//                            jwtService.sendAccessAndRefreshToken(response, ac, refreshToken);
                         }
                 );
-        filterChain.doFilter(request, response);
     }
 
     private void saveAuthentication(User user){
-
-
         UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
                 .username(String.valueOf(user.getId()))
-                .password(null)
-                .roles(user.getRole().name())
+                .password("")
+                .roles("USER")
                 .build();
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(

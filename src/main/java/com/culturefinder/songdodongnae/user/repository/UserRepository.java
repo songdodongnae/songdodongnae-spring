@@ -69,4 +69,11 @@ public class UserRepository {
         em.persist(findUser);
         return findUser;
     }
+
+    public User updateUserRefreshToken(User user, String refreshToken){
+        User findUser = em.find(User.class, user.getId());
+        findUser.setRefreshToken(refreshToken);
+        em.persist(findUser);
+        return findUser;
+    }
 }

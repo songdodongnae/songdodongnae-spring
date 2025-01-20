@@ -80,13 +80,13 @@ public class JwtService {
     public Optional<String> extractAccessToken(HttpServletRequest request){
         return Optional.ofNullable(request.getHeader(accessHeader))
                 .filter(accessToken -> accessToken.startsWith("Bearer"))
-                .map(accessToken -> accessToken.replace("Bearer", ""));
+                .map(accessToken -> accessToken.replace("Bearer ", ""));
     }
 
     public Optional<String> extractRefreshToken(HttpServletRequest request){
         return Optional.ofNullable(request.getHeader(refreshHeader))
                 .filter(refreshToken -> refreshToken.startsWith("Bearer"))
-                .map(refreshToken -> refreshToken.replace("Bearer", ""));
+                .map(refreshToken -> refreshToken.replace("Bearer ", ""));
     }
 
     public Optional<Long> extractId(String accessToken){

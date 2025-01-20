@@ -35,7 +35,6 @@ public class User {
 
     private String refreshToken;
 
-
     public User(UserProfile userProfile) {
         this.nickname = userProfile.getName();
         this.email = userProfile.getEmail();
