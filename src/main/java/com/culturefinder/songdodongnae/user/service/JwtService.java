@@ -62,14 +62,14 @@ public class JwtService {
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
-    public void setAccessToken(HttpServletResponse response, String accessToken){
+    public void sendAccessToken(HttpServletResponse response, String accessToken){
         response.setStatus(HttpServletResponse.SC_OK);
 
         response.setHeader(accessHeader, accessToken);
         log.info("Access Token = {}", accessToken);
     }
 
-    public void setAccessAndRefreshToken(HttpServletResponse response,
+    public void sendAccessAndRefreshToken(HttpServletResponse response,
                                          String accessToken,
                                          String refreshToken){
         response.setStatus(HttpServletResponse.SC_OK);
@@ -102,11 +102,12 @@ public class JwtService {
         }
     }
 
-    public void updateRefreshToken(Long id, String accessToken){
-//        userRepository.findById(id)
-//                .isPresent(
-//                        user -> user.
-//                )
+    public void updateRefreshToken(Long id, String refreshToken){
+        userRepository.findById(id)
+                .ifPresentOrElse(
+                        user -> user.setRefreshToken(refreshToken),
+                        () -> new Exception("일치하는 회원이 없습니다.")
+                );
     }
 
     public boolean isTokenValid(String token){
