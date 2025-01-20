@@ -18,6 +18,18 @@ public class UserRepository {
     @PersistenceContext
     private final EntityManager em;
 
+    public Optional<User> findById(Long id){
+        if(id == null) return Optional.empty();
+
+        return em.createQuery(
+                "select u from User u where u.id = :id"
+                , User.class)
+                .setParameter("id", id)
+                .getResultList()
+                .stream()
+                .findFirst();
+    }
+
     public Optional<User> findByProviderIdAndProvider(String providerId, String provider) {
         if (providerId == null || provider == null) return Optional.empty();
 
