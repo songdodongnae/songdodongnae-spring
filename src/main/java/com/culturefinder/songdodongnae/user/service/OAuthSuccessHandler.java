@@ -3,6 +3,7 @@ package com.culturefinder.songdodongnae.user.service;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,9 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         // 테스트 코드
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("http://localhost:3000");
         builder.path("auth");
-        builder.queryParam("accessToken", "abcdefg");
+//        builder.queryParam("accessToken", "abcdefg");
+
+
         response.sendRedirect(builder.build().toString());
     }
 
@@ -55,8 +58,12 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
                               Long id){
         String accessToken = jwtService.createAccessToken(id);
         String refreshToken = jwtService.createRefreshToken();
-        response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
-        response.addHeader(jwtService.getRefreshHeader(), "Bearer " + refreshToken);
+
+//        response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
+//        response.addHeader(jwtService.getRefreshHeader(), "Bearer " + refreshToken);
+
+        response.addCookie(new Cookie("Authorization", "Bearer " + accessToken));
+        response.addCookie(new Cookie("Authorization-refresh", "Bearer " + refreshToken));
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         jwtService.updateRefreshToken(id, refreshToken);
