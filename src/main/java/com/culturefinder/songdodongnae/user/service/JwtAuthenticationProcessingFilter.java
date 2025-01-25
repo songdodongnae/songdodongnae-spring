@@ -79,18 +79,18 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     }
 
     private void saveAuthentication(User user) {
-        UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
-                .username(String.valueOf(user.getId()))
-                .password("")
-                .roles("USER")
-                .build();
-
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                authoritiesMapper.mapAuthorities(userDetails.getAuthorities())
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
+//                .username(String.valueOf(user.getId()))
+//                .password("")
+//                .roles("USER")
+//                .build();
+//
+//        Authentication authentication = new UsernamePasswordAuthenticationToken(
+//                userDetails,
+//                null,
+//                authoritiesMapper.mapAuthorities(userDetails.getAuthorities())
+//        );
+//
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }
