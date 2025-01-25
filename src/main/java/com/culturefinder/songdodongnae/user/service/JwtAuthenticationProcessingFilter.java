@@ -2,7 +2,6 @@ package com.culturefinder.songdodongnae.user.service;
 
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
-import com.nimbusds.oauth2.sdk.auth.JWTAuthentication;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,17 +17,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
-
-    private static final String[] whiteList = {
-            "/login/**",
-            "/index.html"
-    };
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
@@ -37,28 +29,19 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (Arrays.asList(whiteList).contains(request.getRequestURI())) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         String refreshToken = jwtService.extractRefreshToken(request)
                 .filter(jwtService::isTokenValid)
                 .orElse(null);
 
         if (refreshToken != null) {
-            checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
-            return;
+            validateRefreshTokenAndReIssueAccessToken(response, refreshToken);
+        } else {
+            checkAccessToken(request, response);
         }
-
-        checkAccessToken(request, response, filterChain);
     }
 
-    private void checkRefreshTokenAndReIssueAccessToken(
-            HttpServletResponse response,
-            String refreshToken) {
-        userRepository.findByRefreshToken(refreshToken).ifPresentOrElse
-                (
+    private void validateRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
+        userRepository.findByRefreshToken(refreshToken).ifPresentOrElse (
                         user -> {
                             String reIssuedRefreshToken = reIssueRefreshToken(user);
                             jwtService.sendAccessAndRefreshToken(
@@ -68,20 +51,17 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                             );
                             log.info("access 재발급");
                         },
-                        () -> {
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        });
+                        () -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED)
+        );
     }
 
-    private String reIssueRefreshToken(User user){
+    private String reIssueRefreshToken(User user) {
         String reIssuedRefreshToken = jwtService.createRefreshToken();
         userRepository.updateUserRefreshToken(user, reIssuedRefreshToken);
         return reIssuedRefreshToken;
     }
 
-    private void checkAccessToken(HttpServletRequest request,
-                                  HttpServletResponse response,
-                                  FilterChain filterChain) throws ServletException, IOException {
+    private void checkAccessToken(HttpServletRequest request, HttpServletResponse response) {
         jwtService.extractAccessToken(request)
                 .filter(jwtService::isTokenValid)
                 .ifPresentOrElse(
@@ -94,16 +74,11 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                         () -> {
                             log.info("처음 저장");
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//                            String ac = jwtService.createAccessToken(1L);
-//                            String refreshToken = jwtService.createRefreshToken();
-//                            User savedUser = userRepository.findById(1L).get();
-//                            userRepository.updateUserRefreshToken(savedUser, refreshToken);
-//                            jwtService.sendAccessAndRefreshToken(response, ac, refreshToken);
                         }
                 );
     }
 
-    private void saveAuthentication(User user){
+    private void saveAuthentication(User user) {
         UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
                 .username(String.valueOf(user.getId()))
                 .password("")

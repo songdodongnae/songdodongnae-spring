@@ -62,35 +62,34 @@ public class JwtService {
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
-    public void sendAccessToken(HttpServletResponse response, String accessToken){
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        response.setHeader(accessHeader, accessToken);
-        log.info("Access Token = {}", accessToken);
-    }
+//    public void sendAccessToken(HttpServletResponse response, String accessToken) {
+//        response.setStatus(HttpServletResponse.SC_OK);
+//        response.setHeader(accessHeader, accessToken);
+//        log.info("Access Token = {}", accessToken);
+//    }
 
     public void sendAccessAndRefreshToken(HttpServletResponse response,
                                          String accessToken,
-                                         String refreshToken){
+                                         String refreshToken) {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setHeader(accessHeader, accessToken);
         response.setHeader(refreshHeader, refreshToken);
     }
 
-    public Optional<String> extractAccessToken(HttpServletRequest request){
+    public Optional<String> extractAccessToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(accessHeader))
                 .filter(accessToken -> accessToken.startsWith("Bearer"))
                 .map(accessToken -> accessToken.replace("Bearer ", ""));
     }
 
-    public Optional<String> extractRefreshToken(HttpServletRequest request){
+    public Optional<String> extractRefreshToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(refreshHeader))
                 .filter(refreshToken -> refreshToken.startsWith("Bearer"))
                 .map(refreshToken -> refreshToken.replace("Bearer ", ""));
     }
 
-    public Optional<Long> extractId(String accessToken){
-        try{
+    public Optional<Long> extractId(String accessToken) {
+        try {
             return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
                     .build()
                     .verify(accessToken)
@@ -102,7 +101,7 @@ public class JwtService {
         }
     }
 
-    public void updateRefreshToken(Long id, String refreshToken){
+    public void updateRefreshToken(Long id, String refreshToken) {
         userRepository.findById(id)
                 .ifPresentOrElse(
                         user -> user.setRefreshToken(refreshToken),
@@ -110,8 +109,8 @@ public class JwtService {
                 );
     }
 
-    public boolean isTokenValid(String token){
-        try{
+    public boolean isTokenValid(String token) {
+        try {
             JWT.require(Algorithm.HMAC512(secretKey))
                     .build()
                     .verify(token);
