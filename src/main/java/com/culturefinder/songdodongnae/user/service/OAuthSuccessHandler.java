@@ -24,6 +24,7 @@ import java.util.Optional;
 public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 
     private final UserRepository userRepository;
+    private final JwtService jwtService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -38,6 +39,8 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         log.info("providerid = {}", providerId);
         log.info("user = {}", user);
 
+        user.ifPresent(u -> loginSuccess(request, response, u.getId()));
+
         // [ 웹 서버 uri + 토큰 ] 으로 리다이렉트
 
         // 테스트 코드
@@ -45,5 +48,17 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         builder.path("auth");
         builder.queryParam("accessToken", "abcdefg");
         response.sendRedirect(builder.build().toString());
+    }
+
+    private void loginSuccess(HttpServletRequest request,
+                              HttpServletResponse response,
+                              Long id){
+        String accessToken = jwtService.createAccessToken(id);
+        String refreshToken = jwtService.createRefreshToken();
+        response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
+        response.addHeader(jwtService.getRefreshHeader(), "Bearer " + refreshToken);
+
+        jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
+        jwtService.updateRefreshToken(id, refreshToken);
     }
 }

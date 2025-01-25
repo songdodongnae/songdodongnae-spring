@@ -7,6 +7,7 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.cors.PreFlightRequestHandler;
 
 import java.util.Optional;
 
@@ -17,6 +18,31 @@ public class UserRepository {
 
     @PersistenceContext
     private final EntityManager em;
+    private final PreFlightRequestHandler preFlightRequestHandler;
+
+    public Optional<User> findById(Long id){
+        if(id == null) return Optional.empty();
+
+        return em.createQuery(
+                "select u from User u where u.id = :id"
+                , User.class)
+                .setParameter("id", id)
+                .getResultList()
+                .stream()
+                .findFirst();
+    }
+
+    public Optional<User> findByRefreshToken(String refreshToken){
+        if(refreshToken == null) return Optional.empty();
+
+        return em.createQuery(
+                        "select u from User u where u.refreshToken = :refreshToken"
+                        , User.class)
+                .setParameter("refreshToken", refreshToken)
+                .getResultList()
+                .stream()
+                .findFirst();
+    }
 
     public Optional<User> findByProviderIdAndProvider(String providerId, String provider) {
         if (providerId == null || provider == null) return Optional.empty();
@@ -40,6 +66,13 @@ public class UserRepository {
     public User updateUser(User user) {
         User findUser = em.find(User.class, user.getId());
         findUser.update(user.getNickname(), user.getEmail());
+        em.persist(findUser);
+        return findUser;
+    }
+
+    public User updateUserRefreshToken(User user, String refreshToken){
+        User findUser = em.find(User.class, user.getId());
+        findUser.setRefreshToken(refreshToken);
         em.persist(findUser);
         return findUser;
     }

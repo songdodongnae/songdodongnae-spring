@@ -3,12 +3,14 @@ package com.culturefinder.songdodongnae.user.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @ToString
 @NoArgsConstructor
 public class User {
@@ -31,6 +33,7 @@ public class User {
 
     private String provider;
 
+    private String refreshToken;
 
     public User(UserProfile userProfile) {
         this.nickname = userProfile.getName();
