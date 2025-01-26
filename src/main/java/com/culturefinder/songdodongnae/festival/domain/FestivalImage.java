@@ -16,4 +16,8 @@ public class FestivalImage {
     private Festival festival;
 
     private String imageUrl;
+
+    public FestivalImage(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }
