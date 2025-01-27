@@ -3,6 +3,7 @@ package com.culturefinder.songdodongnae.festival.domain;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.util.List;
 @Entity
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class Festival {
 
     @Id @GeneratedValue

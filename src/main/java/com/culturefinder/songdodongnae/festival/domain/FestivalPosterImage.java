@@ -2,9 +2,11 @@ package com.culturefinder.songdodongnae.festival.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class FestivalPosterImage {
 
     @Id @GeneratedValue
