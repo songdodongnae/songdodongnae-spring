@@ -23,4 +23,11 @@ public class DeliciousSpotImage {
 
     private String imageUrl;
 
+    public DeliciousSpotImage(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setDeliciousSpot(DeliciousSpot deliciousSpot) {
+        this.deliciousSpot = deliciousSpot;
+    }
 }
