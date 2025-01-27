@@ -23,7 +23,8 @@ public class SecurityConfig {
     private final String[] whiteList = {
             "/api/login",
             "/oauth2/**",
-            "/"
+            "/admin/**",
+            "/**", // 개발용 코드
     };
 
     private final JwtService jwtService;
