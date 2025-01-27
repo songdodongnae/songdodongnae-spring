@@ -20,4 +20,8 @@ public class FestivalImage {
     public FestivalImage(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public void setFestival(Festival festival) {
+        this.festival = festival;
+    }
 }

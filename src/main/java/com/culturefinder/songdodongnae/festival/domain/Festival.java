@@ -20,7 +20,7 @@ public class Festival {
     @Column(name = "festival_id")
     private Long id;
 
-    private String title;
+    private String name;
 
     @Enumerated(EnumType.STRING)
     private FestivalCategory category;
