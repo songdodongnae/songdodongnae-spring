@@ -25,13 +25,13 @@ public class Festival {
     @Enumerated(EnumType.STRING)
     private FestivalCategory category;
 
-    private LocalDateTime start_date;
+    private LocalDateTime startDate;
 
-    private LocalDateTime end_date;
+    private LocalDateTime endDate;
 
-    private LocalTime start_time;
+    private LocalTime startTime;
 
-    private LocalTime end_time;
+    private LocalTime endTime;
 
     private String location;
 
