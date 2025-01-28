@@ -39,7 +39,7 @@ public class DeliciousSpot {
 
     private String parking;
 
-    private String suggestion_menu;
+    private String suggestionMenu;
 
     @Column(columnDefinition = "TEXT")
     private String description;
