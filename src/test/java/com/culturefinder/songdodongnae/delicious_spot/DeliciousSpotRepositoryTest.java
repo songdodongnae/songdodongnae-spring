@@ -2,15 +2,17 @@ package com.culturefinder.songdodongnae.delicious_spot;
 
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotImage;
+import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotList;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 @SpringBootTest
@@ -21,13 +23,25 @@ public class DeliciousSpotRepositoryTest {
 
     @Test
     @DisplayName("맛집 저장되는지 확인하는 테스트")
+    @Rollback(false)
     public void test1() {
-        ArrayList<DeliciousSpotImage> deliciousSpotImages = new ArrayList<>();
-        DeliciousSpotImage deliciousSpotImage = new DeliciousSpotImage("image url 1");
-        deliciousSpotImages.add(deliciousSpotImage);
-        DeliciousSpot deliciousSpot = new DeliciousSpot(null, "맛집1", "여기", 10000, (float) 1.1, (float) 5.0, null, null, "계속기다려그냥", "주차못함", "메뉴 암거나 시켜", "설명ㄴ", "한줄", "인스타없어", "0101..", 22 , deliciousSpotImages);
-        deliciousSpotImage.setDeliciousSpot(deliciousSpot);
-        DeliciousSpot saveDeliciousSpot = deliciousSpotRepository.saveDeliciousSpot(deliciousSpot);
-        Assertions.assertThat(deliciousSpot.getId()).isEqualTo(saveDeliciousSpot.getId());
+        DeliciousSpotImage deliciousSpotImage1 = new DeliciousSpotImage("imageUrl1");
+        DeliciousSpotImage deliciousSpotImage2 = new DeliciousSpotImage("imageUrl2");
+        DeliciousSpot deliciousSpot = new DeliciousSpot();
+        List<DeliciousSpotImage> deliciousSpotImageArrayList = new ArrayList<>();
+        deliciousSpotImageArrayList.add(deliciousSpotImage1);
+        deliciousSpotImageArrayList.add(deliciousSpotImage2);
+        deliciousSpot.setDeliciousSpotImages(deliciousSpotImageArrayList);
+        deliciousSpotImage1.setDeliciousSpot(deliciousSpot);
+        deliciousSpotImage2.setDeliciousSpot(deliciousSpot);
+
+        List<DeliciousSpot> deliciousSpotArrayList = new ArrayList<>();
+        deliciousSpotArrayList.add(deliciousSpot);
+        DeliciousSpotList deliciousSpotList = new DeliciousSpotList();
+        deliciousSpotList.setDeliciousSpots(deliciousSpotArrayList);
+        deliciousSpotList.setTitle("맛집리스트1");
+        deliciousSpot.setDeliciousSpotList(deliciousSpotList);
+
+        deliciousSpotRepository.saveDeliciousSpotList(deliciousSpotList);
     }
 }

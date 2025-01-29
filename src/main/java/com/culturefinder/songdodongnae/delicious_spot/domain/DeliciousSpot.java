@@ -55,4 +55,15 @@ public class DeliciousSpot {
     @OneToMany(mappedBy = "deliciousSpot", cascade = CascadeType.ALL)
     private List<DeliciousSpotImage> deliciousSpotImages = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "delicious_spot_list_id")
+    private DeliciousSpotList deliciousSpotList;
+
+    public void setDeliciousSpotImages(List<DeliciousSpotImage> deliciousSpotImages) {
+        this.deliciousSpotImages = deliciousSpotImages;
+    }
+
+    public void setDeliciousSpotList(DeliciousSpotList deliciousSpotList) {
+        this.deliciousSpotList = deliciousSpotList;
+    }
 }
