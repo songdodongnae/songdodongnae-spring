@@ -22,4 +22,15 @@ public class FestivalService {
         Festival festival = festivalRepository.saveFestival(festivalReqDto.toEntity());
         return festival.fromEntity();
     }
+
+    public FestivalResDto updateFestival(Long id, FestivalReqDto festivalReqDto) {
+        if (festivalReqDto.getName() == null || festivalReqDto.getName().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
+
+        Festival findFestival = festivalRepository.findById(id);
+        findFestival.update(festivalReqDto.toEntity());
+        Festival updatedFestival = festivalRepository.saveFestival(findFestival);
+        return updatedFestival.fromEntity();
+    }
 }

@@ -20,4 +20,7 @@ public class FestivalRepository {
         return festival;
     }
 
+    public Festival findById(Long id) {
+        return em.find(Festival.class, id);
+    }
 }
