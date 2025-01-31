@@ -41,4 +41,10 @@ public class FestivalController {
         List<FestivalResDto> dtos = festivalService.getAllFestival();
         return new ResponseEntity<>(new ResDto(HttpStatus.OK, "축제모두조회 완료", dtos), HttpStatus.OK);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResDto> festivalRead(@PathVariable Long id) {
+        FestivalResDto dto = festivalService.getFestival(id);
+        return new ResponseEntity<>(new ResDto(HttpStatus.OK, "축제조회 완료", dto), HttpStatus.OK);
+    }
 }

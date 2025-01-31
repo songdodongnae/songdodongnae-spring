@@ -52,4 +52,8 @@ public class FestivalService {
                 .map(Festival::fromEntity)
                 .collect(Collectors.toList());
     }
+
+    public FestivalResDto getFestival(Long id) {
+        return festivalRepository.findById(id).fromEntity();
+    }
 }
