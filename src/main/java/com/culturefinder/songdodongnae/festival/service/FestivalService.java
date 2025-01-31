@@ -7,7 +7,6 @@ import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
 @RequiredArgsConstructor
 @Service
 public class FestivalService {
@@ -32,7 +31,7 @@ public class FestivalService {
         if (findFestival == null) {
             throw new IllegalArgumentException("Festival not found");
         }
-        Festival updatedFestival = festivalRepository.updateFestival(festivalReqDto.toEntity());
+        Festival updatedFestival = festivalRepository.updateFestival(id, festivalReqDto.toEntity());
         return updatedFestival.fromEntity();
     }
 }
