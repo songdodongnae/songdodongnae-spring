@@ -31,4 +31,9 @@ public class FestivalRepository {
         em.persist(findFestival);
         return findFestival;
     }
+
+    public void deleteFestival(Long id) {
+        Festival findFestival = em.find(Festival.class, id);
+        em.remove(findFestival);
+    }
 }

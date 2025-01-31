@@ -34,4 +34,13 @@ public class FestivalService {
         Festival updatedFestival = festivalRepository.updateFestival(id, festivalReqDto.toEntity());
         return updatedFestival.fromEntity();
     }
+
+    public FestivalResDto deleteFestival(Long id) {
+        Festival findFestival = festivalRepository.findById(id);
+        if (findFestival == null) {
+            throw new IllegalArgumentException("Festival not found");
+        }
+        festivalRepository.deleteFestival(id);
+        return findFestival.fromEntity();
+    }
 }

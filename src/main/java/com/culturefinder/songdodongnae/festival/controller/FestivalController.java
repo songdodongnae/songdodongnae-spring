@@ -27,4 +27,10 @@ public class FestivalController {
         FestivalResDto dto = festivalService.updateFestival(id, festivalReqDto);
         return new ResponseEntity<>(new ResDto(HttpStatus.OK, "축제수정 완료", dto), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResDto> festivalDelete(@PathVariable Long id) {
+        FestivalResDto dto = festivalService.deleteFestival(id);
+        return new ResponseEntity<>(new ResDto(HttpStatus.OK, "축제삭제 완료", dto), HttpStatus.OK);
+    }
 }
