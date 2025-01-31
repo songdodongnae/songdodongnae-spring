@@ -23,4 +23,11 @@ public class FestivalRepository {
     public Festival findById(Long id) {
         return em.find(Festival.class, id);
     }
+
+    public Festival updateFestival(Festival festival) {
+        Festival findFestival = em.find(Festival.class, festival.getId());
+        findFestival.update(festival);
+        em.persist(findFestival);
+        return festival;
+    }
 }
