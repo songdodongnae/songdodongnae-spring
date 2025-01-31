@@ -6,6 +6,7 @@ import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,11 +16,14 @@ import java.util.stream.Collectors;
 public class FestivalService {
 
     private final FestivalRepository festivalRepository;
+    private final FestivalImageService festivalImageService;
 
-    public FestivalResDto createFestival(FestivalReqDto festivalReqDto) {
+    public FestivalResDto createFestival(FestivalReqDto festivalReqDto, MultipartFile posterFile, MultipartFile imageFile) {
         if (festivalReqDto.getName() == null || festivalReqDto.getName().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty");
         }
+        List<String> posterUrl = festivalImageService.upload(posterFile);
+        List<String> imageUrl = festivalImageService.upload(imageFile);
 
         Festival festival = festivalRepository.saveFestival(festivalReqDto.toEntity());
         return festival.fromEntity();

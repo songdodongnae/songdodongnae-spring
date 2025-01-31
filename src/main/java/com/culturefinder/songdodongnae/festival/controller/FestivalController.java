@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,8 +20,11 @@ public class FestivalController {
     private final FestivalService festivalService;
 
     @PostMapping
-    public ResponseEntity<ResDto> festivalCreate(@RequestBody FestivalReqDto festivalReqDto) {
-        FestivalResDto dto = festivalService.createFestival(festivalReqDto);
+    public ResponseEntity<ResDto> festivalCreate(
+            @RequestPart FestivalReqDto festivalReqDto,
+            @RequestPart(required = false) MultipartFile posterFile,
+            @RequestPart(required = false) MultipartFile imageFile) {
+        FestivalResDto dto = festivalService.createFestival(festivalReqDto, posterFile, imageFile);
         return new ResponseEntity<>(new ResDto(HttpStatus.CREATED, "축제생성 완료", dto), HttpStatus.CREATED);
     }
 
