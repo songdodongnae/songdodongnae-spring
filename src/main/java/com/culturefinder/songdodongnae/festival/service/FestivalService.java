@@ -7,6 +7,9 @@ import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class FestivalService {
@@ -42,5 +45,11 @@ public class FestivalService {
         }
         festivalRepository.deleteFestival(id);
         return findFestival.fromEntity();
+    }
+
+    public List<FestivalResDto> getAllFestival() {
+        return festivalRepository.findAll().stream()
+                .map(Festival::fromEntity)
+                .collect(Collectors.toList());
     }
 }

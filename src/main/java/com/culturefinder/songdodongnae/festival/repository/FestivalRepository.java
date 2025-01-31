@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 @Transactional
 @RequiredArgsConstructor
@@ -35,5 +37,9 @@ public class FestivalRepository {
     public void deleteFestival(Long id) {
         Festival findFestival = em.find(Festival.class, id);
         em.remove(findFestival);
+    }
+
+    public List<Festival> findAll() {
+        return em.createQuery("SELECT f from Festival f", Festival.class).getResultList();
     }
 }

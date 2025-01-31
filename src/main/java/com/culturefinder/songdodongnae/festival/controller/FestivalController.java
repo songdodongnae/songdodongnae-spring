@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/festival")
@@ -32,5 +34,11 @@ public class FestivalController {
     public ResponseEntity<ResDto> festivalDelete(@PathVariable Long id) {
         FestivalResDto dto = festivalService.deleteFestival(id);
         return new ResponseEntity<>(new ResDto(HttpStatus.OK, "축제삭제 완료", dto), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<ResDto> festivalAll() {
+        List<FestivalResDto> dtos = festivalService.getAllFestival();
+        return new ResponseEntity<>(new ResDto(HttpStatus.OK, "축제모두조회 완료", dtos), HttpStatus.OK);
     }
 }
