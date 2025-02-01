@@ -18,7 +18,7 @@ public class AdminBasicController {
     private final AdminService adminService;
 
     @GetMapping("/login")
-    public String login_get(@CookieValue("admin-session") String session) {
+    public String login_get(@CookieValue(value = "admin-session", required = false) String session) {
         if (adminService.isContainAdminSession(session)) {
             return "redirect:/admin/main";
         }
