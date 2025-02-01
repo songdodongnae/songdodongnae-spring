@@ -1,25 +1,18 @@
-package com.culturefinder.songdodongnae.delicious_spot.domain;
+package com.culturefinder.songdodongnae.admin.dto;
 
-import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotInputDto;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
+import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotImage;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
-@Getter
-@Entity
-@ToString(exclude = "deliciousSpotList")
-@AllArgsConstructor
+@Data
+@ToString
 @NoArgsConstructor
-public class DeliciousSpot {
+public class AdminDeliciousSpotDto {
 
-    @Id @GeneratedValue
-    @Column(name = "delicious_spot_id")
     private Long id;
 
     private String name;
@@ -42,7 +35,6 @@ public class DeliciousSpot {
 
     private String suggestionMenu;
 
-    @Column(columnDefinition = "TEXT")
     private String description;
 
     private String onelineDescription;
@@ -53,14 +45,10 @@ public class DeliciousSpot {
 
     private Integer likes;
 
-    @OneToMany(mappedBy = "deliciousSpot", cascade = CascadeType.ALL)
-    private List<DeliciousSpotImage> deliciousSpotImages = new ArrayList<>();
+    private String[] imageLinks;
 
-    @ManyToOne
-    @JoinColumn(name = "delicious_spot_list_id")
-    private DeliciousSpotList deliciousSpotList;
-
-    public DeliciousSpot(AdminDeliciousSpotInputDto deliciousSpot) {
+    public AdminDeliciousSpotDto(DeliciousSpot deliciousSpot) {
+        this.id = deliciousSpot.getId();
         this.name = deliciousSpot.getName();
         this.location = deliciousSpot.getLocation();
         this.price = deliciousSpot.getPrice();
@@ -70,19 +58,12 @@ public class DeliciousSpot {
         this.endTime = deliciousSpot.getEndTime();
         this.waiting = deliciousSpot.getWaiting();
         this.parking = deliciousSpot.getParking();
+        this.likes = deliciousSpot.getLikes();
         this.suggestionMenu = deliciousSpot.getSuggestionMenu();
         this.description = deliciousSpot.getDescription();
         this.onelineDescription = deliciousSpot.getOnelineDescription();
         this.instagram = deliciousSpot.getInstagram();
         this.contact = deliciousSpot.getContact();
-        this.likes = deliciousSpot.getLikes();
-    }
-
-    public void setDeliciousSpotImages(List<DeliciousSpotImage> deliciousSpotImages) {
-        this.deliciousSpotImages = deliciousSpotImages;
-    }
-
-    public void setDeliciousSpotList(DeliciousSpotList deliciousSpotList) {
-        this.deliciousSpotList = deliciousSpotList;
+        this.imageLinks = deliciousSpot.getDeliciousSpotImages().stream().map(DeliciousSpotImage::getImageUrl).toArray(String[]::new);
     }
 }

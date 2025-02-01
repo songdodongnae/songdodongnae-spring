@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@ToString
+@ToString(exclude = "deliciousSpots")
 @NoArgsConstructor
 @AllArgsConstructor
 public class DeliciousSpotList {
@@ -22,7 +22,9 @@ public class DeliciousSpotList {
 
     private String title;
 
-    private String likes;
+    private Integer likes = 0;
+
+    private String imageUrl;
 
     @OneToMany(mappedBy = "deliciousSpotList", cascade = CascadeType.ALL)
     private List<DeliciousSpot> deliciousSpots = new ArrayList<>();
@@ -31,7 +33,12 @@ public class DeliciousSpotList {
         this.deliciousSpots = deliciousSpots;
     }
 
-    public void setTitle(String title) {
+    public DeliciousSpotList(String title, String imageUrl) {
         this.title = title;
+        this.imageUrl = imageUrl;
+    }
+
+    public void addDeliciousSpot(DeliciousSpot deliciousSpot) {
+        this.deliciousSpots.add(deliciousSpot);
     }
 }
