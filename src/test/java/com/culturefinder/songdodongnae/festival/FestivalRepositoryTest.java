@@ -9,7 +9,7 @@ import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.dto.ResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
-import com.culturefinder.songdodongnae.festival.service.FestivalImageService;
+/*import com.culturefinder.songdodongnae.festival.service.FestivalImageService;*/
 import com.culturefinder.songdodongnae.festival.service.FestivalService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,8 +35,8 @@ public class FestivalRepositoryTest {
 
     @Autowired
     private FestivalRepository festivalRepository;
-    @Autowired
-    private FestivalImageService festivalImageService;
+    /*@Autowired
+    private FestivalImageService festivalImageService;*/
 
     @Test
     @DisplayName("축제 저장되는지 확인하는 테스트")
@@ -64,9 +64,9 @@ public class FestivalRepositoryTest {
         FestivalReqDto festivalReqDto = new FestivalReqDto("축제2", FestivalCategory.FESTIVAL,  LocalDate.of(2025, 5, 1), LocalDate.of(2025, 5, 3),  LocalTime.of(10, 0),
                 LocalTime.of(18, 0), null, "서울...", "200원쯤?", "010.22..", "http://,,,,,", "http://,,,,,", "설명", "한줄설명");
 
-        FestivalService festivalService = new FestivalService(festivalRepository, festivalImageService);
+        FestivalService festivalService = new FestivalService(festivalRepository/*, festivalImageService*/);
         FestivalController festivalController = new FestivalController(festivalService);
-        ResponseEntity<ResDto> response = festivalController.festivalCreate(festivalReqDto, null, null);
+        ResponseEntity<ResDto> response = festivalController.festivalCreate(festivalReqDto/*, null, null*/);
 
         FestivalResDto festival = (FestivalResDto) response.getBody().getResult();
         System.out.println("festival.getId() = " + festival.getId());
@@ -93,9 +93,9 @@ public class FestivalRepositoryTest {
         FestivalReqDto festivalReqDto = new FestivalReqDto(null, FestivalCategory.FESTIVAL,  LocalDate.of(2025, 5, 1), LocalDate.of(2025, 5, 3),  LocalTime.of(10, 0),
                 LocalTime.of(18, 0), null, "서울...", "200원쯤?", "010.22..", "http://,,,,,", "http://,,,,,", "설명", "한줄설명");
 
-        FestivalService festivalService = new FestivalService(festivalRepository, festivalImageService);
+        FestivalService festivalService = new FestivalService(festivalRepository/*, festivalImageService*/);
         FestivalController festivalController = new FestivalController(festivalService);
-        assertThatThrownBy(() -> festivalController.festivalCreate(festivalReqDto, null,null))
+        assertThatThrownBy(() -> festivalController.festivalCreate(festivalReqDto/*, null,null*/))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

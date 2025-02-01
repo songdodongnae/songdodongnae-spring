@@ -21,10 +21,10 @@ public class FestivalController {
 
     @PostMapping
     public ResponseEntity<ResDto> festivalCreate(
-            @RequestPart FestivalReqDto festivalReqDto,
-            @RequestPart(required = false) MultipartFile posterFile,
-            @RequestPart(required = false) MultipartFile imageFile) {
-        FestivalResDto dto = festivalService.createFestival(festivalReqDto, posterFile, imageFile);
+            @RequestBody FestivalReqDto festivalReqDto
+            /*, @RequestPart(required = false) MultipartFile posterFile,
+            @RequestPart(required = false) MultipartFile imageFile*/) {
+        FestivalResDto dto = festivalService.createFestival(festivalReqDto/*, posterFile, imageFile*/);
         return new ResponseEntity<>(new ResDto(HttpStatus.CREATED, "축제생성 완료", dto), HttpStatus.CREATED);
     }
 

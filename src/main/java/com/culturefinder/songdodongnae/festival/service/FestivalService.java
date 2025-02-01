@@ -16,14 +16,14 @@ import java.util.stream.Collectors;
 public class FestivalService {
 
     private final FestivalRepository festivalRepository;
-    private final FestivalImageService festivalImageService;
+    // private final FestivalImageService festivalImageService;
 
-    public FestivalResDto createFestival(FestivalReqDto festivalReqDto, MultipartFile posterFile, MultipartFile imageFile) {
+    public FestivalResDto createFestival(FestivalReqDto festivalReqDto/*, MultipartFile posterFile, MultipartFile imageFile*/) {
         if (festivalReqDto.getName() == null || festivalReqDto.getName().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty");
         }
-        List<String> posterUrl = festivalImageService.upload(posterFile);
-        List<String> imageUrl = festivalImageService.upload(imageFile);
+        /*List<String> posterUrl = festivalImageService.upload(posterFile);
+        List<String> imageUrl = festivalImageService.upload(imageFile);*/
 
         Festival festival = festivalRepository.saveFestival(festivalReqDto.toEntity());
         return festival.fromEntity();

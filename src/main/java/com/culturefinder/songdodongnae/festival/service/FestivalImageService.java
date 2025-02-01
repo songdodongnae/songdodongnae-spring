@@ -1,3 +1,4 @@
+/*
 package com.culturefinder.songdodongnae.festival.service;
 
 import org.springframework.stereotype.Service;
@@ -12,3 +13,4 @@ public class FestivalImageService {
         return null;
     }
 }
+*/
