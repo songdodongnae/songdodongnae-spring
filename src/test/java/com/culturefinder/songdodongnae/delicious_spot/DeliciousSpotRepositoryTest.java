@@ -1,7 +1,9 @@
 package com.culturefinder.songdodongnae.delicious_spot;
 
+import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotDto;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotImage;
+import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotList;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 @SpringBootTest
@@ -20,14 +23,48 @@ public class DeliciousSpotRepositoryTest {
     @Autowired private DeliciousSpotRepository deliciousSpotRepository;
 
     @Test
-    @DisplayName("맛집 저장되는지 확인하는 테스트")
+    @DisplayName("맛집 리스트 저장되는지 확인하는 테스트")
     public void test1() {
-        ArrayList<DeliciousSpotImage> deliciousSpotImages = new ArrayList<>();
-        DeliciousSpotImage deliciousSpotImage = new DeliciousSpotImage("image url 1");
-        deliciousSpotImages.add(deliciousSpotImage);
-        DeliciousSpot deliciousSpot = new DeliciousSpot(null, "맛집1", "여기", 10000, (float) 1.1, (float) 5.0, null, null, "계속기다려그냥", "주차못함", "메뉴 암거나 시켜", "설명ㄴ", "한줄", "인스타없어", "0101..", 22 , deliciousSpotImages);
-        deliciousSpotImage.setDeliciousSpot(deliciousSpot);
-        DeliciousSpot saveDeliciousSpot = deliciousSpotRepository.saveDeliciousSpot(deliciousSpot);
-        Assertions.assertThat(deliciousSpot.getId()).isEqualTo(saveDeliciousSpot.getId());
+        DeliciousSpotImage deliciousSpotImage1 = new DeliciousSpotImage("imageUrl1");
+        DeliciousSpotImage deliciousSpotImage2 = new DeliciousSpotImage("imageUrl2");
+        DeliciousSpot deliciousSpot = new DeliciousSpot();
+        List<DeliciousSpotImage> deliciousSpotImageArrayList = new ArrayList<>();
+        deliciousSpotImageArrayList.add(deliciousSpotImage1);
+        deliciousSpotImageArrayList.add(deliciousSpotImage2);
+        deliciousSpot.setDeliciousSpotImages(deliciousSpotImageArrayList);
+        deliciousSpotImage1.setDeliciousSpot(deliciousSpot);
+        deliciousSpotImage2.setDeliciousSpot(deliciousSpot);
+
+        List<DeliciousSpot> deliciousSpotArrayList = new ArrayList<>();
+        deliciousSpotArrayList.add(deliciousSpot);
+        DeliciousSpotList deliciousSpotList = new DeliciousSpotList();
+        deliciousSpotList.setDeliciousSpots(deliciousSpotArrayList);
+        deliciousSpotList.setTitle("맛집리스트1");
+        deliciousSpot.setDeliciousSpotList(deliciousSpotList);
+
+        DeliciousSpotList findDeliciousSpotList = deliciousSpotRepository.saveDeliciousSpotList(deliciousSpotList);
+        Assertions.assertThat(deliciousSpotList.getId()).isEqualTo(findDeliciousSpotList.getId());
+    }
+
+    @Test
+    @DisplayName("id가 1인 맛집리스트의 맛집을 모두 불러오는지 확인하는 테스트")
+    public void test2() {
+        DeliciousSpot deliciousSpot1 = new DeliciousSpot();
+        DeliciousSpot deliciousSpot2 = new DeliciousSpot();
+        DeliciousSpot deliciousSpot3 = new DeliciousSpot();
+        List<DeliciousSpot> deliciousSpots = new ArrayList<>();
+        deliciousSpots.add(deliciousSpot1);
+        deliciousSpots.add(deliciousSpot2);
+        deliciousSpots.add(deliciousSpot3);
+
+        DeliciousSpotList deliciousSpotList = new DeliciousSpotList();
+        deliciousSpot1.setDeliciousSpotList(deliciousSpotList);
+        deliciousSpot2.setDeliciousSpotList(deliciousSpotList);
+        deliciousSpot3.setDeliciousSpotList(deliciousSpotList);
+        deliciousSpotList.setDeliciousSpots(deliciousSpots);
+
+        deliciousSpotRepository.saveDeliciousSpotList(deliciousSpotList);
+        List<AdminDeliciousSpotDto> findDeliciousSpots = deliciousSpotRepository.findAllDeliciousSpot(1L);
+        Assertions.assertThat(findDeliciousSpots.size()).isEqualTo(3);
     }
 }
