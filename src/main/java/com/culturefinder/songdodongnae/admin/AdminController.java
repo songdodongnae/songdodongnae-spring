@@ -1,15 +1,17 @@
 package com.culturefinder.songdodongnae.admin;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
+import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotInputDto;
+import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotDto;
+import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotListDto;
+import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotList;
+import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.util.UUID;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -17,37 +19,39 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminController {
 
-    @Value("${admin.id}") private String adminId;
+    private final AdminService adminService;
+    private final DeliciousSpotRepository deliciousSpotRepository;
 
-    @Value("${admin.password}") private String adminPassword;
-
-    private final AdminSessionManager adminSessionManager;
-
-    @GetMapping("/login")
-    public String login_get(@CookieValue("admin-session") String session) {
-        if (adminSessionManager.contains(session)) return "redirect:/admin/main";
-        return "admin/login";
+    @GetMapping("/delicious-list-list")
+    public String delicious_list_get(Model model) {
+        List<AdminDeliciousSpotListDto> deliciousSpotList = deliciousSpotRepository.findAllDeliciousSpotListNames();
+        model.addAttribute("deliciousSpotList", deliciousSpotList);
+        return "admin/delicious-list-list";
     }
 
-    @PostMapping("/login")
-    public String login_post(@ModelAttribute AdminUser adminUser, HttpServletResponse response) throws IOException {
-        if (adminUser.getId().equals(adminId) && adminUser.getPassword().equals(adminPassword)) {
-            String session = UUID.randomUUID().toString();
-            Cookie cookie = new Cookie("admin-session", session);
-            response.addCookie(cookie);
-            adminSessionManager.store(session);
-            return "redirect:/admin/main";
+    @PostMapping("/delicious-list-list")
+    public String delicious_list_post(String title, String imageUrl) {
+        DeliciousSpotList deliciousSpotList = new DeliciousSpotList(title, imageUrl);
+        deliciousSpotRepository.saveDeliciousSpotList(deliciousSpotList);
+        return "redirect:/admin/delicious-list-list";
+    }
+
+    @GetMapping("/delicious-list")
+    public String delicious_get(@RequestParam Long id, Model model) {
+        List<AdminDeliciousSpotDto> deliciousSpotList = deliciousSpotRepository.findAllDeliciousSpot(id);
+        String deliciousSpotTitle = deliciousSpotRepository.findDeliciousSpotListById(id).getTitle();
+        model.addAttribute("deliciousSpotId", id);
+        model.addAttribute("deliciousSpotList", deliciousSpotList);
+        model.addAttribute("deliciousSpotTitle", deliciousSpotTitle);
+        return "admin/delicious-list";
+    }
+
+    @PostMapping("/delicious-list")
+    public String delicious_post(AdminDeliciousSpotInputDto delicious, @RequestParam Long id) {
+        if (!delicious.getName().isBlank()) {
+            deliciousSpotRepository.addDeliciousSpot(id, delicious);
         }
-        return "redirect/admin/login";
+        return "redirect:/admin/delicious-list?id=" + id;
     }
 
-    @GetMapping("/main")
-    public String main_get() {
-        return "admin/main";
-    }
-
-    @GetMapping("/delicious")
-    public String delicious_get() {
-        return "admin/delicious";
-    }
 }

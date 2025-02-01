@@ -21,6 +21,7 @@ public class DeliciousSpotImage {
     @JoinColumn(name = "delicious_spot_id")
     private DeliciousSpot deliciousSpot;
 
+    @Column(length = 40000)
     private String imageUrl;
 
     public DeliciousSpotImage(String imageUrl) {
