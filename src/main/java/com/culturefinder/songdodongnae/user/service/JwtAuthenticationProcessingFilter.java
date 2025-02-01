@@ -38,6 +38,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         } else {
             checkAccessToken(request, response);
         }
+        filterChain.doFilter(request, response);
     }
 
     private void validateRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
