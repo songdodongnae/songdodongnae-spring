@@ -64,7 +64,7 @@ public class DeliciousSpotRepositoryTest {
         deliciousSpotList.setDeliciousSpots(deliciousSpots);
 
         deliciousSpotRepository.saveDeliciousSpotList(deliciousSpotList);
-        List<AdminDeliciousSpotDto> findDeliciousSpots = deliciousSpotRepository.findAllDeliciousSpot(1L);
+        List<AdminDeliciousSpotDto> findDeliciousSpots = deliciousSpotRepository.findAllDeliciousSpot(deliciousSpotList.getId());
         Assertions.assertThat(findDeliciousSpots.size()).isEqualTo(3);
     }
 }

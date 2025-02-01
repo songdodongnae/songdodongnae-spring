@@ -33,6 +33,10 @@ public class DeliciousSpotList {
         this.deliciousSpots = deliciousSpots;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public DeliciousSpotList(String title, String imageUrl) {
         this.title = title;
         this.imageUrl = imageUrl;
