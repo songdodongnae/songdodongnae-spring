@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.festival.controller;
 
+import com.culturefinder.songdodongnae.festival.domain.FestivalCategory;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.dto.ResDto;
@@ -52,9 +53,10 @@ public class FestivalController {
         return new ResponseEntity<>(new ResDto(HttpStatus.OK, "축제조회 완료", dto), HttpStatus.OK);
     }
 
-    @GetMapping("/{category}")
+    @GetMapping("/category/{category}")
     public ResponseEntity<ResDto> festivalByCategory(@PathVariable String category) {
-        List<FestivalResDto> dtos = festivalService.getFestivalByCategory(category);
+        FestivalCategory festivalCategory = FestivalCategory.valueOf(category.toUpperCase());
+        List<FestivalResDto> dtos = festivalService.getFestivalByCategory(festivalCategory);
         return new ResponseEntity<>(new ResDto(HttpStatus.OK, "카테고리별 축제 조회 완료", dtos), HttpStatus.OK);
     }
 

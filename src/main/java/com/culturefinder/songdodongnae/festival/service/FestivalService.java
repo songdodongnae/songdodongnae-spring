@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.festival.service;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
+import com.culturefinder.songdodongnae.festival.domain.FestivalCategory;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
@@ -60,7 +61,7 @@ public class FestivalService {
         return festivalRepository.findById(id).fromEntity();
     }
 
-    public List<FestivalResDto> getFestivalByCategory(String category) {
+    public List<FestivalResDto> getFestivalByCategory(FestivalCategory category) {
         return festivalRepository.findByCategory(category).stream()
                 .map(Festival::fromEntity).collect(Collectors.toList());
     }
