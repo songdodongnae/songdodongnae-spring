@@ -6,7 +6,6 @@ import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,5 +58,10 @@ public class FestivalService {
 
     public FestivalResDto getFestival(Long id) {
         return festivalRepository.findById(id).fromEntity();
+    }
+
+    public List<FestivalResDto> getFestivalByCategory(String category) {
+        return festivalRepository.findByCategory(category).stream()
+                .map(Festival::fromEntity).collect(Collectors.toList());
     }
 }

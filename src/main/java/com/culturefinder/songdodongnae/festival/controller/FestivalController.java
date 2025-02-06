@@ -21,8 +21,8 @@ public class FestivalController {
 
     @PostMapping
     public ResponseEntity<ResDto> festivalCreate(
-            @RequestBody FestivalReqDto festivalReqDto
-            /*, @RequestPart(required = false) MultipartFile posterFile,
+            @RequestBody FestivalReqDto festivalReqDto /*,
+            @RequestPart(required = false) MultipartFile posterFile,
             @RequestPart(required = false) MultipartFile imageFile*/) {
         FestivalResDto dto = festivalService.createFestival(festivalReqDto/*, posterFile, imageFile*/);
         return new ResponseEntity<>(new ResDto(HttpStatus.CREATED, "축제생성 완료", dto), HttpStatus.CREATED);
@@ -51,4 +51,11 @@ public class FestivalController {
         FestivalResDto dto = festivalService.getFestival(id);
         return new ResponseEntity<>(new ResDto(HttpStatus.OK, "축제조회 완료", dto), HttpStatus.OK);
     }
+
+    @GetMapping("/{category}")
+    public ResponseEntity<ResDto> festivalByCategory(@PathVariable String category) {
+        List<FestivalResDto> dtos = festivalService.getFestivalByCategory(category);
+        return new ResponseEntity<>(new ResDto(HttpStatus.OK, "카테고리별 축제 조회 완료", dtos), HttpStatus.OK);
+    }
+
 }

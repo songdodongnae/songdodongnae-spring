@@ -11,6 +11,7 @@ import com.culturefinder.songdodongnae.festival.dto.ResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 /*import com.culturefinder.songdodongnae.festival.service.FestivalImageService;*/
 import com.culturefinder.songdodongnae.festival.service.FestivalService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +96,7 @@ public class FestivalRepositoryTest {
 
         FestivalService festivalService = new FestivalService(festivalRepository/*, festivalImageService*/);
         FestivalController festivalController = new FestivalController(festivalService);
-        assertThatThrownBy(() -> festivalController.festivalCreate(festivalReqDto/*, null,null*/))
+        assertThatThrownBy(() -> festivalController.festivalCreate(festivalReqDto /*, null, null*/))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
