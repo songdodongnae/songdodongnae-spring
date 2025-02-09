@@ -1,6 +1,5 @@
 package com.culturefinder.songdodongnae.delicious_spot;
 
-import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotDto;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotImage;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotList;
@@ -14,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
 
 
 @SpringBootTest
@@ -43,7 +44,7 @@ public class DeliciousSpotRepositoryTest {
         deliciousSpot.setDeliciousSpotList(deliciousSpotList);
 
         DeliciousSpotList findDeliciousSpotList = deliciousSpotRepository.saveDeliciousSpotList(deliciousSpotList);
-        Assertions.assertThat(deliciousSpotList.getId()).isEqualTo(findDeliciousSpotList.getId());
+        assertThat(deliciousSpotList.getId()).isEqualTo(findDeliciousSpotList.getId());
     }
 
     @Test
@@ -64,7 +65,11 @@ public class DeliciousSpotRepositoryTest {
         deliciousSpotList.setDeliciousSpots(deliciousSpots);
 
         deliciousSpotRepository.saveDeliciousSpotList(deliciousSpotList);
-        List<AdminDeliciousSpotDto> findDeliciousSpots = deliciousSpotRepository.findAllDeliciousSpot(deliciousSpotList.getId());
-        Assertions.assertThat(findDeliciousSpots.size()).isEqualTo(3);
+        List<DeliciousSpot> findDeliciousSpotList = deliciousSpotRepository
+                .findAllDeliciousSpot(deliciousSpotList.getId());
+        assertThat(findDeliciousSpotList.size()).isEqualTo(3);
+        assertThat(findDeliciousSpotList.get(0).getDeliciousSpotList().getId()).isEqualTo(1);
+        assertThat(findDeliciousSpotList.get(1).getDeliciousSpotList().getId()).isEqualTo(1);
+        assertThat(findDeliciousSpotList.get(2).getDeliciousSpotList().getId()).isEqualTo(1);
     }
 }

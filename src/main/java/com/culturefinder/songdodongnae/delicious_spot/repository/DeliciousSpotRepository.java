@@ -1,7 +1,6 @@
 package com.culturefinder.songdodongnae.delicious_spot.repository;
 
 import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotInputDto;
-import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotDto;
 import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotListDto;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotImage;
@@ -28,15 +27,6 @@ public class DeliciousSpotRepository {
         return deliciousSpotList;
     }
 
-    public List<AdminDeliciousSpotListDto> findAllDeliciousSpotListNames() {
-        return em.createQuery(
-                "select d from DeliciousSpotList d", DeliciousSpotList.class
-        )
-                .getResultStream()
-                .map(d -> new AdminDeliciousSpotListDto(d.getId(), d.getTitle()))
-                .toList();
-    }
-
     // 테스트 코드 작성 필요
     public List<DeliciousSpotList> findAllDeliciousSpotList() {
         return em
@@ -45,18 +35,17 @@ public class DeliciousSpotRepository {
     }
 
     // 테스트 코드 작성 필요
-    public AdminDeliciousSpotListDto findDeliciousSpotListById(Long id) {
+    public AdminDeliciousSpotListDto adminFindDeliciousSpotListById(Long id) {
         DeliciousSpotList deliciousSpotList = em.find(DeliciousSpotList.class, id);
         return new AdminDeliciousSpotListDto(deliciousSpotList.getId(), deliciousSpotList.getTitle());
     }
 
-    public List<AdminDeliciousSpotDto> findAllDeliciousSpot(Long id) {
+    public List<DeliciousSpot> findAllDeliciousSpot(Long id) {
         return em.createQuery(
                 "select d from DeliciousSpot d where d.deliciousSpotList.id = :id", DeliciousSpot.class
         )
                 .setParameter("id", id)
                 .getResultStream()
-                .map(AdminDeliciousSpotDto::new)
                 .toList();
     }
 

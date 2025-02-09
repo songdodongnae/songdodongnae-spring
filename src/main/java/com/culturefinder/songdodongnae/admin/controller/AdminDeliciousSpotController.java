@@ -1,6 +1,5 @@
 package com.culturefinder.songdodongnae.admin.controller;
 
-import com.culturefinder.songdodongnae.admin.AdminService;
 import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotInputDto;
 import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotDto;
 import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotListDto;
@@ -18,14 +17,16 @@ import java.util.List;
 @Controller
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-public class DeliciousSpotController {
+public class AdminDeliciousSpotController {
 
-    private final AdminService adminService;
     private final DeliciousSpotRepository deliciousSpotRepository;
 
     @GetMapping("/delicious-list-list")
     public String delicious_list_get(Model model) {
-        List<AdminDeliciousSpotListDto> deliciousSpotList = deliciousSpotRepository.findAllDeliciousSpotListNames();
+        List<AdminDeliciousSpotListDto> deliciousSpotList = deliciousSpotRepository.findAllDeliciousSpotList()
+                .stream()
+                .map(AdminDeliciousSpotListDto::new)
+                .toList();
         model.addAttribute("deliciousSpotList", deliciousSpotList);
         return "admin/delicious-list-list";
     }
@@ -39,8 +40,12 @@ public class DeliciousSpotController {
 
     @GetMapping("/delicious-list")
     public String delicious_get(@RequestParam Long id, Model model) {
-        List<AdminDeliciousSpotDto> deliciousSpotList = deliciousSpotRepository.findAllDeliciousSpot(id);
-        String deliciousSpotTitle = deliciousSpotRepository.findDeliciousSpotListById(id).getTitle();
+        List<AdminDeliciousSpotDto> deliciousSpotList = deliciousSpotRepository
+                .findAllDeliciousSpot(id)
+                .stream()
+                .map(AdminDeliciousSpotDto::new)
+                .toList();
+        String deliciousSpotTitle = deliciousSpotRepository.adminFindDeliciousSpotListById(id).getTitle();
         model.addAttribute("deliciousSpotId", id);
         model.addAttribute("deliciousSpotList", deliciousSpotList);
         model.addAttribute("deliciousSpotTitle", deliciousSpotTitle);
