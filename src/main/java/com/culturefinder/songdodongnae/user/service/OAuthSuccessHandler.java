@@ -44,8 +44,8 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtService.createAccessToken(id);
         String refreshToken = jwtService.createRefreshToken();
 
-        ResponseCookie accessCookie = getRefreshTokenCookie("access", accessToken);
-        ResponseCookie refreshCookie = getRefreshTokenCookie("refresh", refreshToken);
+        ResponseCookie accessCookie = getRefreshTokenCookie("Authorization", accessToken);
+        ResponseCookie refreshCookie = getRefreshTokenCookie("Authorization-refresh", refreshToken);
 
         response.addHeader("Set-Cookie", accessCookie.toString());
         response.addHeader("Set-Cookie", refreshCookie.toString());
