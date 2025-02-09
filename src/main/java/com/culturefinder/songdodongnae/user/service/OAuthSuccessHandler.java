@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -34,7 +35,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 
         user.ifPresent(u -> loginSuccess(request, response, u.getId()));
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("http://localhost:3000");
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("https://www.songdodongnae.n-e.kr/");
         builder.path("auth");
         response.sendRedirect(builder.build().toString());
     }
@@ -43,20 +44,34 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtService.createAccessToken(id);
         String refreshToken = jwtService.createRefreshToken();
 
-        Cookie accessTokenCookie = createCookie("Authorization", accessToken);
-        Cookie refreshTokenCookie = createCookie("Authorization-refresh", refreshToken);
+        ResponseCookie accessCookie = getRefreshTokenCookie("access", accessToken);
+        ResponseCookie refreshCookie = getRefreshTokenCookie("refresh", refreshToken);
 
-        response.addCookie(accessTokenCookie);
-        response.addCookie(refreshTokenCookie);
+        response.addHeader("Set-Cookie", accessCookie.toString());
+        response.addHeader("Set-Cookie", refreshCookie.toString());
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         jwtService.updateRefreshToken(id, refreshToken);
     }
 
-    private Cookie createCookie(String key, String Value) {
-        Cookie cookie = new Cookie(key, Value);
-        cookie.setDomain("localhost"); // 로컬 테스트 코드
+    private ResponseCookie getRefreshTokenCookie(String key, String token) {
+        ResponseCookie cookie = ResponseCookie.from(key, token)
+                .maxAge(2000)
+                .path("/")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None") // sameSite 정책을 None 으로 설정
+                .build();
+        return cookie;
+    }
+
+    private Cookie createCookie(String key, String value) {
+        Cookie cookie = new Cookie(key, value);
+        cookie.setDomain("songdodongnae.n-e.kr");
         cookie.setPath("/");
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(60 * 60 * 24);
         return cookie;
     }
 
