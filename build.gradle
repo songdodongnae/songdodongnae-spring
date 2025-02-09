@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.0'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id 'war'
 }
 
 group = 'com.culturefinder'
@@ -34,8 +35,16 @@ dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'com.auth0:java-jwt:4.4.0'
+
+	// JSP
+	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
+	implementation "org.apache.tomcat.embed:tomcat-embed-jasper"
+	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.0'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+bootWar.enabled = true
+war.enabled = false

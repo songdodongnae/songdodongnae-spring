@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -20,18 +21,20 @@ public class SecurityConfig {
 
     private final OAuthService oAuthService;
     private final OAuthSuccessHandler oAuthSuccessHandler;
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
+
     private final String[] whiteList = {
             "/api/login",
             "/oauth2/**",
-            "/"
+            "/admin/**",
+            "/**", // 개발용 코드
     };
-
-    private final JwtService jwtService;
-    private final UserRepository userRepository;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(whiteList).permitAll()
                         .anyRequest()
@@ -48,7 +51,6 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
-        JwtAuthenticationProcessingFilter jwtAuthenticationFilter = new JwtAuthenticationProcessingFilter(jwtService, userRepository);
-        return jwtAuthenticationFilter;
+        return new JwtAuthenticationProcessingFilter(jwtService, userRepository);
     }
 }
