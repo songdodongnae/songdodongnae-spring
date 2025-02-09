@@ -2,7 +2,6 @@ package com.culturefinder.songdodongnae.user.service;
 
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +31,11 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         String providerId = extractProviderId(authentication);
 
         Optional<User> user = userRepository.findByProviderIdAndProvider(providerId, provider);
-
         user.ifPresent(u -> loginSuccess(request, response, u.getId()));
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("https://www.songdodongnae.n-e.kr/");
         builder.path("auth");
+
         response.sendRedirect(builder.build().toString());
     }
 
@@ -44,8 +43,8 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtService.createAccessToken(id);
         String refreshToken = jwtService.createRefreshToken();
 
-        ResponseCookie accessCookie = getRefreshTokenCookie("Authorization", accessToken);
-        ResponseCookie refreshCookie = getRefreshTokenCookie("Authorization-refresh", refreshToken);
+        ResponseCookie accessCookie = createCookie("Authorization", accessToken);
+        ResponseCookie refreshCookie = createCookie("Authorization-refresh", refreshToken);
 
         response.addHeader("Set-Cookie", accessCookie.toString());
         response.addHeader("Set-Cookie", refreshCookie.toString());
@@ -54,24 +53,14 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         jwtService.updateRefreshToken(id, refreshToken);
     }
 
-    private ResponseCookie getRefreshTokenCookie(String key, String token) {
-        ResponseCookie cookie = ResponseCookie.from(key, token)
-                .maxAge(2000)
+    private ResponseCookie createCookie(String key, String value) {
+        ResponseCookie cookie = ResponseCookie.from(key, value)
+                .maxAge(60)
                 .path("/")
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("None") // sameSite 정책을 None 으로 설정
+                .sameSite("None")
                 .build();
-        return cookie;
-    }
-
-    private Cookie createCookie(String key, String value) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setDomain("songdodongnae.n-e.kr");
-        cookie.setPath("/");
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(60 * 60 * 24);
         return cookie;
     }
 
