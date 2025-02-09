@@ -27,7 +27,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private final UserRepository userRepository;
     private final String[] whiteList = {"/admin/**"};
 
-    private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+    private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -46,6 +46,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         } else {
             checkAccessToken(request, response);
         }
+
         filterChain.doFilter(request, response);
     }
 

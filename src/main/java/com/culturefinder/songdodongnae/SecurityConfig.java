@@ -21,15 +21,15 @@ public class SecurityConfig {
 
     private final OAuthService oAuthService;
     private final OAuthSuccessHandler oAuthSuccessHandler;
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
+
     private final String[] whiteList = {
             "/api/login",
             "/oauth2/**",
             "/admin/**",
             "/**", // 개발용 코드
     };
-
-    private final JwtService jwtService;
-    private final UserRepository userRepository;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -51,7 +51,6 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
-        JwtAuthenticationProcessingFilter jwtAuthenticationFilter = new JwtAuthenticationProcessingFilter(jwtService, userRepository);
-        return jwtAuthenticationFilter;
+        return new JwtAuthenticationProcessingFilter(jwtService, userRepository);
     }
 }
