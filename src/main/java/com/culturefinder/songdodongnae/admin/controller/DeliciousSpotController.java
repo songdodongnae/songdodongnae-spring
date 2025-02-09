@@ -1,5 +1,6 @@
-package com.culturefinder.songdodongnae.admin;
+package com.culturefinder.songdodongnae.admin.controller;
 
+import com.culturefinder.songdodongnae.admin.AdminService;
 import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotInputDto;
 import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotDto;
 import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotListDto;
@@ -17,7 +18,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-public class AdminController {
+public class DeliciousSpotController {
 
     private final AdminService adminService;
     private final DeliciousSpotRepository deliciousSpotRepository;
