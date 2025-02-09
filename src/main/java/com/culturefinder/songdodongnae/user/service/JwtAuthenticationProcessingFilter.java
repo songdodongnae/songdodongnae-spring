@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -24,11 +25,18 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private final String[] whiteList = {"/admin/**"};
 
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String requestURI = request.getRequestURI();
+        if (isUriInWhiteList(requestURI)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String refreshToken = jwtService.extractRefreshToken(request)
                 .filter(jwtService::isTokenValid)
                 .orElse(null);
@@ -93,5 +101,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    private boolean isUriInWhiteList(String uri) {
+        return Arrays.stream(whiteList).anyMatch(pattern -> uri.matches(pattern.replace("**", ".*")));
     }
 }
