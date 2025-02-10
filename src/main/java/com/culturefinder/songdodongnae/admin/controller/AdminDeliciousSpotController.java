@@ -3,6 +3,7 @@ package com.culturefinder.songdodongnae.admin.controller;
 import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotInputDto;
 import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotDto;
 import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotListDto;
+import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotList;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,18 +35,19 @@ public class AdminDeliciousSpotController {
     @PostMapping("/delicious-list-list")
     public String delicious_list_post(String title, String imageUrl) {
         DeliciousSpotList deliciousSpotList = new DeliciousSpotList(title, imageUrl);
-        deliciousSpotRepository.saveDeliciousSpotList(deliciousSpotList);
+        deliciousSpotRepository.addDeliciousSpotList(deliciousSpotList);
         return "redirect:/admin/delicious-list-list";
     }
 
     @GetMapping("/delicious-list")
     public String delicious_get(@RequestParam Long id, Model model) {
         List<AdminDeliciousSpotDto> deliciousSpotList = deliciousSpotRepository
-                .findAllDeliciousSpot(id)
+                .findAllDeliciousSpotById(id)
+                .getDeliciousSpots()
                 .stream()
                 .map(AdminDeliciousSpotDto::new)
                 .toList();
-        String deliciousSpotTitle = deliciousSpotRepository.adminFindDeliciousSpotListById(id).getTitle();
+        String deliciousSpotTitle = deliciousSpotRepository.findDeliciousSpotListById(id).getTitle();
         model.addAttribute("deliciousSpotId", id);
         model.addAttribute("deliciousSpotList", deliciousSpotList);
         model.addAttribute("deliciousSpotTitle", deliciousSpotTitle);
@@ -55,7 +57,7 @@ public class AdminDeliciousSpotController {
     @PostMapping("/delicious-list")
     public String delicious_post(AdminDeliciousSpotInputDto delicious, @RequestParam Long id) {
         if (!delicious.getName().isBlank()) {
-            deliciousSpotRepository.addDeliciousSpot(id, delicious);
+            deliciousSpotRepository.addDeliciousSpot(id, new DeliciousSpot(delicious));
         }
         return "redirect:/admin/delicious-list?id=" + id;
     }
