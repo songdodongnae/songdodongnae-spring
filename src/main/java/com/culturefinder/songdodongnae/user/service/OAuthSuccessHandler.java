@@ -57,7 +57,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         ResponseCookie cookie = ResponseCookie.from(key, value)
                 .maxAge(60)
                 .path("/")
-                .httpOnly(true)
+                .httpOnly(false)
                 .secure(true)
                 .sameSite("None")
                 .build();
