@@ -55,11 +55,16 @@ public class AdminDeliciousSpotController {
     }
 
     @PostMapping("/delicious-list")
-    public String delicious_post(AdminDeliciousSpotInputDto delicious, @RequestParam Long id) {
+    public String delicious_list_post(AdminDeliciousSpotInputDto delicious, @RequestParam Long id) {
         if (!delicious.getName().isBlank()) {
             deliciousSpotRepository.addDeliciousSpot(id, new DeliciousSpot(delicious));
         }
         return "redirect:/admin/delicious-list?id=" + id;
     }
 
+    @PostMapping("/delicious-list-list/delete")
+    public String delicious_list_delete(Long id) {
+        deliciousSpotRepository.removeDeliciousSpotList(id);
+        return "redirect:/admin/delicious-list-list";
+    }
 }

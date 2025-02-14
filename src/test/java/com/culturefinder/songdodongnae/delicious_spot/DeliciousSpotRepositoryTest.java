@@ -4,6 +4,8 @@ import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotImage;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotList;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import static org.assertj.core.api.Assertions.*;
 public class DeliciousSpotRepositoryTest {
 
     @Autowired private DeliciousSpotRepository deliciousSpotRepository;
+    @PersistenceContext private EntityManager em;
 
     @Test
     @DisplayName("맛집 리스트 저장되는지 확인하는 테스트")
@@ -107,5 +110,43 @@ public class DeliciousSpotRepositoryTest {
         assertThat(findDeliciousSpotList).isNotNull();
         assertThat(findDeliciousSpotList.getId()).isEqualTo(deliciousSpotListId);
         assertThat(findDeliciousSpotList.getDeliciousSpots().size()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("특정 맛집 리스트가 지워지는지 확인하는 테스트")
+    public void test6() {
+        DeliciousSpotList deliciousSpotList = new DeliciousSpotList();
+        deliciousSpotRepository.addDeliciousSpotList(deliciousSpotList);
+        em.flush();
+        Long deliciousSpotListId = deliciousSpotList.getId();
+
+        DeliciousSpotList removeDeliciousSpotList = deliciousSpotRepository.removeDeliciousSpotList(deliciousSpotListId);
+        assertThat(removeDeliciousSpotList.getId()).isEqualTo(deliciousSpotListId);
+    }
+
+    @Test
+    @DisplayName("특정 맛집 리스트가 지워질때 연관된 데이터가 모두 지워지는지 확인하는 테스트")
+    public void test7() {
+        DeliciousSpotList deliciousSpotList = new DeliciousSpotList();
+        DeliciousSpot deliciousSpot = new DeliciousSpot();
+        DeliciousSpotImage deliciousSpotImage = new DeliciousSpotImage();
+        deliciousSpotImage.setDeliciousSpot(deliciousSpot);
+        deliciousSpot.setDeliciousSpotImages(List.of(deliciousSpotImage));
+        deliciousSpot.setDeliciousSpotList(deliciousSpotList);
+        deliciousSpotList.setDeliciousSpots(List.of(deliciousSpot));
+        DeliciousSpotList AddDeliciousSpotList = deliciousSpotRepository.addDeliciousSpotList(deliciousSpotList);
+        em.flush();
+
+        Long id = AddDeliciousSpotList.getId();
+        deliciousSpotRepository.removeDeliciousSpotList(id);
+        em.flush();
+
+        List<DeliciousSpotList> listlist = em.createQuery("select d from DeliciousSpotList d").getResultList();
+        List<DeliciousSpot> list = em.createQuery("select d from DeliciousSpot d").getResultList();
+        List<DeliciousSpotImage> image = em.createQuery("select d from DeliciousSpotImage d").getResultList();
+
+        assertThat(listlist).isEmpty();
+        assertThat(list).isEmpty();
+        assertThat(image).isEmpty();
     }
 }

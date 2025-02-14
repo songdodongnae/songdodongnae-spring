@@ -13,6 +13,9 @@
         <c:forEach var="item" items="${deliciousSpotList}">
             <div>
                 <a href="/admin/delicious-list?id=${item.id}">${item.title}</a>
+                <form action="/admin/delicious-list-list/delete" method="post" style="display: inline;">
+                    <button type="submit" name="id" value=${item.id} style="width: 60px">[x]</button>
+                </form>
             </div>
         </c:forEach>
     </ul>

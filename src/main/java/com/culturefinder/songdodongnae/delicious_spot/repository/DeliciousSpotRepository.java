@@ -40,9 +40,15 @@ public class DeliciousSpotRepository {
         return em.find(DeliciousSpotList.class, id);
     }
 
-    public void addDeliciousSpot(Long listId, DeliciousSpot deliciousSpot) {
-        DeliciousSpotList deliciousSpotListToAdd = findDeliciousSpotListById(listId);
+    public void addDeliciousSpot(Long id, DeliciousSpot deliciousSpot) {
+        DeliciousSpotList deliciousSpotListToAdd = findDeliciousSpotListById(id);
         deliciousSpotListToAdd.addDeliciousSpot(deliciousSpot);
         deliciousSpot.setDeliciousSpotList(deliciousSpotListToAdd);
+    }
+
+    public DeliciousSpotList removeDeliciousSpotList(Long id) {
+        DeliciousSpotList findDeliciousSpotList = em.find(DeliciousSpotList.class, id);
+        em.remove(findDeliciousSpotList);
+        return findDeliciousSpotList;
     }
 }
