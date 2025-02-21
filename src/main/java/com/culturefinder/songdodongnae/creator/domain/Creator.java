@@ -7,5 +7,10 @@ public class Creator {
     @Id
     @GeneratedValue
     private Long id;
+
+    private String name;
+    private String description;
+
+    private String imageUrl;
 }
 
