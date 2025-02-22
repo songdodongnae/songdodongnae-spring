@@ -33,7 +33,8 @@ public class DeliciousSpotController {
 
     @GetMapping("/list/{id}")
     public ResponseEntity<ResponseContainer<List<SingleDeliciousSpotResponseDto>>> list_get(@PathVariable Long id) {
-        List<SingleDeliciousSpotResponseDto> data = deliciousSpotRepository.findAllDeliciousSpot(id)
+        List<SingleDeliciousSpotResponseDto> data = deliciousSpotRepository.findAllDeliciousSpotById(id)
+                .getDeliciousSpots()
                 .stream()
                 .map(SingleDeliciousSpotResponseDto::new)
                 .toList();

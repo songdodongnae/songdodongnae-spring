@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8">R
 <title>Songdodongnae admin</title>
 </head>
 <body>
@@ -12,12 +12,15 @@
     <ul>
         <c:forEach var="item" items="${deliciousSpotList}">
             <div>
-                <a href="/admin/delicious-list?id=${item.id}">${item.title}</a>
+                <a href="/admin/delicious_spot/delicious-list?id=${item.id}">${item.title}</a>
+                <form action="/admin/delicious_spot/delicious-list-list/delete" method="post" style="display: inline;">
+                    <button type="submit" name="id" value=${item.id} style="width: 60px">[x]</button>
+                </form>
             </div>
         </c:forEach>
     </ul>
 
-    <form action="/admin/delicious-list-list" method="post">
+    <form action="/admin/delicious_spot/delicious-list-list" method="post">
         <p>
             <input type="text" name="title" placeholder="맛집 리스트 제목">
         </p>
