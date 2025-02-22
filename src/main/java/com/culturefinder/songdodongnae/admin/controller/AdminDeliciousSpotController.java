@@ -16,7 +16,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin/delicious_spot")
 @RequiredArgsConstructor
 public class AdminDeliciousSpotController {
 
@@ -29,14 +29,14 @@ public class AdminDeliciousSpotController {
                 .map(AdminDeliciousSpotListDto::new)
                 .toList();
         model.addAttribute("deliciousSpotList", deliciousSpotList);
-        return "admin/delicious-list-list";
+        return "admin/delicious_spot/delicious-list-list";
     }
 
     @PostMapping("/delicious-list-list")
     public String delicious_list_post(String title, String imageUrl) {
         DeliciousSpotList deliciousSpotList = new DeliciousSpotList(title, imageUrl);
         deliciousSpotRepository.addDeliciousSpotList(deliciousSpotList);
-        return "redirect:/admin/delicious-list-list";
+        return "redirect:/admin/delicious_spot/delicious-list-list";
     }
 
     @GetMapping("/delicious-list")
@@ -51,7 +51,7 @@ public class AdminDeliciousSpotController {
         model.addAttribute("deliciousSpotId", id);
         model.addAttribute("deliciousSpotList", deliciousSpotList);
         model.addAttribute("deliciousSpotTitle", deliciousSpotTitle);
-        return "admin/delicious-list";
+        return "admin/delicious_spot/delicious-list";
     }
 
     @PostMapping("/delicious-list")
@@ -59,12 +59,12 @@ public class AdminDeliciousSpotController {
         if (!delicious.getName().isBlank()) {
             deliciousSpotRepository.addDeliciousSpot(id, new DeliciousSpot(delicious));
         }
-        return "redirect:/admin/delicious-list?id=" + id;
+        return "redirect:/admin/delicious_spot/delicious-list?id=" + id;
     }
 
     @PostMapping("/delicious-list-list/delete")
     public String delicious_list_delete(Long id) {
         deliciousSpotRepository.removeDeliciousSpotList(id);
-        return "redirect:/admin/delicious-list-list";
+        return "redirect:/admin/delicious_spot/delicious-list-list";
     }
 }

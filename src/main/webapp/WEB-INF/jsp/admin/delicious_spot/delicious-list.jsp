@@ -12,60 +12,11 @@
     <h1>맛집 목록</h1>
     <ul>
         <c:forEach var="item" items="${deliciousSpotList}" varStatus="status">
-            <h3>[${status.index + 1}] ${item.name}</h3>
-            <div>
-                ${item.location}
-            </div>
-            <div>
-                ${item.price}
-            </div>
-            <div>
-                ${item.naverRating}
-            </div>
-            <div>
-                ${item.kakaoRating}
-            </div>
-            <div>
-                ${item.startTime}
-            </div>
-            <div>
-                ${item.endTime}
-            </div>
-            <div>
-                ${item.waiting}
-            </div>
-            <div>
-                ${item.parking}
-            </div>
-            <div>
-                ${item.suggestionMenu}
-            </div>
-            <div>
-                ${item.description}
-            </div>
-            <div>
-                ${item.onelineDescription}
-            </div>
-            <div>
-                ${item.instagram}
-            </div>
-            <div>
-                ${item.contact}
-            </div>
-            <div>
-                ${item.likes}
-            </div>
-            <div>
-                <c:forEach var="image" items="${item.imageLinks}">
-                    <c:if test="${image ne ''}">
-                        <img src="${image}" alt="Image" width="200" height="150" />
-                    </c:if>
-                </c:forEach>
-            </div>
+            <h3>[ id = ${item.id} ] ${item.name}</h3>
         </c:forEach>
     </ul>
     <h1>맛집 리스트에 맛집 등록</h1>
-    <form action="/admin/delicious-list/detail?id=${deliciousSpotId}" method="post">
+    <form action="/admin/delicious_spot/delicious-list?id=${deliciousSpotId}" method="post">
         <p>
             <input type="text" name="id" placeholder="id", value="${deliciousSpotId}" readonly/>
         </p>
@@ -115,7 +66,7 @@
             <input type="text" name="likes" placeholder="0" readonly/>
         </p>
         <p>
-            <input type="text" name="imageLinks" placeholder="이미지 링크 리스트 (띄어쓰기로 구분)">
+            <input type="text" name="imageLinks" placeholder="이미지 링크 리스트 (띄어쓰기 구분)">
         </p>
         <p>
             <button type="submit">저장</button>

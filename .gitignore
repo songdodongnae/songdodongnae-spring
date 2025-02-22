@@ -41,6 +41,7 @@ logs/
 src/main/resources
 .pem
 *.pem
+/.run
 
 ### Mac OS ###
 .DS_Store
