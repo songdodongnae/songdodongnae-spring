@@ -1,12 +1,12 @@
 package com.culturefinder.songdodongnae.festival.service;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
+import com.culturefinder.songdodongnae.festival.domain.FestivalCategory;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,4 +60,5 @@ public class FestivalService {
     public FestivalResDto getFestival(Long id) {
         return festivalRepository.findById(id).fromEntity();
     }
+
 }

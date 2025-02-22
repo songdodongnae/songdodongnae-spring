@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.festival.controller;
 
+import com.culturefinder.songdodongnae.festival.domain.FestivalCategory;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.dto.ResDto;
@@ -21,8 +22,8 @@ public class FestivalController {
 
     @PostMapping
     public ResponseEntity<ResDto> festivalCreate(
-            @RequestBody FestivalReqDto festivalReqDto
-            /*, @RequestPart(required = false) MultipartFile posterFile,
+            @RequestBody FestivalReqDto festivalReqDto /*,
+            @RequestPart(required = false) MultipartFile posterFile,
             @RequestPart(required = false) MultipartFile imageFile*/) {
         FestivalResDto dto = festivalService.createFestival(festivalReqDto/*, posterFile, imageFile*/);
         return new ResponseEntity<>(new ResDto(HttpStatus.CREATED, "축제생성 완료", dto), HttpStatus.CREATED);
@@ -51,4 +52,5 @@ public class FestivalController {
         FestivalResDto dto = festivalService.getFestival(id);
         return new ResponseEntity<>(new ResDto(HttpStatus.OK, "축제조회 완료", dto), HttpStatus.OK);
     }
+
 }

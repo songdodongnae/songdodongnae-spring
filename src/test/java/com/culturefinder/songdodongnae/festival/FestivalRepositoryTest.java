@@ -11,6 +11,8 @@ import com.culturefinder.songdodongnae.festival.dto.ResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 /*import com.culturefinder.songdodongnae.festival.service.FestivalImageService;*/
 import com.culturefinder.songdodongnae.festival.service.FestivalService;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -37,6 +40,14 @@ public class FestivalRepositoryTest {
     private FestivalRepository festivalRepository;
     /*@Autowired
     private FestivalImageService festivalImageService;*/
+
+    @BeforeEach
+    void setUp() {
+        List<Festival> festivals = festivalRepository.findAll();
+        for (Festival festival : festivals) {
+            festivalRepository.deleteFestival(festival.getId());
+        }
+    }
 
     @Test
     @DisplayName("축제 저장되는지 확인하는 테스트")
@@ -95,7 +106,7 @@ public class FestivalRepositoryTest {
 
         FestivalService festivalService = new FestivalService(festivalRepository/*, festivalImageService*/);
         FestivalController festivalController = new FestivalController(festivalService);
-        assertThatThrownBy(() -> festivalController.festivalCreate(festivalReqDto/*, null,null*/))
+        assertThatThrownBy(() -> festivalController.festivalCreate(festivalReqDto /*, null, null*/))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -169,5 +180,6 @@ public class FestivalRepositoryTest {
         assertThat(findFestival.getOnelineDescription()).isEqualTo("한줄설명");
 
     }
+
 
 }

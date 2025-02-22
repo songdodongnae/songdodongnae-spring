@@ -1,10 +1,10 @@
 package com.culturefinder.songdodongnae.festival.repository;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
+import com.culturefinder.songdodongnae.festival.domain.FestivalCategory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,4 +42,6 @@ public class FestivalRepository {
     public List<Festival> findAll() {
         return em.createQuery("SELECT f from Festival f", Festival.class).getResultList();
     }
+
+
 }
