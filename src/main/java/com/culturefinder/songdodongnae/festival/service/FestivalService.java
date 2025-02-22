@@ -61,8 +61,4 @@ public class FestivalService {
         return festivalRepository.findById(id).fromEntity();
     }
 
-    public List<FestivalResDto> getFestivalByCategory(FestivalCategory category) {
-        return festivalRepository.findByCategory(category).stream()
-                .map(Festival::fromEntity).collect(Collectors.toList());
-    }
 }

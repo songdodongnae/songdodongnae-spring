@@ -181,23 +181,5 @@ public class FestivalRepositoryTest {
 
     }
 
-    @Test
-    @DisplayName("카테고리별로 축제 조회")
-    void cotrollerCategory() {
-        // 축제 데이터 준비
-        FestivalReqDto festivalReqDto1 = new FestivalReqDto("축제1", FestivalCategory.FESTIVAL, LocalDate.of(2025, 5, 1), LocalDate.of(2025, 5, 3), LocalTime.of(10, 0), LocalTime.of(18, 0), null, "서울...", "200원쯤?", "010.22..", "http://,,,,,", "http://,,,,,", "설명", "한줄설명");
-        FestivalReqDto festivalReqDto2 = new FestivalReqDto("축제2", FestivalCategory.FAIR, LocalDate.of(2025, 6, 1), LocalDate.of(2025, 6, 3), LocalTime.of(10, 0), LocalTime.of(18, 0), null, "부산...", "300원쯤?", "010.33..", "http://,,,,,", "http://,,,,,", "설명", "한줄설명");
-        FestivalReqDto festivalReqDto3 = new FestivalReqDto("축제3", FestivalCategory.FAIR, LocalDate.of(2025, 6, 1), LocalDate.of(2025, 6, 3), LocalTime.of(10, 0), LocalTime.of(18, 0), null, "부산...", "300원쯤?", "010.33..", "http://,,,,,", "http://,,,,,", "설명", "한줄설명");
-        FestivalReqDto festivalReqDto4 = new FestivalReqDto("축제4", FestivalCategory.FAIR, LocalDate.of(2025, 6, 1), LocalDate.of(2025, 6, 3), LocalTime.of(10, 0), LocalTime.of(18, 0), null, "부산...", "300원쯤?", "010.33..", "http://,,,,,", "http://,,,,,", "설명", "한줄설명");
-
-        festivalRepository.saveFestival(festivalReqDto1.toEntity());
-        festivalRepository.saveFestival(festivalReqDto2.toEntity());
-        festivalRepository.saveFestival(festivalReqDto3.toEntity());
-        festivalRepository.saveFestival(festivalReqDto4.toEntity());
-
-        List<Festival> festivals = festivalRepository.findByCategory(FestivalCategory.FAIR);
-
-        assertThat(festivals).hasSize(3);
-    }
 
 }

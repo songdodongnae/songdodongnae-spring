@@ -53,11 +53,4 @@ public class FestivalController {
         return new ResponseEntity<>(new ResDto(HttpStatus.OK, "축제조회 완료", dto), HttpStatus.OK);
     }
 
-    @GetMapping("/category/{category}")
-    public ResponseEntity<ResDto> festivalByCategory(@PathVariable String category) {
-        FestivalCategory festivalCategory = FestivalCategory.valueOf(category.toUpperCase());
-        List<FestivalResDto> dtos = festivalService.getFestivalByCategory(festivalCategory);
-        return new ResponseEntity<>(new ResDto(HttpStatus.OK, "카테고리별 축제 조회 완료", dtos), HttpStatus.OK);
-    }
-
 }

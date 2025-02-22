@@ -43,9 +43,5 @@ public class FestivalRepository {
         return em.createQuery("SELECT f from Festival f", Festival.class).getResultList();
     }
 
-    public List<Festival> findByCategory(FestivalCategory category) {
-        return  em.createQuery("SELECT f from Festival f WHERE f.category = :category", Festival.class)
-                .setParameter("category", category)
-                .getResultList();
-    }
+
 }
