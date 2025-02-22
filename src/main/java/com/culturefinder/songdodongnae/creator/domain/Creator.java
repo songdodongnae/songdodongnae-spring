@@ -22,6 +22,7 @@ public class Creator {
 
     private String imageUrl;
 
+
     public CreatorResDto fromEntity() {
         return CreatorResDto.builder()
                 .id(this.id)
