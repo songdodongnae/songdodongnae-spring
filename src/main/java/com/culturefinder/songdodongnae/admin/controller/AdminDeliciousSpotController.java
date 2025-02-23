@@ -22,24 +22,24 @@ public class AdminDeliciousSpotController {
 
     private final DeliciousSpotRepository deliciousSpotRepository;
 
-    @GetMapping("/delicious-list-list")
+    @GetMapping("/series_list")
     public String delicious_list_get(Model model) {
         List<AdminDeliciousSpotListDto> deliciousSpotList = deliciousSpotRepository.findAllDeliciousSpotList()
                 .stream()
                 .map(AdminDeliciousSpotListDto::new)
                 .toList();
         model.addAttribute("deliciousSpotList", deliciousSpotList);
-        return "admin/delicious_spot/delicious-list-list";
+        return "admin/delicious_spot/series_list";
     }
 
-    @PostMapping("/delicious-list-list")
+    @PostMapping("/series_list")
     public String delicious_list_post(String title, String imageUrl) {
         DeliciousSpotList deliciousSpotList = new DeliciousSpotList(title, imageUrl);
         deliciousSpotRepository.addDeliciousSpotList(deliciousSpotList);
-        return "redirect:/admin/delicious_spot/delicious-list-list";
+        return "redirect:/admin/delicious_spot/series_list";
     }
 
-    @GetMapping("/delicious-list")
+    @GetMapping("/series")
     public String delicious_get(@RequestParam Long id, Model model) {
         List<AdminDeliciousSpotDto> deliciousSpotList = deliciousSpotRepository
                 .findAllDeliciousSpotById(id)
@@ -51,20 +51,20 @@ public class AdminDeliciousSpotController {
         model.addAttribute("deliciousSpotId", id);
         model.addAttribute("deliciousSpotList", deliciousSpotList);
         model.addAttribute("deliciousSpotTitle", deliciousSpotTitle);
-        return "admin/delicious_spot/delicious-list";
+        return "admin/delicious_spot/series";
     }
 
-    @PostMapping("/delicious-list")
+    @PostMapping("/series")
     public String delicious_list_post(AdminDeliciousSpotInputDto delicious, @RequestParam Long id) {
         if (!delicious.getName().isBlank()) {
             deliciousSpotRepository.addDeliciousSpot(id, new DeliciousSpot(delicious));
         }
-        return "redirect:/admin/delicious_spot/delicious-list?id=" + id;
+        return "redirect:/admin/delicious_spot/series?id=" + id;
     }
 
-    @PostMapping("/delicious-list-list/delete")
+    @PostMapping("/series_list/delete")
     public String delicious_list_delete(Long id) {
         deliciousSpotRepository.removeDeliciousSpotList(id);
-        return "redirect:/admin/delicious_spot/delicious-list-list";
+        return "redirect:/admin/delicious_spot/series_list";
     }
 }
