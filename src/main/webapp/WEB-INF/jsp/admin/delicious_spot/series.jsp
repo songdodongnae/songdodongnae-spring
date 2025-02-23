@@ -8,7 +8,7 @@
 <title>Songdodongnae admin</title>
 </head>
 <body>
-    <h1>맛집 리스트명: ${deliciousSpotTitle}</h1>
+    <h1>맛집 시리즈: ${deliciousSpotTitle}</h1>
     <h1>맛집 목록</h1>
     <ul>
         <c:forEach var="item" items="${deliciousSpotList}" varStatus="status">

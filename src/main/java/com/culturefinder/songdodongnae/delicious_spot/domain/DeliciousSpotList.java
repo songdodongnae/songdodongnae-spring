@@ -24,6 +24,7 @@ public class DeliciousSpotList {
 
     private Integer likes = 0;
 
+    @Column(length = 40000)
     private String imageUrl;
 
     @OneToMany(mappedBy = "deliciousSpotList", cascade = CascadeType.ALL)

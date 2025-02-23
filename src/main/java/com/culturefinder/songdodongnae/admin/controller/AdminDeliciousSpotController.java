@@ -6,12 +6,15 @@ import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotListDto;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotList;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
+import com.culturefinder.songdodongnae.s3.S3UploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -21,6 +24,7 @@ import java.util.List;
 public class AdminDeliciousSpotController {
 
     private final DeliciousSpotRepository deliciousSpotRepository;
+    private final S3UploadService uploadService;
 
     @GetMapping("/series_list")
     public String delicious_list_get(Model model) {
@@ -33,7 +37,8 @@ public class AdminDeliciousSpotController {
     }
 
     @PostMapping("/series_list")
-    public String delicious_list_post(String title, String imageUrl) {
+    public String delicious_list_post(String title, MultipartFile file) throws IOException {
+        String imageUrl = uploadService.saveFile(file);
         DeliciousSpotList deliciousSpotList = new DeliciousSpotList(title, imageUrl);
         deliciousSpotRepository.addDeliciousSpotList(deliciousSpotList);
         return "redirect:/admin/delicious_spot/series_list";
