@@ -20,6 +20,10 @@
         padding: 20px;
         width: 300px;
     }
+    #image-size-guide-comment {
+        color: red;
+        font-weight: 600;
+    }
 </style>
 </head>
 <body>
@@ -50,6 +54,9 @@
                 <button type="submit">빈 맛집 시리즈 추가</button>
             </p>
         </form>
+        <div id="image-size-guide-comment">
+            * 이미지는 1MB 이하로 압축됩니다. (최대 허용 크기: 20MB)
+        </div>
     </div>
 
     <script>
@@ -58,7 +65,7 @@
             var fileInput = document.getElementById('fileInput');
             var title = document.getElementById('id_title').value.trim();
             var filePath = fileInput.value;
-            var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i; // 허용할 확장자
+            var allowedExtensions = /(\.jpg|\.jpeg)$/i; // 허용할 확장자
 
             if (title === "") {
                 alert('제목을 꼭 입력하셔야 합니다.');
@@ -70,7 +77,7 @@
             }
 
             if (!allowedExtensions.exec(filePath)) {
-                alert('JPG, JPEG, PNG 파일만 업로드 가능합니다.');
+                alert('JPG, JPEG 파일만 업로드 가능합니다.');
                 fileInput.value = ''; // 파일 선택 취소
                 return false; // 제출 막기
             }

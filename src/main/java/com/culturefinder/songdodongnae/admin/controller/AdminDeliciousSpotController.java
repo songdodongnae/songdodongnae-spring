@@ -37,8 +37,8 @@ public class AdminDeliciousSpotController {
     }
 
     @PostMapping("/series_list")
-    public String delicious_list_post(String title, MultipartFile file) throws IOException {
-        String imageUrl = uploadService.saveFile(file);
+    public String delicious_list_post(String title, MultipartFile file) throws Exception {
+        String imageUrl = (file.isEmpty()) ? "" : uploadService.saveFile(file);
         DeliciousSpotList deliciousSpotList = new DeliciousSpotList(title, imageUrl);
         deliciousSpotRepository.addDeliciousSpotList(deliciousSpotList);
         return "redirect:/admin/delicious_spot/series_list";
