@@ -8,5 +8,6 @@ import lombok.Getter;
 public class CreatorResDto {
     private Long id;
     private String name;
+    private String details;
     private String description;
 }

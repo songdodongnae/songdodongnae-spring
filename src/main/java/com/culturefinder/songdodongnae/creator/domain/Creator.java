@@ -18,14 +18,17 @@ public class Creator {
     @Column(name = "creator_id")
     private Long id;
 
-    @OneToMany(mappedBy = "creator")
-    private List<Series> series = new ArrayList<>();
-
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column
+    private String details;
+
+    @Column
     private String description;
+
+    @OneToMany(mappedBy = "creator")
+    private List<Series> series = new ArrayList<>();
 
     @OneToOne(mappedBy = "creator", cascade = CascadeType.ALL)
     private CreatorImage creatorImage;
@@ -34,6 +37,7 @@ public class Creator {
         return CreatorResDto.builder()
                 .id(this.id)
                 .name(this.name)
+                .details(this.details)
                 .description(this.description)
                 .build();
     }
