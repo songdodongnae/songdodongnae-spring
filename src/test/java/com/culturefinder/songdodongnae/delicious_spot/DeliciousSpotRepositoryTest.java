@@ -2,7 +2,6 @@ package com.culturefinder.songdodongnae.delicious_spot;
 
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotImage;
-import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotList;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;

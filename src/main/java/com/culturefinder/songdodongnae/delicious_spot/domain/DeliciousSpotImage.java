@@ -31,4 +31,5 @@ public class DeliciousSpotImage {
     public void setDeliciousSpot(DeliciousSpot deliciousSpot) {
         this.deliciousSpot = deliciousSpot;
     }
+
 }
