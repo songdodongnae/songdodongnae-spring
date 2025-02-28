@@ -1,8 +1,12 @@
 package com.culturefinder.songdodongnae.creator.domain;
 
 import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
+import com.culturefinder.songdodongnae.series.domain.Series;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @Getter
@@ -10,9 +14,12 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 public class Creator {
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
+    @Column(name = "creator_id")
     private Long id;
+
+    @OneToMany(mappedBy = "creator")
+    private List<Series> series = new ArrayList<>();
 
     @Column(nullable = false)
     private String name;
@@ -20,8 +27,8 @@ public class Creator {
     @Column(nullable = false)
     private String description;
 
-    private String imageUrl;
-
+    @OneToOne(mappedBy = "creator", cascade = CascadeType.ALL)
+    private CreatorImage creatorImage;
 
     public CreatorResDto fromEntity() {
         return CreatorResDto.builder()
