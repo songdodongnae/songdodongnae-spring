@@ -26,7 +26,6 @@ public class DeliciousSpotRepository {
 
     public void addDeliciousSpot(Long id, DeliciousSpot deliciousSpot) {
         Series seriesToAdd = seriesRepository.findSeriesById(id);
-        seriesToAdd.addDeliciousSpot(deliciousSpot);
         deliciousSpot.setSeries(seriesToAdd);
 
         em.persist(deliciousSpot);

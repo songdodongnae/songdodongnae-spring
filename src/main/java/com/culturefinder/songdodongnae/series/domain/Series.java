@@ -37,22 +37,4 @@ public class Series {
     @OneToOne(mappedBy = "series", cascade = CascadeType.ALL)
     private SeriesImage seriesImage;
 
-    @OneToMany(mappedBy = "series")
-    private List<DeliciousSpot> deliciousSpots = new ArrayList<>();
-
-    @OneToMany(mappedBy = "series")
-    private List<Festival> festivals = new ArrayList<>();
-
-    public void addDeliciousSpot(DeliciousSpot deliciousSpot){
-        deliciousSpots.add(deliciousSpot);
-    }
-
-    public void addFestival(Festival festival){
-        festivals.add(festival);
-    }
-
-
-    public void setDeliciousSpots(List<DeliciousSpot> deliciousSpots){
-        this.deliciousSpots = deliciousSpots;
-    }
 }

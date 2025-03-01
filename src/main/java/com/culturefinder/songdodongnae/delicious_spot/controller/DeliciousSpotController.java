@@ -34,15 +34,15 @@ public class DeliciousSpotController {
         return new ResponseContainer<>(HttpStatus.OK, "", data).toResponseEntity();
     }
 
-    @GetMapping("/list/{id}")
-    public ResponseEntity<ResponseContainer<List<SingleDeliciousSpotResponseDto>>> list_get(@PathVariable Long id) {
-        List<SingleDeliciousSpotResponseDto> data = seriesRepository.findSeriesById(id)
-                .getDeliciousSpots()
-                .stream()
-                .map(SingleDeliciousSpotResponseDto::new)
-                .toList();
-
-        return new ResponseContainer<>(HttpStatus.OK, "", data).toResponseEntity();
-    }
+//    @GetMapping("/list/{id}")
+//    public ResponseEntity<ResponseContainer<List<SingleDeliciousSpotResponseDto>>> list_get(@PathVariable Long id) {
+//        List<SingleDeliciousSpotResponseDto> data = seriesRepository.findSeriesById(id)
+//                .getDeliciousSpots()
+//                .stream()
+//                .map(SingleDeliciousSpotResponseDto::new)
+//                .toList();
+//
+//        return new ResponseContainer<>(HttpStatus.OK, "", data).toResponseEntity();
+//    }
 
 }
