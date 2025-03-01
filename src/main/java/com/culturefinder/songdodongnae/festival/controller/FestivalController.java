@@ -7,7 +7,6 @@ import com.culturefinder.songdodongnae.festival.dto.ResDto;
 import com.culturefinder.songdodongnae.festival.service.FestivalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,7 @@ public class FestivalController {
     private final FestivalService festivalService;
 
     @Operation(summary = "축제 생성", description = "새로운 축제를 생성합니다.")
-    @ApiResponses(@ApiResponse(responseCode = "201", description = "축제 생성 완료"))
+    @ApiResponse(responseCode = "201", description = "축제 생성 완료")
     @PostMapping
     public ResponseEntity<ResDto> festivalCreate(
             @RequestBody FestivalReqDto festivalReqDto /*,
@@ -37,7 +36,7 @@ public class FestivalController {
     }
 
     @Operation(summary = "축제 수정", description = "기존 축제 정보를 수정합니다.")
-    @ApiResponses(@ApiResponse(responseCode = "200", description = "축제 수정 완료"))
+    @ApiResponse(responseCode = "200", description = "축제 수정 완료")
     @PutMapping("/{id}")
     public ResponseEntity<ResDto> festivalUpdate(@PathVariable Long id, @RequestBody FestivalReqDto festivalReqDto) {
         FestivalResDto dto = festivalService.updateFestival(id, festivalReqDto);
@@ -45,7 +44,7 @@ public class FestivalController {
     }
 
     @Operation(summary = "축제 삭제", description = "축제를 삭제합니다.")
-    @ApiResponses(@ApiResponse(responseCode = "200", description = "축제 삭제 완료"))
+    @ApiResponse(responseCode = "200", description = "축제 삭제 완료")
     @DeleteMapping("/{id}")
     public ResponseEntity<ResDto> festivalDelete(@PathVariable Long id) {
         FestivalResDto dto = festivalService.deleteFestival(id);
@@ -61,7 +60,7 @@ public class FestivalController {
     }
 
     @Operation(summary = "축제 조회", description = "특정 ID의 축제 정보를 조회합니다.")
-    @ApiResponses(@ApiResponse(responseCode = "200", description = "축제 조회 성공"))
+    @ApiResponse(responseCode = "200", description = "축제 조회 성공")
     @GetMapping("/{id}")
     public ResponseEntity<ResDto> festivalRead(@PathVariable Long id) {
         FestivalResDto dto = festivalService.getFestival(id);
