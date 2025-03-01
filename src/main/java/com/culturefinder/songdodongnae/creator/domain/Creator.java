@@ -24,7 +24,7 @@ public class Creator {
     @Column
     private String details;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @OneToMany(mappedBy = "creator")

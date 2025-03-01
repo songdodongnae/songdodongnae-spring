@@ -30,7 +30,6 @@ public class Series {
 
     private String details;
 
-    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime updateAt;
@@ -46,5 +45,14 @@ public class Series {
 
     public void addDeliciousSpot(DeliciousSpot deliciousSpot){
         deliciousSpots.add(deliciousSpot);
+    }
+
+    public void addFestival(Festival festival){
+        festivals.add(festival);
+    }
+
+
+    public void setDeliciousSpots(List<DeliciousSpot> deliciousSpots){
+        this.deliciousSpots = deliciousSpots;
     }
 }

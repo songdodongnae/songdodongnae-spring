@@ -23,6 +23,10 @@ public class DeliciousSpot {
     @Column(name = "delicious_spot_id")
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "series_id")
+    private Series series;
+
     private String name;
 
     private String location;
@@ -56,10 +60,6 @@ public class DeliciousSpot {
 
     @OneToMany(mappedBy = "deliciousSpot", cascade = CascadeType.ALL)
     private List<DeliciousSpotImage> deliciousSpotImages = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "series_id")
-    private Series series;
 
     public DeliciousSpot(AdminDeliciousSpotInputDto deliciousSpot) {
         this.name = deliciousSpot.getName();

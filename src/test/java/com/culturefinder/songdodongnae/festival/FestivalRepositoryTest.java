@@ -11,6 +11,8 @@ import com.culturefinder.songdodongnae.festival.dto.ResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 /*import com.culturefinder.songdodongnae.festival.service.FestivalImageService;*/
 import com.culturefinder.songdodongnae.festival.service.FestivalService;
+import com.culturefinder.songdodongnae.series.domain.Series;
+import com.culturefinder.songdodongnae.series.repository.SeriesRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,6 +40,8 @@ public class FestivalRepositoryTest {
 
     @Autowired
     private FestivalRepository festivalRepository;
+    @Autowired
+    private SeriesRepository seriesRepository;
     /*@Autowired
     private FestivalImageService festivalImageService;*/
 
@@ -61,9 +65,13 @@ public class FestivalRepositoryTest {
         FestivalImage festivalImage = new FestivalImage("image1");
         festivalImages.add(festivalImage);
 
-        Festival festival = new Festival(null, "축제1", FestivalCategory.FESTIVAL, null, null, null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", festivalPosterImages, festivalImages);
+        Series series = new Series();
+
+        Festival festival = new Festival(null, "축제1", FestivalCategory.FESTIVAL, null, null, null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", festivalPosterImages, festivalImages, series);
         festivalPosterImage.setFestival(festival);
         festivalImage.setFestival(festival);
+        series.addFestival(festival);
+        seriesRepository.addSeries(series);
 
         Festival savedFestival = festivalRepository.saveFestival(festival);
         assertThat(festival.getId()).isEqualTo(savedFestival.getId());
@@ -117,7 +125,7 @@ public class FestivalRepositoryTest {
         Festival savedFestival = festivalRepository.saveFestival(new Festival(
                 null, "축제1", FestivalCategory.FESTIVAL, null, null, null, null, null,
                 "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명",
-                "한줄설명", new ArrayList<>(), new ArrayList<>()
+                "한줄설명", new ArrayList<>(), new ArrayList<>(), new Series()
         ));
 
         Festival updatedFestival = new Festival(
@@ -125,7 +133,7 @@ public class FestivalRepositoryTest {
                 savedFestival.getStartDate(), savedFestival.getEndDate(), savedFestival.getStartTime(),
                 savedFestival.getEndTime(), savedFestival.getTimeDescription(), "서울 2",
                 "1000원", "010.33.44.44", "http://22,,,", "http://,,,",
-                "업데이트된 설명", "업데이트된 한줄설명", new ArrayList<>(), new ArrayList<>()
+                "업데이트된 설명", "업데이트된 한줄설명", new ArrayList<>(), new ArrayList<>(), new Series()
         );
 
         Festival updatedSavedFestival = festivalRepository.updateFestival(savedFestival.getId(),updatedFestival);
@@ -146,7 +154,7 @@ public class FestivalRepositoryTest {
         Festival savedFestival = festivalRepository.saveFestival(new Festival(
                 null, "축제1", FestivalCategory.FESTIVAL, null, null, null, null, null,
                 "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명",
-                "한줄설명", new ArrayList<>(), new ArrayList<>()
+                "한줄설명", new ArrayList<>(), new ArrayList<>(), new Series()
         ));
 
         festivalRepository.deleteFestival(savedFestival.getId());

@@ -27,4 +27,15 @@ public class SeriesRepository {
         return em.createQuery("SELECT s FROM Series s", Series.class)
                 .getResultList();
     }
+
+    public Series addSeries(Series series){
+        em.persist(series);
+        return series;
+    }
+
+    public Series removeSeries(Long id) {
+        Series series = em.find(Series.class, id);
+        em.remove(series);
+        return series;
+    }
 }
