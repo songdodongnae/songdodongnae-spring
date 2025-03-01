@@ -13,6 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -28,7 +33,9 @@ public class SecurityConfig {
             "/api/login",
             "/oauth2/**",
             "/admin/**",
-            "/**", // 개발용 코드
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+             "/**", // 개발용 코드
     };
 
     @Bean
