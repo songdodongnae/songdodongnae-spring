@@ -1,6 +1,6 @@
 package com.culturefinder.songdodongnae.delicious_spot.dto;
 
-import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotList;
+import com.culturefinder.songdodongnae.series.domain.Series;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -14,9 +14,9 @@ public class DeliciousSpotThumbnailResponseDto {
 
     private String imageUrl;
 
-    public DeliciousSpotThumbnailResponseDto(DeliciousSpotList deliciousSpotList) {
-        this.id = deliciousSpotList.getId();
-        this.title = deliciousSpotList.getTitle();
-        this.imageUrl = deliciousSpotList.getImageUrl();;
+    public DeliciousSpotThumbnailResponseDto(Series series) {
+        this.id = series.getId();
+        this.title = series.getTitle();
+        this.imageUrl = series.getSeriesImage().getSeriesImage();;
     }
 }

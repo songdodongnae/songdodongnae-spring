@@ -28,6 +28,8 @@ public class SecurityConfig {
             "/api/login",
             "/oauth2/**",
             "/admin/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
             "/**", // 개발용 코드
     };
 

@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.delicious_spot.domain;
 
 import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotInputDto;
+import com.culturefinder.songdodongnae.series.domain.Series;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Getter
 @Entity
-@ToString(exclude = "deliciousSpotList")
+@ToString(exclude = "series")
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeliciousSpot {
@@ -21,6 +22,10 @@ public class DeliciousSpot {
     @Id @GeneratedValue
     @Column(name = "delicious_spot_id")
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "series_id")
+    private Series series;
 
     private String name;
 
@@ -56,10 +61,6 @@ public class DeliciousSpot {
     @OneToMany(mappedBy = "deliciousSpot", cascade = CascadeType.ALL)
     private List<DeliciousSpotImage> deliciousSpotImages = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "delicious_spot_list_id")
-    private DeliciousSpotList deliciousSpotList;
-
     public DeliciousSpot(AdminDeliciousSpotInputDto deliciousSpot) {
         this.name = deliciousSpot.getName();
         this.location = deliciousSpot.getLocation();
@@ -82,7 +83,7 @@ public class DeliciousSpot {
         this.deliciousSpotImages = deliciousSpotImages;
     }
 
-    public void setDeliciousSpotList(DeliciousSpotList deliciousSpotList) {
-        this.deliciousSpotList = deliciousSpotList;
+    public void setSeries(Series series) {
+        this.series = series;
     }
 }
