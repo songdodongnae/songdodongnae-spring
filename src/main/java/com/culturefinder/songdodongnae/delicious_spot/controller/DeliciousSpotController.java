@@ -24,15 +24,15 @@ public class DeliciousSpotController {
     private final DeliciousSpotRepository deliciousSpotRepository;
     private final SeriesRepository seriesRepository;
 
-    @GetMapping("/thumbnails")
-    public ResponseEntity<ResponseContainer<List<DeliciousSpotThumbnailResponseDto>>> thumbnails_get() {
-        List<DeliciousSpotThumbnailResponseDto> data = seriesRepository.findAllSeries()
-                .stream()
-                .map(DeliciousSpotThumbnailResponseDto::new)
-                .toList();
-
-        return new ResponseContainer<>(HttpStatus.OK, "", data).toResponseEntity();
-    }
+//    @GetMapping("/thumbnails")
+//    public ResponseEntity<ResponseContainer<List<DeliciousSpotThumbnailResponseDto>>> thumbnails_get() {
+//        List<DeliciousSpotThumbnailResponseDto> data = seriesRepository.findAllSeries()
+//                .stream()
+//                .map(DeliciousSpotThumbnailResponseDto::new)
+//                .toList();
+//
+//        return new ResponseContainer<>(HttpStatus.OK, "", data).toResponseEntity();
+//    }
 
 //    @GetMapping("/list/{id}")
 //    public ResponseEntity<ResponseContainer<List<SingleDeliciousSpotResponseDto>>> list_get(@PathVariable Long id) {
