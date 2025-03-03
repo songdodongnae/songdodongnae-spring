@@ -30,8 +30,7 @@ public class Creator {
     @OneToMany(mappedBy = "creator")
     private List<Series> series = new ArrayList<>();
 
-    @OneToOne(mappedBy = "creator", cascade = CascadeType.ALL)
-    private CreatorImage creatorImage;
+    private String imageUrl;
 
     public CreatorResDto fromEntity() {
         return CreatorResDto.builder()
