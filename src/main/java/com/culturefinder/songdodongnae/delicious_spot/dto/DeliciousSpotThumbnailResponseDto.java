@@ -17,6 +17,6 @@ public class DeliciousSpotThumbnailResponseDto {
     public DeliciousSpotThumbnailResponseDto(Series series) {
         this.id = series.getId();
         this.title = series.getTitle();
-        this.imageUrl = series.getSeriesImage().getSeriesImage();;
+        this.imageUrl = series.getImageUrl();
     }
 }

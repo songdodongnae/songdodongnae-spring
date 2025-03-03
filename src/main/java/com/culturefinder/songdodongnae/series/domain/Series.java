@@ -32,7 +32,6 @@ public class Series {
 
     private LocalDateTime updateAt;
 
-    @OneToOne(mappedBy = "series", cascade = CascadeType.ALL)
-    private SeriesImage seriesImage;
+    private String imageUrl;
 
 }
