@@ -1,16 +1,12 @@
 package com.culturefinder.songdodongnae.series.domain;
 
 import com.culturefinder.songdodongnae.creator.domain.Creator;
-import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
-import com.culturefinder.songdodongnae.festival.domain.Festival;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Entity
@@ -32,7 +28,12 @@ public class Series {
 
     private LocalDateTime updateAt;
 
-    @OneToOne(mappedBy = "series", cascade = CascadeType.ALL)
-    private SeriesImage seriesImage;
+    private String imageUrl;
 
+    private Boolean isOnMain;
+
+    private Integer orderNumber;
+
+    @Enumerated(value = EnumType.STRING)
+    private SeriesCategory category;
 }

@@ -8,15 +8,15 @@
 <title>Songdodongnae admin</title>
 </head>
 <body>
-    <h1>맛집 리스트명: ${deliciousSpotTitle}</h1>
+    <h1>맛집 시리즈: ${deliciousSpotTitle}</h1>
     <h1>맛집 목록</h1>
     <ul>
         <c:forEach var="item" items="${deliciousSpotList}" varStatus="status">
             <h3>[ id = ${item.id} ] ${item.name}</h3>
         </c:forEach>
     </ul>
-    <h1>맛집 리스트에 맛집 등록</h1>
-    <form action="/admin/delicious_spot/delicious-list?id=${deliciousSpotId}" method="post">
+    <h1>맛집 시리즈에 맛집 등록</h1>
+    <form action="/admin/delicious_spot/series?id=${deliciousSpotId}" method="post">
         <p>
             <input type="text" name="id" placeholder="id", value="${deliciousSpotId}" readonly/>
         </p>

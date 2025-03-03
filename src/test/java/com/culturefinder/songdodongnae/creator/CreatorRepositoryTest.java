@@ -20,8 +20,8 @@ public class CreatorRepositoryTest {
     private CreatorRepository creatorRepository;
 
     @Test
-    @DisplayName("creator create test")
-    void create() {
+    @DisplayName("크리에이터가 올바르게 생성되는지 확인하는 테스트")
+    void test01() {
         CreatorReqDto creatorReqDto = new CreatorReqDto("두둥", "매운걸 좋아하는", "순대가 좋아요");
         Creator savedCreator = creatorRepository.saveCreator(creatorReqDto.toEntity());
         CreatorResDto creatorResDto = savedCreator.fromEntity();
@@ -29,6 +29,5 @@ public class CreatorRepositoryTest {
         Assertions.assertThat(creatorReqDto.getName()).isEqualTo(creatorResDto.getName());
         Assertions.assertThat(creatorReqDto.getDescription()).isEqualTo(creatorResDto.getDescription());
     }
-
 
 }
