@@ -9,8 +9,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 
+@Transactional
 @SpringBootTest
 public class CreatorRepositoryTest {
 
@@ -20,7 +22,7 @@ public class CreatorRepositoryTest {
     @Test
     @DisplayName("creator create test")
     void create() {
-        CreatorReqDto creatorReqDto = new CreatorReqDto("두둥", "순대를 좋아요");
+        CreatorReqDto creatorReqDto = new CreatorReqDto("두둥", "매운걸 좋아하는", "순대가 좋아요");
         Creator savedCreator = creatorRepository.saveCreator(creatorReqDto.toEntity());
         CreatorResDto creatorResDto = savedCreator.fromEntity();
 

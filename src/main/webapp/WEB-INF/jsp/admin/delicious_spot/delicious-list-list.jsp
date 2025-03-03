@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">R
+<meta charset="UTF-8">
 <title>Songdodongnae admin</title>
 </head>
 <body>

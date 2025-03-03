@@ -2,6 +2,8 @@ package com.culturefinder.songdodongnae.delicious_spot.controller;
 
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotThumbnailResponseDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.SingleDeliciousSpotResponseDto;
+import com.culturefinder.songdodongnae.series.domain.Series;
+import com.culturefinder.songdodongnae.series.repository.SeriesRepository;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +22,11 @@ import java.util.List;
 public class DeliciousSpotController {
 
     private final DeliciousSpotRepository deliciousSpotRepository;
+    private final SeriesRepository seriesRepository;
 
     @GetMapping("/thumbnails")
     public ResponseEntity<ResponseContainer<List<DeliciousSpotThumbnailResponseDto>>> thumbnails_get() {
-        List<DeliciousSpotThumbnailResponseDto> data = deliciousSpotRepository.findAllDeliciousSpotList()
+        List<DeliciousSpotThumbnailResponseDto> data = seriesRepository.findAllSeries()
                 .stream()
                 .map(DeliciousSpotThumbnailResponseDto::new)
                 .toList();
@@ -31,15 +34,15 @@ public class DeliciousSpotController {
         return new ResponseContainer<>(HttpStatus.OK, "", data).toResponseEntity();
     }
 
-    @GetMapping("/list/{id}")
-    public ResponseEntity<ResponseContainer<List<SingleDeliciousSpotResponseDto>>> list_get(@PathVariable Long id) {
-        List<SingleDeliciousSpotResponseDto> data = deliciousSpotRepository.findAllDeliciousSpotById(id)
-                .getDeliciousSpots()
-                .stream()
-                .map(SingleDeliciousSpotResponseDto::new)
-                .toList();
-
-        return new ResponseContainer<>(HttpStatus.OK, "", data).toResponseEntity();
-    }
+//    @GetMapping("/list/{id}")
+//    public ResponseEntity<ResponseContainer<List<SingleDeliciousSpotResponseDto>>> list_get(@PathVariable Long id) {
+//        List<SingleDeliciousSpotResponseDto> data = seriesRepository.findSeriesById(id)
+//                .getDeliciousSpots()
+//                .stream()
+//                .map(SingleDeliciousSpotResponseDto::new)
+//                .toList();
+//
+//        return new ResponseContainer<>(HttpStatus.OK, "", data).toResponseEntity();
+//    }
 
 }
