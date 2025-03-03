@@ -28,8 +28,6 @@ public class Series {
 
     private String title;
 
-    private String details;
-
     private LocalDateTime createdAt;
 
     private LocalDateTime updateAt;
