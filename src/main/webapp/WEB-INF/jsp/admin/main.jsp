@@ -8,10 +8,9 @@
 </head>
 <body>
     <h1>송도동네 어드민</h1>
-    <form action="/admin/delicious_spot/series_list" method="get">
-        <p>
-            <button type="submit">맛집 시리즈 목록</button>
-        </p>
-    </form>
+    <div><a href="/admin/system">시스템 정보</a></div>
+    <div><a href="/admin/series">시리즈 관리</a></div>
+    <div><a href="/admin/creator">크리에이터 관리</a></div>
+    <div><a href="/admin/user">유저 관리</a></div>
 </body>
 </html>
