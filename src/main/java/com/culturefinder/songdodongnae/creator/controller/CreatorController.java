@@ -1,6 +1,5 @@
 package com.culturefinder.songdodongnae.creator.controller;
 
-import com.culturefinder.songdodongnae.creator.dto.CreatorReqDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
 import com.culturefinder.songdodongnae.creator.service.CreatorService;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;

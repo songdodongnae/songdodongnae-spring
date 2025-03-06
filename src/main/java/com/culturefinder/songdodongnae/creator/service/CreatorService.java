@@ -17,9 +17,7 @@ public class CreatorService {
 
     public CreatorResDto createCreator(CreatorReqDto creatorReqDto) {
         Creator creator = creatorReqDto.toEntity();
-        log.info("creator = {}", creator);
         Creator savedCreator = creatorRepository.saveCreator(creator);
-        log.info("saved creator = {}", savedCreator);
         return savedCreator.fromEntity();
     }
 }

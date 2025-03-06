@@ -22,7 +22,7 @@ public class Creator {
     private String name;
 
     @Column
-    private String details;
+    private String introduction;
 
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -36,7 +36,7 @@ public class Creator {
         return CreatorResDto.builder()
                 .id(this.id)
                 .name(this.name)
-                .details(this.details)
+                .details(this.introduction)
                 .description(this.description)
                 .build();
     }
