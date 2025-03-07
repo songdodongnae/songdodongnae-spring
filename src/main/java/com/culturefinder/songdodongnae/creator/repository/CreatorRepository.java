@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Transactional
 @RequiredArgsConstructor
 @Repository
@@ -19,4 +21,9 @@ public class CreatorRepository {
         em.persist(creator);
         return creator;
     }
+
+    public List<Creator> findAllCreator() {
+        return em.createQuery("select c from Creator c", Creator.class).getResultList();
+    }
+
 }

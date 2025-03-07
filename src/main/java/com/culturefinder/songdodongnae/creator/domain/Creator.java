@@ -30,6 +30,7 @@ public class Creator {
     @OneToMany(mappedBy = "creator")
     private List<Series> series = new ArrayList<>();
 
+    @Column(length = 40000)
     private String imageUrl;
 
     public CreatorResDto fromEntity() {
