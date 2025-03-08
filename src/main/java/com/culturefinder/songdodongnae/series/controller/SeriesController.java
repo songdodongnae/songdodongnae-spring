@@ -1,5 +1,7 @@
 package com.culturefinder.songdodongnae.series.controller;
 
+import com.culturefinder.songdodongnae.exception.CustomException;
+import com.culturefinder.songdodongnae.exception.ErrorCode;
 import com.culturefinder.songdodongnae.series.domain.Series;
 import com.culturefinder.songdodongnae.series.dto.SeriesThumbnailResponseDto;
 import com.culturefinder.songdodongnae.series.repository.SeriesRepository;
@@ -32,7 +34,7 @@ public class SeriesController {
                 .sorted(Comparator.comparingInt(Series::getOrderNumber))
                 .map(SeriesThumbnailResponseDto::new)
                 .toList();
-        return new ResponseContainer<List<SeriesThumbnailResponseDto>>(HttpStatus.OK, "", seriesList)
+        return new ResponseContainer<>(HttpStatus.OK, "", seriesList)
                 .toResponseEntity();
     }
 }

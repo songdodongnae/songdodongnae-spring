@@ -1,8 +1,10 @@
 package com.culturefinder.songdodongnae.exception;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 
+@Getter
 @AllArgsConstructor
 public class ErrorDto {
 
