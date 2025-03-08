@@ -25,4 +25,10 @@ public class CreatorController {
         return new ResponseContainer<>(HttpStatus.OK, "크리에이터 썸네일 목록 조회 성공", dtos).toResponseEntity();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseContainer<CreatorResDto>> getCreator(@PathVariable Long id) {
+        CreatorResDto dto = creatorService.getCreator(id);
+        return new ResponseContainer<>(HttpStatus.OK, "크리에이터 조회 성공", dto).toResponseEntity();
+    }
+
 }

@@ -27,4 +27,8 @@ public class CreatorRepository {
     public List<Creator> findAll() {
         return em.createQuery("SELECT f from Creator f", Creator.class).getResultList();
     }
+
+    public Creator findById(Long id) {
+        return em.find(Creator.class, id);
+    }
 }

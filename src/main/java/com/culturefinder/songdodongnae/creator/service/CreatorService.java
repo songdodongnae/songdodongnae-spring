@@ -32,4 +32,9 @@ public class CreatorService {
                 .map(Creator::fromThumbEntity)
                 .collect(Collectors.toList());
     }
+
+    public CreatorResDto getCreator(Long id) {
+        return creatorRepository.findById(id).fromEntity();
+    }
+
 }
