@@ -1,6 +1,5 @@
-package com.culturefinder.songdodongnae.admin;
+package com.culturefinder.songdodongnae.admin.common;
 
-import com.culturefinder.songdodongnae.admin.dto.AdminLoginRequestDto;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

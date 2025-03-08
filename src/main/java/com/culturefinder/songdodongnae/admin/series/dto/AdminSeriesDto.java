@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.admin.dto;
+package com.culturefinder.songdodongnae.admin.series.dto;
 
 import com.culturefinder.songdodongnae.series.domain.Series;
 import lombok.AllArgsConstructor;

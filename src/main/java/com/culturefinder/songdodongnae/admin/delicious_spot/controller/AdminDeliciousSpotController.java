@@ -1,16 +1,12 @@
-package com.culturefinder.songdodongnae.admin.controller;
+package com.culturefinder.songdodongnae.admin.delicious_spot.controller;
 
-import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotInputDto;
-import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotDto;
-import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
+import com.culturefinder.songdodongnae.admin.delicious_spot.dto.AdminDeliciousSpotInputDto;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @Controller

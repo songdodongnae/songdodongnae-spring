@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.admin.dto;
+package com.culturefinder.songdodongnae.admin.delicious_spot.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.admin.controller;
+package com.culturefinder.songdodongnae.admin.series.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

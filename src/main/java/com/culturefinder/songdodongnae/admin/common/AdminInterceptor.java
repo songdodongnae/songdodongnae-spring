@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.admin;
+package com.culturefinder.songdodongnae.admin.common;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

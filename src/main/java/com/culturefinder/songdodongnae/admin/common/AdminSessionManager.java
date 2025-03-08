@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.admin;
+package com.culturefinder.songdodongnae.admin.common;
 
 import org.springframework.stereotype.Component;
 

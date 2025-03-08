@@ -1,6 +1,6 @@
 package com.culturefinder.songdodongnae.delicious_spot.domain;
 
-import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotInputDto;
+import com.culturefinder.songdodongnae.admin.delicious_spot.dto.AdminDeliciousSpotInputDto;
 import com.culturefinder.songdodongnae.series.domain.Series;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
