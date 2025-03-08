@@ -1,11 +1,15 @@
 package com.culturefinder.songdodongnae.creator.repository;
 
 import com.culturefinder.songdodongnae.creator.domain.Creator;
+import com.culturefinder.songdodongnae.festival.domain.Festival;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
+import java.util.List;
 
 @Transactional
 @RequiredArgsConstructor
@@ -18,5 +22,9 @@ public class CreatorRepository {
     public Creator saveCreator(Creator creator) {
         em.persist(creator);
         return creator;
+    }
+
+    public List<Creator> findAll() {
+        return em.createQuery("SELECT f from Creator f", Creator.class).getResultList();
     }
 }

@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.creator.domain;
 
 import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
+import com.culturefinder.songdodongnae.creator.dto.CreatorThumbnailResDto;
 import com.culturefinder.songdodongnae.series.domain.Series;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,8 +37,16 @@ public class Creator {
         return CreatorResDto.builder()
                 .id(this.id)
                 .name(this.name)
-                .details(this.introduction)
+                .introduction(this.introduction)
                 .description(this.description)
+                .build();
+    }
+
+    public CreatorThumbnailResDto fromThumbEntity() {
+        return CreatorThumbnailResDto.builder()
+                .id(this.id)
+                .name(this.name)
+                .introduction(this.introduction)
                 .build();
     }
 }
