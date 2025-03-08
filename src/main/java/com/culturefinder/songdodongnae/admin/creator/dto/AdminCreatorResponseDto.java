@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.admin.dto;
+package com.culturefinder.songdodongnae.admin.creator.dto;
 
 import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.series.domain.Series;

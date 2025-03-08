@@ -1,8 +1,11 @@
-package com.culturefinder.songdodongnae.admin.controller;
+package com.culturefinder.songdodongnae.admin.creator.controller;
 
-import com.culturefinder.songdodongnae.admin.dto.AdminCreatorResponseDto;
+import com.culturefinder.songdodongnae.admin.creator.dto.AdminCreatorCreateRequestDto;
+import com.culturefinder.songdodongnae.admin.creator.dto.AdminCreatorResponseDto;
 import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
+import com.culturefinder.songdodongnae.exception.CustomException;
+import com.culturefinder.songdodongnae.exception.ErrorCode;
 import com.culturefinder.songdodongnae.s3.S3UploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -44,17 +48,19 @@ public class AdminCreatorController {
     }
 
     @PostMapping("/create")
-    public String creator_create_post(
-            @RequestPart("name") String name,
-            @RequestPart("introduction") String introduction,
-            @RequestPart("description") String description,
-            @RequestPart("file") MultipartFile file
-    ) throws Exception {
-        String imageUrl = uploadService.saveFile(file);
+    public String creator_create_post(AdminCreatorCreateRequestDto dto) throws IOException {
+        if (dto.getName().isBlank() ||
+                dto.getIntroduction().isBlank() ||
+                dto.getDescription().isBlank() ||
+                dto.getFile().isEmpty())
+        {
+            throw new CustomException(ErrorCode.INVALID_PARAMETER);
+        }
+        String imageUrl = uploadService.saveFile(dto.getFile());
         Creator creator = Creator.builder()
-                .name(name)
-                .introduction(introduction)
-                .description(description)
+                .name(dto.getName())
+                .introduction(dto.getIntroduction())
+                .description(dto.getDescription())
                 .imageUrl(imageUrl)
                 .build();
         creatorRepository.saveCreator(creator);

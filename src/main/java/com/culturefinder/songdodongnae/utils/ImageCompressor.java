@@ -2,6 +2,7 @@ package com.culturefinder.songdodongnae.utils;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
@@ -14,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class ImageCompressor {
 
-    public byte[] compressImage(MultipartFile file, String format, long MAX_SIZE) throws Exception {
+    public byte[] compressImage(MultipartFile file, String format, long MAX_SIZE) throws IOException {
         BufferedImage image = ImageIO.read(file.getInputStream());
         float quality = 1.0f;
         byte[] compressedImage = file.getBytes();
