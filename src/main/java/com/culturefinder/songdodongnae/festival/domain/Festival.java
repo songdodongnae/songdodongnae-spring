@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,8 @@ public class Festival {
     private String description;
 
     private String onelineDescription;
+
+    private LocalDateTime createdTime;
 
     @OneToMany(mappedBy = "festival", cascade = CascadeType.ALL)
     private List<FestivalPosterImage> festivalPosterImages = new ArrayList<>();

@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,8 @@ public class DeliciousSpot {
     private String contact;
 
     private Integer likes;
+
+    private LocalDateTime createdTime;
 
     @OneToMany(mappedBy = "deliciousSpot", cascade = CascadeType.ALL)
     private List<DeliciousSpotImage> deliciousSpotImages = new ArrayList<>();
