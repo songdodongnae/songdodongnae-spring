@@ -30,6 +30,10 @@ public class DeliciousSpotRepository {
                 .getResultList();
     }
 
+    public List<DeliciousSpot> findAll() {
+        return em.createQuery("SELECT d FROM DeliciousSpot d", DeliciousSpot.class).getResultList();
+    }
+
     public void addDeliciousSpot(Long id, DeliciousSpot deliciousSpot) {
         Series seriesToAdd = seriesRepository.findSeriesById(id);
         deliciousSpot.setSeries(seriesToAdd);

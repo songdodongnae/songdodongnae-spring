@@ -17,10 +17,16 @@ public class CurationController {
 
     private final CurationService curationService;
 
-    @GetMapping("/thumbnail")
-    public ResponseEntity<ResponseContainer<List<CurationThumbnailResDto>>> getCurationThumbnails() {
-        List<CurationThumbnailResDto> dtos = curationService.getCurationThumbnails();
+    @GetMapping("/thumbnail/all")
+    public ResponseEntity<ResponseContainer<List<CurationThumbnailResDto>>> getAllCurationThumbnails() {
+        List<CurationThumbnailResDto> dtos = curationService.getAllCurationThumbnails();
         return new ResponseContainer<>(HttpStatus.OK, "큐레이션 썸네일 목록 조회 성공", dtos).toResponseEntity();
+    }
+
+    @GetMapping("/thumbnail/top")
+    public ResponseEntity<ResponseContainer<List<CurationThumbnailResDto>>> getTopCurationThumbnails() {
+        List<CurationThumbnailResDto> dtos = curationService.getTopCurationThumbnails();
+        return new ResponseContainer<>(HttpStatus.OK, "큐레이션 썸네일 상위 20개 조회 성공", dtos).toResponseEntity();
     }
 
 }

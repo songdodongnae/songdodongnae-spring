@@ -18,7 +18,23 @@ public class CurationService {
     private final FestivalRepository festivalRepository;
     private final DeliciousSpotRepository deliciousSpotRepository;
 
-    public List<CurationThumbnailResDto> getCurationThumbnails() {
+    public List<CurationThumbnailResDto> getAllCurationThumbnails() {
+        List<CurationThumbnailResDto> festivals = festivalRepository.findAll().stream()
+                .map(Festival::fromThumbEntity)
+                .toList();
+
+        List<CurationThumbnailResDto> deliciousSpots = deliciousSpotRepository.findAll().stream()
+                .map(DeliciousSpot::fromThumbEntity)
+                .toList();
+
+        List<CurationThumbnailResDto> curation = new ArrayList<>();
+        curation.addAll(festivals);
+        curation.addAll(deliciousSpots);
+
+        return curation;
+    }
+
+    public List<CurationThumbnailResDto> getTopCurationThumbnails() {
         List<CurationThumbnailResDto> festivals = festivalRepository.findTopByOrderByCreatedTimeDesc().stream()
                 .map(Festival::fromThumbEntity)
                 .toList();
@@ -37,4 +53,5 @@ public class CurationService {
                 .collect(Collectors.toList());
 
     }
+
 }
