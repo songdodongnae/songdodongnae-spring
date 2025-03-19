@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.delicious_spot.domain;
 
 import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotInputDto;
+import com.culturefinder.songdodongnae.curation.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.series.domain.Series;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -80,6 +81,15 @@ public class DeliciousSpot {
         this.instagram = deliciousSpot.getInstagram();
         this.contact = deliciousSpot.getContact();
         this.likes = deliciousSpot.getLikes();
+    }
+
+    public CurationThumbnailResDto fromThumbEntity() {
+        return CurationThumbnailResDto.builder()
+                .id(this.id)
+                .title(this.name)
+                .introduction(this.onelineDescription)
+                .imageUrl(this.deliciousSpotImages.get(0).getImageUrl())
+                .build();
     }
 
     public void setDeliciousSpotImages(List<DeliciousSpotImage> deliciousSpotImages) {
