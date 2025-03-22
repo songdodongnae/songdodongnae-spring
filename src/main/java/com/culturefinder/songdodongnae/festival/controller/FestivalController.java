@@ -56,7 +56,7 @@ public class FestivalController {
 
     @Operation(summary = "축제 조회", description = "특정 ID의 축제 정보를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "축제 조회 성공")
-    @GetMapping("/{id}")
+    @GetMapping("/festival/{id}")
     public ResponseEntity<ResponseContainer<FestivalResDto>> festivalRead(@PathVariable Long id) {
         FestivalResDto dto = festivalService.getFestival(id);
         return new ResponseContainer<>(HttpStatus.OK, "축제 조회 성공", dto).toResponseEntity();
