@@ -47,24 +47,23 @@ public class FestivalRepositoryTest {
     @Test
     @DisplayName("축제 저장되는지 확인하는 테스트")
     public void test1() {
-//        ArrayList<FestivalPosterImage> festivalPosterImages = new ArrayList<>();
-//        FestivalPosterImage festivalPosterImage = new FestivalPosterImage("poster1");
-//        festivalPosterImages.add(festivalPosterImage);
-//
-//        ArrayList<FestivalImage> festivalImages = new ArrayList<>();
-//        FestivalImage festivalImage = new FestivalImage("image1");
-//        festivalImages.add(festivalImage);
-//
-//        Series series = new Series();
-//
-//        Festival festival = new Festival(null, "축제1", FestivalCategory.FESTIVAL, null, null, null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", festivalPosterImages, festivalImages, series);
-//        festivalPosterImage.setFestival(festival);
-//        festivalImage.setFestival(festival);
-//        series.addFestival(festival);
-//        seriesRepository.addSeries(series);
-//
-//        Festival savedFestival = festivalRepository.saveFestival(festival);
-//        assertThat(festival.getId()).isEqualTo(savedFestival.getId());
+        ArrayList<FestivalPosterImage> festivalPosterImages = new ArrayList<>();
+        FestivalPosterImage festivalPosterImage = new FestivalPosterImage("poster1");
+        festivalPosterImages.add(festivalPosterImage);
+
+        ArrayList<FestivalImage> festivalImages = new ArrayList<>();
+        FestivalImage festivalImage = new FestivalImage("image1");
+        festivalImages.add(festivalImage);
+
+        Series series = new Series();
+        seriesRepository.addSeries(series);
+
+        Festival festival = new Festival(null, "축제1", FestivalCategory.FESTIVAL, null, null, null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", festivalPosterImages, festivalImages, series);
+        festivalPosterImage.setFestival(festival);
+        festivalImage.setFestival(festival);
+
+        Festival savedFestival = festivalRepository.saveFestival(festival);
+        assertThat(festival.getId()).isEqualTo(savedFestival.getId());
     }
 
     @Test
