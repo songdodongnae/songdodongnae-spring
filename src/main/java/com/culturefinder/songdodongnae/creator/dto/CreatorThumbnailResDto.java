@@ -3,12 +3,11 @@ package com.culturefinder.songdodongnae.creator.dto;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
 @Builder
-public class CreatorResDto {
+@Getter
+public class CreatorThumbnailResDto {
     private Long id;
     private String name;
     private String introduction;
-    private String description;
     private String imageUrl;
 }
