@@ -24,6 +24,16 @@ public class DeliciousSpotRepository {
         return em.find(DeliciousSpot.class, id);
     }
 
+    public List<DeliciousSpot> findTopByOrderByCreatedTimeDesc() {
+        return em.createQuery("SELECT d FROM DeliciousSpot d ORDER BY d.createdTime DESC", DeliciousSpot.class)
+                .setMaxResults(20)
+                .getResultList();
+    }
+
+    public List<DeliciousSpot> findAll() {
+        return em.createQuery("SELECT d FROM DeliciousSpot d", DeliciousSpot.class).getResultList();
+    }
+
     public void addDeliciousSpot(Long id, DeliciousSpot deliciousSpot) {
         Series seriesToAdd = seriesRepository.findSeriesById(id);
         deliciousSpot.setSeries(seriesToAdd);

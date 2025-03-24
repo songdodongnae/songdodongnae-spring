@@ -1,7 +1,6 @@
 package com.culturefinder.songdodongnae.festival.repository;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
-import com.culturefinder.songdodongnae.festival.domain.FestivalCategory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +41,13 @@ public class FestivalRepository {
     public List<Festival> findAll() {
         return em.createQuery("SELECT f from Festival f", Festival.class).getResultList();
     }
+
+    public List<Festival> findTopByOrderByCreatedTimeDesc() {
+        return em.createQuery("SELECT f FROM Festival f ORDER BY f.createdTime DESC", Festival.class)
+                .setMaxResults(20)
+                .getResultList();
+    }
+
 
 
 }

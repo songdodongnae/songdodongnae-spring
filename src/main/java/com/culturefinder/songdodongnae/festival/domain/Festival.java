@@ -1,11 +1,13 @@
 package com.culturefinder.songdodongnae.festival.domain;
 
+import com.culturefinder.songdodongnae.curation.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.series.domain.Series;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,8 @@ public class Festival {
     private Long id;
 
     private String name;
+
+    private String creatorName;
 
     @Enumerated(EnumType.STRING)
     private FestivalCategory category;
@@ -51,6 +55,8 @@ public class Festival {
     private String description;
 
     private String onelineDescription;
+
+    private LocalDateTime createdTime;
 
     @OneToMany(mappedBy = "festival", cascade = CascadeType.ALL)
     private List<FestivalPosterImage> festivalPosterImages = new ArrayList<>();
@@ -98,4 +104,14 @@ public class Festival {
         this.description = festival.getDescription();
         this.onelineDescription = festival.getOnelineDescription();
     }
+
+    public CurationThumbnailResDto fromThumbEntity() {
+        return CurationThumbnailResDto.builder()
+                .id(this.id)
+                .title(this.name)
+                .introduction(this.onelineDescription)
+                .imageUrl(this.festivalPosterImages.get(0).getImageUrl())
+                .build();
+    }
+
 }
