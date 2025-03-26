@@ -11,11 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -49,13 +45,16 @@ public class AdminCreatorController {
 
     @PostMapping("/create")
     public String creator_create_post(AdminCreatorCreateRequestDto dto) throws IOException {
-        if (dto.getName().isBlank() ||
-                dto.getIntroduction().isBlank() ||
-                dto.getDescription().isBlank() ||
-                dto.getFile().isEmpty())
-        {
+        if (dto.getName() == null|| dto.getIntroduction() == null || dto.getDescription() == null) {
             throw new CustomException(ErrorCode.INVALID_PARAMETER);
         }
+        if (dto.getName().isBlank() || dto.getIntroduction().isBlank() || dto.getDescription().isBlank()) {
+            throw new CustomException(ErrorCode.INVALID_PARAMETER);
+        }
+        if (dto.getFile().isEmpty()) {
+            throw new CustomException(ErrorCode.EMPTY_FILE);
+        }
+
         String imageUrl = uploadService.saveFile(dto.getFile());
         Creator creator = Creator.builder()
                 .name(dto.getName())

@@ -1,13 +1,12 @@
 package com.culturefinder.songdodongnae.admin.creator.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@Getter
+@Data
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class AdminCreatorCreateRequestDto {
 
     private String name;
