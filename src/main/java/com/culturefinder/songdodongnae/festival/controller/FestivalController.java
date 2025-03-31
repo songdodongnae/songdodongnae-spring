@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.festival.controller;
 
+import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import com.culturefinder.songdodongnae.festival.service.FestivalService;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Tag(name = "Festival API", description = "축제 관련 API")
 @RequiredArgsConstructor
@@ -30,7 +32,10 @@ public class FestivalController {
             @RequestParam int year,
             @RequestParam int month) {
 
-        List<FestivalResDto> dtos = festivalService.getFestivalsByYearAndMonth(year, month);
+        List<FestivalResDto> dtos = festivalService.getFestivalsByYearAndMonth(year, month)
+                .stream()
+                .map(Festival::fromEntity)
+                .collect(Collectors.toList());
         return new ResponseContainer<>(HttpStatus.OK, "년/월 해당 축제 조회 성공", dtos).toResponseEntity();
     }
 
@@ -38,7 +43,10 @@ public class FestivalController {
     @ApiResponse(responseCode = "200", description = "모든 축제 조회 성공")
     @GetMapping("festivals/all")
     public ResponseEntity<ResponseContainer<List<FestivalResDto>>> festivalAll() {
-        List<FestivalResDto> dtos = festivalService.getAllFestival();
+        List<FestivalResDto> dtos = festivalService.getAllFestival()
+                .stream()
+                .map(Festival::fromEntity)
+                .collect(Collectors.toList());
         return new ResponseContainer<>(HttpStatus.OK, "모든 축제 조회 성공", dtos).toResponseEntity();
     }
 
@@ -46,7 +54,7 @@ public class FestivalController {
     @ApiResponse(responseCode = "200", description = "축제 조회 성공")
     @GetMapping("/festival/{id}")
     public ResponseEntity<ResponseContainer<FestivalResDto>> festivalRead(@PathVariable Long id) {
-        FestivalResDto dto = festivalService.getFestival(id);
+        FestivalResDto dto = festivalService.getFestival(id).fromEntity();
         return new ResponseContainer<>(HttpStatus.OK, "축제 조회 성공", dto).toResponseEntity();
     }
 
