@@ -41,4 +41,10 @@ public class DeliciousSpotRepository {
         em.persist(deliciousSpot);
     }
 
+    public List<DeliciousSpot> findBySeries(Series series) {
+        return em.createQuery("SELECT d FROM DeliciousSpot d WHERE d.series = :series", DeliciousSpot.class)
+                .setParameter("series", series)
+                .getResultList();
+    }
+
 }

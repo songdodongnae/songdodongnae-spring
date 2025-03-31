@@ -1,13 +1,14 @@
 package com.culturefinder.songdodongnae.festival.service;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
-import com.culturefinder.songdodongnae.festival.domain.FestivalCategory;
-import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,49 +17,27 @@ import java.util.stream.Collectors;
 public class FestivalService {
 
     private final FestivalRepository festivalRepository;
-    // private final FestivalImageService festivalImageService;
 
-    public FestivalResDto createFestival(FestivalReqDto festivalReqDto/*, MultipartFile posterFile, MultipartFile imageFile*/) {
-        if (festivalReqDto.getName() == null || festivalReqDto.getName().isEmpty()) {
-            throw new IllegalArgumentException("Name cannot be empty");
-        }
-        /*List<String> posterUrl = festivalImageService.upload(posterFile);
-        List<String> imageUrl = festivalImageService.upload(imageFile);*/
+    public List<Festival> getFestivalsByYearAndMonth(int year, int month) {
+        LocalDate startOfMonth = LocalDate.of(year, month, 1);
+        LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
 
-        Festival festival = festivalRepository.saveFestival(festivalReqDto.toEntity());
-        return festival.fromEntity();
-    }
-
-    public FestivalResDto updateFestival(Long id, FestivalReqDto festivalReqDto) {
-        if (festivalReqDto.getName() == null || festivalReqDto.getName().isEmpty()) {
-            throw new IllegalArgumentException("Name cannot be empty");
-        }
-
-        Festival findFestival = festivalRepository.findById(id);
-        if (findFestival == null) {
-            throw new IllegalArgumentException("Festival not found");
-        }
-        Festival updatedFestival = festivalRepository.updateFestival(id, festivalReqDto.toEntity());
-        return updatedFestival.fromEntity();
-    }
-
-    public FestivalResDto deleteFestival(Long id) {
-        Festival findFestival = festivalRepository.findById(id);
-        if (findFestival == null) {
-            throw new IllegalArgumentException("Festival not found");
-        }
-        festivalRepository.deleteFestival(id);
-        return findFestival.fromEntity();
-    }
-
-    public List<FestivalResDto> getAllFestival() {
         return festivalRepository.findAll().stream()
-                .map(Festival::fromEntity)
+                .filter(festival -> !festival.getEndDate().isBefore(startOfMonth)
+                        && !festival.getStartDate().isAfter(endOfMonth))
                 .collect(Collectors.toList());
     }
 
-    public FestivalResDto getFestival(Long id) {
-        return festivalRepository.findById(id).fromEntity();
+    public List<Festival> getAllFestival() {
+        return new ArrayList<>(festivalRepository.findAll());
+    }
+
+    public Festival getFestival(Long id) {
+        Festival festival = festivalRepository.findById(id);
+        if(festival == null) {
+            throw new IllegalArgumentException("해당 축제가 존재하지 않습니다");
+        }
+        return festival;
     }
 
 }

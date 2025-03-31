@@ -1,6 +1,5 @@
 package com.culturefinder.songdodongnae.festival.dto;
 
-import com.culturefinder.songdodongnae.festival.domain.FestivalCategory;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,7 +11,6 @@ import java.time.LocalTime;
 public class FestivalResDto {
     private Long id;
     private String name;
-    private FestivalCategory category;
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalTime startTime;
