@@ -53,7 +53,7 @@ public class FestivalRepositoryTest {
         Series series = new Series();
         seriesRepository.addSeries(series);
 
-        Festival festival = new Festival(null, "축제1", null, null, null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", festivalPosterImages, festivalImages, series);
+        Festival festival = new Festival(null, "축제1", null, null, null, null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", null, festivalPosterImages, festivalImages, series);
         festivalPosterImage.setFestival(festival);
         festivalImage.setFestival(festival);
 
@@ -67,11 +67,11 @@ public class FestivalRepositoryTest {
         Series series = new Series();
         seriesRepository.addSeries(series);
 
-        Festival festival1 = new Festival(null, "축제1", LocalDate.of(2025, 2, 10), LocalDate.of(2025, 3, 10), null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", null, null, series);
+        Festival festival1 = new Festival(null, "축제1", null, LocalDate.of(2025, 2, 10), LocalDate.of(2025, 3, 10), null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", null, null, null, series);
         festivalRepository.saveFestival(festival1);
-        Festival festival2 = new Festival(null, "축제1", LocalDate.of(2025, 3, 10), LocalDate.of(2025, 3, 10), null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", null, null, series);
+        Festival festival2 = new Festival(null, "축제1", null, LocalDate.of(2025, 3, 10), LocalDate.of(2025, 3, 10), null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", null, null, null, series);
         festivalRepository.saveFestival(festival2);
-        Festival festival3 = new Festival(null, "축제1", LocalDate.of(2025, 3, 20), LocalDate.of(2025, 4, 10), null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", null, null, series);
+        Festival festival3 = new Festival(null, "축제1", null, LocalDate.of(2025, 3, 20), LocalDate.of(2025, 4, 10), null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", null, null, null, series);
         festivalRepository.saveFestival(festival3);
 
         List<Festival> festivalsByYearAndMonth = festivalService.getFestivalsByYearAndMonth(2025, 3);
@@ -87,11 +87,11 @@ public class FestivalRepositoryTest {
         Series series = new Series();
         seriesRepository.addSeries(series);
 
-        Festival festival1 = new Festival(null, "축제1", LocalDate.of(2025, 2, 10), LocalDate.of(2025, 3, 10), null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", null, null, series);
+        Festival festival1 = new Festival(null, "축제1", null, LocalDate.of(2025, 2, 10), LocalDate.of(2025, 3, 10), null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", null, null, null, series);
         festivalRepository.saveFestival(festival1);
-        Festival festival2 = new Festival(null, "축제1", LocalDate.of(2025, 3, 10), LocalDate.of(2025, 3, 10), null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", null, null, series);
+        Festival festival2 = new Festival(null, "축제1", null, LocalDate.of(2025, 3, 10), LocalDate.of(2025, 3, 10), null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", null, null, null, series);
         festivalRepository.saveFestival(festival2);
-        Festival festival3 = new Festival(null, "축제1", LocalDate.of(2025, 3, 20), LocalDate.of(2025, 4, 10), null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", null, null, series);
+        Festival festival3 = new Festival(null, "축제1", null, LocalDate.of(2025, 3, 20), LocalDate.of(2025, 4, 10), null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", null, null, null, series);
         festivalRepository.saveFestival(festival3);
 
         List<Festival> allFestival = festivalService.getAllFestival();
@@ -107,7 +107,7 @@ public class FestivalRepositoryTest {
         Series series = new Series();
         seriesRepository.addSeries(series);
 
-        Festival festival = new Festival(null, "축제1", LocalDate.of(2025, 2, 10), LocalDate.of(2025, 3, 10), null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", null, null, series);
+        Festival festival = new Festival(null, "축제1", null, LocalDate.of(2025, 2, 10), LocalDate.of(2025, 3, 10), null, null, null, "서울...", "200원쯤?", "010.22..", "https:///....", "http://,,,,,", "설명", "한줄설명", null, null, null, series);
         festivalRepository.saveFestival(festival);
 
         Festival savedFestival = festivalService.getFestival(festival.getId());
