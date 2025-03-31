@@ -3,7 +3,6 @@ package com.culturefinder.songdodongnae.festival;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.domain.FestivalImage;
 import com.culturefinder.songdodongnae.festival.domain.FestivalPosterImage;
-import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import com.culturefinder.songdodongnae.festival.service.FestivalService;
 import com.culturefinder.songdodongnae.series.domain.Series;
@@ -18,10 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
