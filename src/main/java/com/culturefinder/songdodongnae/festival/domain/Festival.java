@@ -24,9 +24,6 @@ public class Festival {
 
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    private FestivalCategory category;
-
     private LocalDate startDate;
 
     private LocalDate endDate;
@@ -66,7 +63,6 @@ public class Festival {
         return FestivalResDto.builder()
                 .id(this.id)
                 .name(this.name)
-                .category(this.category)
                 .startDate(this.startDate)
                 .endDate(this.endDate)
                 .startTime(this.startTime)
@@ -84,7 +80,6 @@ public class Festival {
 
     public void update(Festival festival) {
         this.name = festival.getName();
-        this.category = festival.getCategory();
         this.startDate = festival.getStartDate();
         this.endDate = festival.getEndDate();
         this.startTime = festival.getStartTime();

@@ -1,6 +1,5 @@
 package com.culturefinder.songdodongnae.festival.controller;
 
-import com.culturefinder.songdodongnae.festival.domain.FestivalCategory;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import com.culturefinder.songdodongnae.festival.service.FestivalService;
@@ -24,7 +23,7 @@ public class FestivalController {
     private final FestivalService festivalService;
     private final FestivalRepository festivalRepository;
 
-    @Operation(summary = "해당 달 축제 조회", description = "해당 월에 개최되는 모든 축제 목록을 조회합니다")
+    @Operation(summary = "해당 년/월 축제 조회", description = "해당 년/월에 개최되는 모든 축제 목록을 조회합니다")
     @ApiResponse(responseCode = "200", description = "해당 월 축제 조회 성공")
     @GetMapping("/festivals")
     public ResponseEntity<ResponseContainer<List<FestivalResDto>>> festivalsByYearAndMonth(
@@ -35,20 +34,9 @@ public class FestivalController {
         return new ResponseContainer<>(HttpStatus.OK, "년/월 해당 축제 조회 성공", dtos).toResponseEntity();
     }
 
-    @Operation(summary = "category 별 조회", description = "카테고리 별 축제 목록을 조회합니다")
-    @ApiResponse(responseCode = "200", description = "카테고리 별 축제 조회 성공")
-    @GetMapping("/festivals")
-    public ResponseEntity<ResponseContainer<List<FestivalResDto>>> festivalsByCategory(
-            @RequestParam FestivalCategory festivalCategory) {
-
-        List<FestivalResDto> dtos = festivalService.getFetivalsByCategory(festivalCategory);
-        return new ResponseContainer<>(HttpStatus.OK, "카테고리 별 축제 조회 성공", dtos).toResponseEntity();
-    }
-
-
     @Operation(summary = "모든 축제 조회", description = "등록된 모든 축제 목록을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "모든 축제 조회 성공")
-    @GetMapping("festivals")
+    @GetMapping("festivals/all")
     public ResponseEntity<ResponseContainer<List<FestivalResDto>>> festivalAll() {
         List<FestivalResDto> dtos = festivalService.getAllFestival();
         return new ResponseContainer<>(HttpStatus.OK, "모든 축제 조회 성공", dtos).toResponseEntity();
