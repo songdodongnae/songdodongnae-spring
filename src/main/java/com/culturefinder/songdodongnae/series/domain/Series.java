@@ -33,8 +33,6 @@ public class Series {
 
     private String imageUrl;
 
-    private Boolean isOnMain;
-
     private Integer orderNumber;
 
     @Enumerated(value = EnumType.STRING)
