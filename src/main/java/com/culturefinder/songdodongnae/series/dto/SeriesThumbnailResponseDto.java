@@ -15,7 +15,8 @@ public class SeriesThumbnailResponseDto {
     public SeriesThumbnailResponseDto(Series series) {
         this.title = series.getTitle();
         this.imageUrl = series.getImageUrl();
-        this.creatorImageUrl = series.getCreator().getImageUrl();
+        // TODO: 1
+//        this.creatorImageUrl = series.getCreator().getImageUrl();
         this.category = series.getCategory().toString();
     }
 }

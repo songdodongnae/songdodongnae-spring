@@ -1,12 +1,13 @@
 package com.culturefinder.songdodongnae.series.domain;
 
-import com.culturefinder.songdodongnae.creator.domain.Creator;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -18,9 +19,11 @@ public class Series {
     @Column(name = "series_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "creator_id")
-    private Creator creator;
+    @OneToMany(mappedBy = "series")
+    private List<SeriesDeliciousSpot> seriesDeliciousSpotList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "series")
+    private List<SeriesFestival> seriesFestivalList = new ArrayList<>();
 
     private String title;
 

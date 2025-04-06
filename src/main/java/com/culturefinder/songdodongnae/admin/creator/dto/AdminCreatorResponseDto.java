@@ -27,7 +27,8 @@ public class AdminCreatorResponseDto {
         this.name = creator.getName();
         this.introduction = creator.getIntroduction();
         this.description = creator.getDescription();
-        this.series = creator.getSeries();
+        // TODO: 5
+//        this.series = creator.getSeries();
         this.imageUrl = creator.getImageUrl();
     }
 }

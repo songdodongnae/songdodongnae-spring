@@ -32,9 +32,10 @@ public class AdminCreatorController {
 
     @GetMapping("/list")
     public String creator_list_get(Model model) {
-        List<AdminCreatorResponseDto> creatorList = creatorRepository.findAllCreator()
-                .stream().map(AdminCreatorResponseDto::new).toList();
-        model.addAttribute("creatorList", creatorList);
+        // TODO: 6
+//        List<AdminCreatorResponseDto> creatorList = creatorRepository.findAllCreator()
+//                .stream().map(AdminCreatorResponseDto::new).toList();
+//        model.addAttribute("creatorList", creatorList);
         return "admin/creator_list";
     }
 

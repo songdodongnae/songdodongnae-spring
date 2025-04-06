@@ -26,10 +26,11 @@ public class AdminSeriesController {
 
     @GetMapping("/create")
     public String series_create_get(Model model) {
-        List<Creator> creatorList = creatorRepository.findAllCreator();
-        List<SeriesCategory> categoryList = List.of(SeriesCategory.values());
-        model.addAttribute("creatorList", creatorList);
-        model.addAttribute("categoryList", categoryList);
+        // TODO: 3
+//        List<Creator> creatorList = creatorRepository.findAllCreator();
+//        List<SeriesCategory> categoryList = List.of(SeriesCategory.values());
+//        model.addAttribute("creatorList", creatorList);
+//        model.addAttribute("categoryList", categoryList);
         return "admin/series_create";
     }
 
