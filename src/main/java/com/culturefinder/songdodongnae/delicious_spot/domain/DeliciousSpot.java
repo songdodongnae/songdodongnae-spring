@@ -1,13 +1,13 @@
 package com.culturefinder.songdodongnae.delicious_spot.domain;
 
-import com.culturefinder.songdodongnae.admin.dto.AdminDeliciousSpotInputDto;
+import com.culturefinder.songdodongnae.admin.delicious_spot.dto.AdminDeliciousSpotInputDto;
+import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.curation.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.series.domain.Series;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -16,7 +16,6 @@ import java.util.List;
 
 @Getter
 @Entity
-@ToString(exclude = "series")
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeliciousSpot {
@@ -26,8 +25,8 @@ public class DeliciousSpot {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "series_id")
-    private Series series;
+    @JoinColumn(name = "creator_id")
+    private Creator creator;
 
     private String name;
 
@@ -96,7 +95,4 @@ public class DeliciousSpot {
         this.deliciousSpotImages = deliciousSpotImages;
     }
 
-    public void setSeries(Series series) {
-        this.series = series;
-    }
 }

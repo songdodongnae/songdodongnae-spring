@@ -1,8 +1,8 @@
 package com.culturefinder.songdodongnae.festival.domain;
 
+import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.curation.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
-import com.culturefinder.songdodongnae.series.domain.Series;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,7 +15,6 @@ import java.util.List;
 @Getter
 @Entity
 @Builder
-@ToString(exclude = "series")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Festival {
@@ -62,8 +61,8 @@ public class Festival {
     private List<FestivalImage> festivalImages = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "series_id")
-    private Series series;
+    @JoinColumn(name = "creator_id")
+    private Creator creator;
 
     public FestivalResDto fromEntity() {
         return FestivalResDto.builder()

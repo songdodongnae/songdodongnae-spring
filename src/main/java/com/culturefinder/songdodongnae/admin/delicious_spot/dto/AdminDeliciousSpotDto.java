@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.admin.dto;
+package com.culturefinder.songdodongnae.admin.delicious_spot.dto;
 
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotImage;

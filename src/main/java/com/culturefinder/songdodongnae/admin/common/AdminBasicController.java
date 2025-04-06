@@ -1,7 +1,5 @@
-package com.culturefinder.songdodongnae.admin.controller;
+package com.culturefinder.songdodongnae.admin.common;
 
-import com.culturefinder.songdodongnae.admin.dto.AdminLoginRequestDto;
-import com.culturefinder.songdodongnae.admin.AdminService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

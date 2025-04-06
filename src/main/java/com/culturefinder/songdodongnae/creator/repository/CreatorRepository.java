@@ -1,14 +1,11 @@
 package com.culturefinder.songdodongnae.creator.repository;
 
 import com.culturefinder.songdodongnae.creator.domain.Creator;
-import com.culturefinder.songdodongnae.festival.domain.Festival;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
 import java.util.List;
 
 @Transactional
@@ -30,5 +27,10 @@ public class CreatorRepository {
 
     public Creator findById(Long id) {
         return em.find(Creator.class, id);
+    }
+
+    public void deleteById(Long id) {
+        Creator findCreator = findById(id);
+        if (findCreator != null) em.remove(findCreator);
     }
 }

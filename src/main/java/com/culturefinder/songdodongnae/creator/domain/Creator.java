@@ -2,7 +2,8 @@ package com.culturefinder.songdodongnae.creator.domain;
 
 import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorThumbnailResDto;
-import com.culturefinder.songdodongnae.series.domain.Series;
+import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
+import com.culturefinder.songdodongnae.festival.domain.Festival;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,8 +30,12 @@ public class Creator {
     private String description;
 
     @OneToMany(mappedBy = "creator")
-    private List<Series> series = new ArrayList<>();
+    private List<Festival> festivalList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "creator")
+    private List<DeliciousSpot> deliciousSpotList = new ArrayList<>();
+
+    @Column(length = 40000)
     private String imageUrl;
 
     public CreatorResDto fromEntity() {

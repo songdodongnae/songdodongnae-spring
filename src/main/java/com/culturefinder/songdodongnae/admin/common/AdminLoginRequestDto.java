@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.admin.dto;
+package com.culturefinder.songdodongnae.admin.common;
 
 import lombok.Getter;
 import lombok.Setter;

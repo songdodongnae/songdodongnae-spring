@@ -1,6 +1,6 @@
 package com.culturefinder.songdodongnae;
 
-import com.culturefinder.songdodongnae.admin.AdminInterceptor;
+import com.culturefinder.songdodongnae.admin.common.AdminInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
