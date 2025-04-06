@@ -30,4 +30,14 @@ public class CreatorRepositoryTest {
         Assertions.assertThat(creatorReqDto.getDescription()).isEqualTo(creatorResDto.getDescription());
     }
 
+    @Test
+    @DisplayName("크리에이터가 올바르게 삭제되는지 확인하는 테스트")
+    void test02() {
+        CreatorReqDto creatorReqDto = new CreatorReqDto("두둥", "매운걸 좋아하는", "순대가 좋아요");
+        Creator savedCreator = creatorRepository.saveCreator(creatorReqDto.toEntity());
+        creatorRepository.deleteById(savedCreator.getId());
+        int creatorCount  = creatorRepository.findAll().size();
+        Assertions.assertThat(creatorCount).isEqualTo(0);
+    }
+
 }

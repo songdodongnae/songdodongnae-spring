@@ -28,4 +28,9 @@ public class CreatorRepository {
     public Creator findById(Long id) {
         return em.find(Creator.class, id);
     }
+
+    public void deleteById(Long id) {
+        Creator findCreator = findById(id);
+        if (findCreator != null) em.remove(findCreator);
+    }
 }
