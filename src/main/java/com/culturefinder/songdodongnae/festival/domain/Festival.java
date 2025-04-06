@@ -1,11 +1,13 @@
 package com.culturefinder.songdodongnae.festival.domain;
 
+import com.culturefinder.songdodongnae.curation.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.series.domain.Series;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +26,7 @@ public class Festival {
 
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    private FestivalCategory category;
+    private String creatorName;
 
     private LocalDate startDate;
 
@@ -52,6 +53,8 @@ public class Festival {
 
     private String onelineDescription;
 
+    private LocalDateTime createdTime;
+
     @OneToMany(mappedBy = "festival", cascade = CascadeType.ALL)
     private List<FestivalPosterImage> festivalPosterImages = new ArrayList<>();
 
@@ -66,7 +69,6 @@ public class Festival {
         return FestivalResDto.builder()
                 .id(this.id)
                 .name(this.name)
-                .category(this.category)
                 .startDate(this.startDate)
                 .endDate(this.endDate)
                 .startTime(this.startTime)
@@ -84,7 +86,6 @@ public class Festival {
 
     public void update(Festival festival) {
         this.name = festival.getName();
-        this.category = festival.getCategory();
         this.startDate = festival.getStartDate();
         this.endDate = festival.getEndDate();
         this.startTime = festival.getStartTime();
@@ -98,4 +99,14 @@ public class Festival {
         this.description = festival.getDescription();
         this.onelineDescription = festival.getOnelineDescription();
     }
+
+    public CurationThumbnailResDto fromThumbEntity() {
+        return CurationThumbnailResDto.builder()
+                .id(this.id)
+                .title(this.name)
+                .introduction(this.onelineDescription)
+                .imageUrl(this.festivalPosterImages.get(0).getImageUrl())
+                .build();
+    }
+
 }

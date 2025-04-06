@@ -1,7 +1,6 @@
 package com.culturefinder.songdodongnae.festival.dto;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
-import com.culturefinder.songdodongnae.festival.domain.FestivalCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,7 +11,6 @@ import java.time.LocalTime;
 @Getter
 public class FestivalReqDto {
     private String name;
-    private FestivalCategory category;
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalTime startTime;
@@ -29,7 +27,6 @@ public class FestivalReqDto {
     public Festival toEntity() {
         return Festival.builder()
                 .name(this.name)
-                .category(this.category)
                 .startDate(this.startDate)
                 .endDate(this.endDate)
                 .startTime(this.startTime)

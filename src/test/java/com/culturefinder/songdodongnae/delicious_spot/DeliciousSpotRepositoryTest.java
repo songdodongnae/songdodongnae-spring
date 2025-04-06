@@ -25,57 +25,56 @@ public class DeliciousSpotRepositoryTest {
 
     @Autowired private DeliciousSpotRepository deliciousSpotRepository;
     @PersistenceContext private EntityManager em;
-    @Autowired
-    private SeriesRepository seriesRepository;
+    @Autowired private SeriesRepository seriesRepository;
 
     @Test
     @DisplayName("맛집 리스트 저장되는지 확인하는 테스트")
     public void test1() {
-//        DeliciousSpotImage deliciousSpotImage1 = new DeliciousSpotImage("imageUrl1");
-//        DeliciousSpotImage deliciousSpotImage2 = new DeliciousSpotImage("imageUrl2");
-//        DeliciousSpot deliciousSpot = new DeliciousSpot();
-//        List<DeliciousSpotImage> deliciousSpotImageArrayList = new ArrayList<>();
-//        deliciousSpotImageArrayList.add(deliciousSpotImage1);
-//        deliciousSpotImageArrayList.add(deliciousSpotImage2);
-//        deliciousSpot.setDeliciousSpotImages(deliciousSpotImageArrayList);
-//        deliciousSpotImage1.setDeliciousSpot(deliciousSpot);
-//        deliciousSpotImage2.setDeliciousSpot(deliciousSpot);
-//
-//        List<DeliciousSpot> deliciousSpotArrayList = new ArrayList<>();
-//        deliciousSpotArrayList.add(deliciousSpot);
-//        Series deliciousSpotList = new Series();
-//        deliciousSpotList.setDeliciousSpots(deliciousSpotArrayList);
-//        deliciousSpot.setSeries(deliciousSpotList);
-//
-//        Series findDeliciousSpotList = seriesRepository.addSeries(deliciousSpotList);
-//        assertThat(deliciousSpotList.getId()).isEqualTo(findDeliciousSpotList.getId());
+        DeliciousSpotImage deliciousSpotImage1 = new DeliciousSpotImage("imageUrl1");
+        DeliciousSpotImage deliciousSpotImage2 = new DeliciousSpotImage("imageUrl2");
+        DeliciousSpot deliciousSpot = new DeliciousSpot();
+        List<DeliciousSpotImage> deliciousSpotImageArrayList = new ArrayList<>();
+        deliciousSpotImageArrayList.add(deliciousSpotImage1);
+        deliciousSpotImageArrayList.add(deliciousSpotImage2);
+        deliciousSpot.setDeliciousSpotImages(deliciousSpotImageArrayList);
+        deliciousSpotImage1.setDeliciousSpot(deliciousSpot);
+        deliciousSpotImage2.setDeliciousSpot(deliciousSpot);
+
+        List<DeliciousSpot> deliciousSpotArrayList = new ArrayList<>();
+        deliciousSpotArrayList.add(deliciousSpot);
+        Series deliciousSpotList = new Series();
+        seriesRepository.addSeries(deliciousSpotList);
+        deliciousSpot.setSeries(deliciousSpotList);
+        deliciousSpotRepository.addDeliciousSpot(deliciousSpotList.getId(), deliciousSpot);
+
+        Series findDeliciousSpotList = seriesRepository.addSeries(deliciousSpotList);
+        assertThat(deliciousSpotList.getId()).isEqualTo(findDeliciousSpotList.getId());
     }
 
     @Test
     @DisplayName("맛집리스트의 맛집을 모두 불러오는지 확인하는 테스트")
     public void test2() {
-//        DeliciousSpot deliciousSpot1 = new DeliciousSpot();
-//        DeliciousSpot deliciousSpot2 = new DeliciousSpot();
-//        DeliciousSpot deliciousSpot3 = new DeliciousSpot();
-//        List<DeliciousSpot> deliciousSpots = new ArrayList<>();
-//        deliciousSpots.add(deliciousSpot1);
-//        deliciousSpots.add(deliciousSpot2);
-//        deliciousSpots.add(deliciousSpot3);
-//
-//        Series deliciousSpotList = new Series();
-//        deliciousSpot1.setSeries(deliciousSpotList);
-//        deliciousSpot2.setSeries(deliciousSpotList);
-//        deliciousSpot3.setSeries(deliciousSpotList);
-//        deliciousSpotList.setDeliciousSpots(deliciousSpots);
-//        seriesRepository.addSeries(deliciousSpotList);
-//
-//        List<DeliciousSpot> findDeliciousSpotList = seriesRepository
-//                .findSeriesById(deliciousSpotList.getId()).getDeliciousSpots();
-//
-//        assertThat(findDeliciousSpotList.size()).isEqualTo(3);
-//        assertThat(findDeliciousSpotList.get(0).getSeries().getId()).isEqualTo(deliciousSpotList.getId());
-//        assertThat(findDeliciousSpotList.get(1).getSeries().getId()).isEqualTo(deliciousSpotList.getId());
-//        assertThat(findDeliciousSpotList.get(2).getSeries().getId()).isEqualTo(deliciousSpotList.getId());
+        DeliciousSpot deliciousSpot1 = new DeliciousSpot();
+        DeliciousSpot deliciousSpot2 = new DeliciousSpot();
+        DeliciousSpot deliciousSpot3 = new DeliciousSpot();
+
+        Series deliciousSpotList = new Series();
+        seriesRepository.addSeries(deliciousSpotList);
+
+        deliciousSpot1.setSeries(deliciousSpotList);
+        deliciousSpot2.setSeries(deliciousSpotList);
+        deliciousSpot3.setSeries(deliciousSpotList);
+
+        deliciousSpotRepository.addDeliciousSpot(deliciousSpotList.getId(), deliciousSpot1);
+        deliciousSpotRepository.addDeliciousSpot(deliciousSpotList.getId(), deliciousSpot2);
+        deliciousSpotRepository.addDeliciousSpot(deliciousSpotList.getId(), deliciousSpot3);
+
+        List<DeliciousSpot> findDeliciousSpotList = deliciousSpotRepository.findBySeries(deliciousSpotList);
+
+        assertThat(findDeliciousSpotList.size()).isEqualTo(3);
+        assertThat(findDeliciousSpotList.get(0).getSeries().getId()).isEqualTo(deliciousSpotList.getId());
+        assertThat(findDeliciousSpotList.get(1).getSeries().getId()).isEqualTo(deliciousSpotList.getId());
+        assertThat(findDeliciousSpotList.get(2).getSeries().getId()).isEqualTo(deliciousSpotList.getId());
     }
 
     @Test
@@ -102,15 +101,14 @@ public class DeliciousSpotRepositoryTest {
     @Test
     @DisplayName("특정 맛집 리스트에 맛집이 등록되는지 확인하는 테스트")
     public void test5() {
-//        Series deliciousSpotList = new Series();
-//        seriesRepository.addSeries(deliciousSpotList);
-//        Long deliciousSpotListId = deliciousSpotList.getId();
-//        deliciousSpotRepository.addDeliciousSpot(deliciousSpotListId, new DeliciousSpot());
-//
-//        Series findDeliciousSpotList = seriesRepository.findSeriesById(deliciousSpotListId);
-//        assertThat(findDeliciousSpotList).isNotNull();
-//        assertThat(findDeliciousSpotList.getId()).isEqualTo(deliciousSpotListId);
-//        assertThat(findDeliciousSpotList.getDeliciousSpots().size()).isEqualTo(1);
+        Series deliciousSpotList = new Series();
+        seriesRepository.addSeries(deliciousSpotList);
+        deliciousSpotRepository.addDeliciousSpot(deliciousSpotList.getId(), new DeliciousSpot());
+
+        Series findDeliciousSpotList = seriesRepository.findSeriesById(deliciousSpotList.getId());
+        assertThat(findDeliciousSpotList).isNotNull();
+        assertThat(findDeliciousSpotList.getId()).isEqualTo(deliciousSpotList.getId());
+        assertThat(deliciousSpotRepository.findBySeries(deliciousSpotList).size()).isEqualTo(1);
     }
 
     @Test

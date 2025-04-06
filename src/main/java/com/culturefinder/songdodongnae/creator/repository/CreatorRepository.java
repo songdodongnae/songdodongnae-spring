@@ -6,7 +6,6 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Transactional
@@ -22,8 +21,11 @@ public class CreatorRepository {
         return creator;
     }
 
-    public List<Creator> findAllCreator() {
-        return em.createQuery("select c from Creator c", Creator.class).getResultList();
+    public List<Creator> findAll() {
+        return em.createQuery("SELECT f from Creator f", Creator.class).getResultList();
     }
 
+    public Creator findById(Long id) {
+        return em.find(Creator.class, id);
+    }
 }

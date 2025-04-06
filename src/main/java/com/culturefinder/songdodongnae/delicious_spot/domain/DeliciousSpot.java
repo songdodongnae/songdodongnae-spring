@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.delicious_spot.domain;
 
 import com.culturefinder.songdodongnae.admin.delicious_spot.dto.AdminDeliciousSpotInputDto;
+import com.culturefinder.songdodongnae.curation.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.series.domain.Series;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +60,8 @@ public class DeliciousSpot {
 
     private Integer likes;
 
+    private LocalDateTime createdTime;
+
     @OneToMany(mappedBy = "deliciousSpot", cascade = CascadeType.ALL)
     private List<DeliciousSpotImage> deliciousSpotImages = new ArrayList<>();
 
@@ -77,6 +81,15 @@ public class DeliciousSpot {
         this.instagram = deliciousSpot.getInstagram();
         this.contact = deliciousSpot.getContact();
         this.likes = deliciousSpot.getLikes();
+    }
+
+    public CurationThumbnailResDto fromThumbEntity() {
+        return CurationThumbnailResDto.builder()
+                .id(this.id)
+                .title(this.name)
+                .introduction(this.onelineDescription)
+                .imageUrl(this.deliciousSpotImages.get(0).getImageUrl())
+                .build();
     }
 
     public void setDeliciousSpotImages(List<DeliciousSpotImage> deliciousSpotImages) {
