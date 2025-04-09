@@ -35,6 +35,4 @@ public class Series {
 
     private Integer orderNumber;
 
-    @Enumerated(value = EnumType.STRING)
-    private SeriesCategory category;
 }

@@ -1,7 +1,5 @@
 package com.culturefinder.songdodongnae.series.controller;
 
-import com.culturefinder.songdodongnae.exception.CustomException;
-import com.culturefinder.songdodongnae.exception.ErrorCode;
 import com.culturefinder.songdodongnae.series.domain.Series;
 import com.culturefinder.songdodongnae.series.dto.SeriesThumbnailResponseDto;
 import com.culturefinder.songdodongnae.series.repository.SeriesRepository;
@@ -27,10 +25,10 @@ public class SeriesController {
     private final SeriesRepository seriesRepository;
 
     @GetMapping("/thumbnails")
-    @Operation(summary = "홈화면 시리즈 썸네일 조회", description = "홈화면에 보여지는 시리즈 썸네일을 조회합니다.")
+    @Operation(summary = "홈화면 시리즈 조회", description = "홈화면에 보여지는 시리즈 4개를 조회합니다.")
     public ResponseEntity<ResponseContainer<List<SeriesThumbnailResponseDto>>> thumbnails_get() {
         List<SeriesThumbnailResponseDto> seriesList = seriesRepository.findAllSeries()
-                .stream().filter(Series::getIsOnMain)
+                .stream()
                 .sorted(Comparator.comparingInt(Series::getOrderNumber))
                 .map(SeriesThumbnailResponseDto::new)
                 .toList();
