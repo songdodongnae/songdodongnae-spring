@@ -1,10 +1,10 @@
 package com.culturefinder.songdodongnae.admin.series.controller;
 
-import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
+import com.culturefinder.songdodongnae.exception.CustomException;
+import com.culturefinder.songdodongnae.exception.ErrorCode;
 import com.culturefinder.songdodongnae.s3.S3UploadService;
 import com.culturefinder.songdodongnae.series.domain.Series;
-import com.culturefinder.songdodongnae.series.domain.SeriesCategory;
 import com.culturefinder.songdodongnae.series.repository.SeriesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,6 @@ import java.util.List;
 @RequestMapping("admin/series")
 public class AdminSeriesController {
 
-    private final CreatorRepository creatorRepository;
     private final SeriesRepository seriesRepository;
     private final S3UploadService uploadService;
 
@@ -48,6 +47,7 @@ public class AdminSeriesController {
             @RequestParam("orderNumber") int orderNumber,
             @RequestParam("file") MultipartFile file
     ) throws IOException {
+        if (file.isEmpty()) throw new CustomException(ErrorCode.EMPTY_FILE);
         String imageUrl = uploadService.saveFile(file);
         Series series = Series.builder()
                 .title(title)

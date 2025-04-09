@@ -32,7 +32,7 @@
         </div>
         <div class="form-group">
             <label for="orderNumber">정렬 순서</label>
-            <input type="number" name="orderNumber" min="1">
+            <input type="number" name="orderNumber">
         </div>
         <div>
             <button type="submit">등록</button>

@@ -22,14 +22,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
                 <c:forEach var="series" items="${seriesList}">
-                    <td>${series.id}</td>
-                    <td>${series.title}</td>
-                    <td><a href=${series.imageUrl}>이미지 링크 (클릭)</a></td>
-                    <td>${series.orderNumber}</td>
+                    <tr>
+                        <td>${series.id}</td>
+                        <td>${series.title}</td>
+                        <td><a href=${series.imageUrl}>이미지 링크 (클릭)</a></td>
+                        <td>${series.orderNumber}</td>
+                    </tr>
                 </c:forEach>
-            </tr>
         </tbody>
     </table>
 

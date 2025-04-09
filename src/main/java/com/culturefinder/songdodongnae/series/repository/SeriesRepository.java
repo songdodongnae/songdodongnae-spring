@@ -19,7 +19,7 @@ public class SeriesRepository {
     @PersistenceContext
     private final EntityManager em;
 
-    public Series findSeriesById(Long id) throws CustomException {
+    public Series findSeriesById(Long id) {
         Series series =  em.find(Series.class, id);
         if (series == null) throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
         return series;
@@ -30,14 +30,14 @@ public class SeriesRepository {
                 .getResultList();
     }
 
-    public Series addSeries(Series series) throws CustomException {
+    public Series addSeries(Series series) {
         List<Series> seriesList = findAllSeries();
         if (seriesList.size() >= 4) throw new CustomException(ErrorCode.SERIES_OVER_MAX);
         em.persist(series);
         return series;
     }
 
-    public Series removeSeries(Long id) throws CustomException {
+    public Series removeSeries(Long id) {
         Series series = em.find(Series.class, id);
         if (series == null) throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
         em.remove(series);
