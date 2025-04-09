@@ -30,13 +30,15 @@ public class AdminSeriesController {
         return "admin/series";
     }
 
+    @GetMapping("/list")
+    public String series_list_get(Model model) {
+        List<Series> seriesList = seriesRepository.findAllSeries();
+        model.addAttribute("seriesList", seriesList);
+        return "admin/series_list";
+    }
+
     @GetMapping("/create")
-    public String series_create_get(Model model) {
-        // TODO: 3
-//        List<Creator> creatorList = creatorRepository.findAllCreator();
-//        List<SeriesCategory> categoryList = List.of(SeriesCategory.values());
-//        model.addAttribute("creatorList", creatorList);
-//        model.addAttribute("categoryList", categoryList);
+    public String series_create_get() {
         return "admin/series_create";
     }
 
