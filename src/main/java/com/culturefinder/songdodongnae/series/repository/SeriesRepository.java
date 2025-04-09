@@ -1,5 +1,7 @@
 package com.culturefinder.songdodongnae.series.repository;
 
+import com.culturefinder.songdodongnae.exception.CustomException;
+import com.culturefinder.songdodongnae.exception.ErrorCode;
 import com.culturefinder.songdodongnae.series.domain.Series;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,8 +19,10 @@ public class SeriesRepository {
     @PersistenceContext
     private final EntityManager em;
 
-    public Series findSeriesById(Long id) {
-        return em.find(Series.class, id);
+    public Series findSeriesById(Long id) throws CustomException {
+        Series series =  em.find(Series.class, id);
+        if (series == null) throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
+        return series;
     }
 
     public List<Series> findAllSeries() {
@@ -26,14 +30,18 @@ public class SeriesRepository {
                 .getResultList();
     }
 
-    public Series addSeries(Series series) {
+    public Series addSeries(Series series) throws CustomException {
+        List<Series> seriesList = findAllSeries();
+        if (seriesList.size() >= 4) throw new CustomException(ErrorCode.SERIES_OVER_MAX);
         em.persist(series);
         return series;
     }
 
-    public Series removeSeries(Long id) {
+    public Series removeSeries(Long id) throws CustomException {
         Series series = em.find(Series.class, id);
+        if (series == null) throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
         em.remove(series);
         return series;
     }
+
 }
