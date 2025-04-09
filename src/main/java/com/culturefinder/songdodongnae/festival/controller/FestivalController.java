@@ -2,7 +2,6 @@ package com.culturefinder.songdodongnae.festival.controller;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
-import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import com.culturefinder.songdodongnae.festival.service.FestivalService;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 public class FestivalController {
 
     private final FestivalService festivalService;
-    private final FestivalRepository festivalRepository;
 
     @Operation(summary = "해당 년/월 축제 조회", description = "해당 년/월에 개최되는 모든 축제 목록을 조회합니다")
     @ApiResponse(responseCode = "200", description = "해당 월 축제 조회 성공")
