@@ -25,8 +25,6 @@ public class Festival {
 
     private String name;
 
-    private String creatorName;
-
     private LocalDate startDate;
 
     private LocalDate endDate;
