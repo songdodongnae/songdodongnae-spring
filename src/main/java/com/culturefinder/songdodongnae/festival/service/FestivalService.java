@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,26 +16,30 @@ public class FestivalService {
 
     private final FestivalRepository festivalRepository;
 
-    public List<Festival> getFestivalsByYearAndMonth(int year, int month) {
+    public List<FestivalResDto> getFestivalsByYearAndMonth(int year, int month) {
+
         LocalDate startOfMonth = LocalDate.of(year, month, 1);
         LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
 
-        return festivalRepository.findAll().stream()
-                .filter(festival -> !festival.getEndDate().isBefore(startOfMonth)
-                        && !festival.getStartDate().isAfter(endOfMonth))
+        return festivalRepository.findByYearAndMonth(startOfMonth , endOfMonth)
+                .stream()
+                .map(Festival::fromEntity)
                 .collect(Collectors.toList());
     }
 
-    public List<Festival> getAllFestival() {
-        return new ArrayList<>(festivalRepository.findAll());
+    public List<FestivalResDto> getAllFestival() {
+        return festivalRepository.findAll()
+                .stream()
+                .map(Festival::fromEntity)
+                .collect(Collectors.toList());
     }
 
-    public Festival getFestival(Long id) {
+    public FestivalResDto getFestival(Long id) {
         Festival festival = festivalRepository.findById(id);
-        if(festival == null) {
+        if (festival == null) {
             throw new IllegalArgumentException("해당 축제가 존재하지 않습니다");
         }
-        return festival;
+        return festival.fromEntity();
     }
 
 }
