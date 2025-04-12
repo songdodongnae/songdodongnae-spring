@@ -78,6 +78,9 @@ public class Festival {
                 .reservationUrl(this.reservationUrl)
                 .description(this.description)
                 .onelineDescription(this.onelineDescription)
+                .createdTime(LocalDateTime.now())
+                .posterImages(this.festivalPosterImages)
+                .images(this.festivalImages)
                 .build();
     }
 
@@ -102,7 +105,7 @@ public class Festival {
                 .id(this.id)
                 .title(this.name)
                 .introduction(this.onelineDescription)
-                .imageUrl(this.festivalPosterImages.get(0).getImageUrl())
+                .imageUrl(this.festivalPosterImages.toString())
                 .build();
     }
 
