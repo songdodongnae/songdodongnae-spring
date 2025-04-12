@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.festival.dto;
 
+import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
 import com.culturefinder.songdodongnae.festival.domain.FestivalImage;
 import com.culturefinder.songdodongnae.festival.domain.FestivalPosterImage;
 import lombok.Builder;
@@ -30,4 +31,5 @@ public class FestivalResDto {
     private LocalDateTime createdTime;
     private List<FestivalPosterImage> posterImages;
     private List<FestivalImage> images;
+    private CreatorResDto creator;
 }

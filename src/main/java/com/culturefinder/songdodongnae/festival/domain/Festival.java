@@ -81,6 +81,7 @@ public class Festival {
                 .createdTime(LocalDateTime.now())
                 .posterImages(this.festivalPosterImages)
                 .images(this.festivalImages)
+                .creator(this.creator != null ? this.creator.fromEntity() : null)
                 .build();
     }
 
@@ -98,6 +99,9 @@ public class Festival {
         this.reservationUrl = festival.getReservationUrl();
         this.description = festival.getDescription();
         this.onelineDescription = festival.getOnelineDescription();
+        if (festival.getCreator() != null) {
+            this.creator = festival.getCreator();
+        }
     }
 
     public CurationThumbnailResDto fromThumbEntity() {
