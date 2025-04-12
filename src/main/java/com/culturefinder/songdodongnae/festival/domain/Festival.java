@@ -78,7 +78,7 @@ public class Festival {
                 .reservationUrl(this.reservationUrl)
                 .description(this.description)
                 .onelineDescription(this.onelineDescription)
-                .createdTime(LocalDateTime.now())
+                .createdTime(this.createdTime)
                 .posterImages(this.festivalPosterImages)
                 .images(this.festivalImages)
                 .creator(this.creator != null ? this.creator.fromEntity() : null)
