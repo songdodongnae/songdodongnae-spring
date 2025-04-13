@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -45,6 +46,14 @@ public class FestivalRepository {
     public List<Festival> findTopByOrderByCreatedTimeDesc() {
         return em.createQuery("SELECT f FROM Festival f ORDER BY f.createdTime DESC", Festival.class)
                 .setMaxResults(20)
+                .getResultList();
+    }
+
+    public List<Festival> findByYearAndMonth(LocalDate start, LocalDate end) {
+        return em.createQuery(
+                        "SELECT f FROM Festival f WHERE f.startDate <= :end AND f.endDate >= :start", Festival.class)
+                .setParameter("start", start)
+                .setParameter("end", end)
                 .getResultList();
     }
 

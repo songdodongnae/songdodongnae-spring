@@ -1,3 +1,4 @@
+/*
 package com.culturefinder.songdodongnae.festival.dto;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
@@ -42,3 +43,4 @@ public class FestivalReqDto {
                 .build();
     }
 }
+*/
