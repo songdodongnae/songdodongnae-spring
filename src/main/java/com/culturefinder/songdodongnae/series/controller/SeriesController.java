@@ -18,14 +18,14 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("series")
+@RequestMapping("/api/series")
 @RequiredArgsConstructor
 public class SeriesController {
 
     private final SeriesRepository seriesRepository;
 
     @GetMapping("/thumbnails")
-    @Operation(summary = "홈화면 시리즈 조회", description = "홈화면에 보여지는 시리즈 4개를 조회합니다.")
+    @Operation(summary = "홈화면 시리즈 썸네일 조회", description = "홈화면에 보여지는 시리즈 썸네일 4개를 조회합니다.")
     public ResponseEntity<ResponseContainer<List<SeriesThumbnailResponseDto>>> thumbnails_get() {
         List<SeriesThumbnailResponseDto> seriesList = seriesRepository.findAllSeries()
                 .stream()

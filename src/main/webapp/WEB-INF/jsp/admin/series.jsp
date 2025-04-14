@@ -8,6 +8,7 @@
 </head>
 <body>
     <h1>시리즈</h1>
+    <div><a href="/admin/series/list">시리즈 조회</a></div>
     <div><a href="/admin/series/create">시리즈 등록</a></div>
 </body>
 </html>

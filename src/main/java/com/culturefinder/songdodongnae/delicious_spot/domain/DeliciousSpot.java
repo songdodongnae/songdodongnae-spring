@@ -3,7 +3,7 @@ package com.culturefinder.songdodongnae.delicious_spot.domain;
 import com.culturefinder.songdodongnae.admin.delicious_spot.dto.AdminDeliciousSpotInputDto;
 import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.curation.CurationThumbnailResDto;
-import com.culturefinder.songdodongnae.series.domain.Series;
+import com.culturefinder.songdodongnae.series.domain.SeriesDeliciousSpot;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -63,6 +63,9 @@ public class DeliciousSpot {
 
     @OneToMany(mappedBy = "deliciousSpot", cascade = CascadeType.ALL)
     private List<DeliciousSpotImage> deliciousSpotImages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "deliciousSpot", cascade = CascadeType.ALL)
+    private List<SeriesDeliciousSpot> seriesDeliciousSpotList = new ArrayList<>();
 
     public DeliciousSpot(AdminDeliciousSpotInputDto deliciousSpot) {
         this.name = deliciousSpot.getName();
