@@ -25,8 +25,6 @@ public class Festival {
 
     private String name;
 
-    private String creatorName;
-
     private LocalDate startDate;
 
     private LocalDate endDate;
@@ -80,6 +78,10 @@ public class Festival {
                 .reservationUrl(this.reservationUrl)
                 .description(this.description)
                 .onelineDescription(this.onelineDescription)
+                .createdTime(this.createdTime)
+                .posterImages(this.festivalPosterImages)
+                .images(this.festivalImages)
+                .creator(this.creator != null ? this.creator.fromEntity() : null)
                 .build();
     }
 
@@ -97,6 +99,9 @@ public class Festival {
         this.reservationUrl = festival.getReservationUrl();
         this.description = festival.getDescription();
         this.onelineDescription = festival.getOnelineDescription();
+        if (festival.getCreator() != null) {
+            this.creator = festival.getCreator();
+        }
     }
 
     public CurationThumbnailResDto fromThumbEntity() {
@@ -104,7 +109,7 @@ public class Festival {
                 .id(this.id)
                 .title(this.name)
                 .introduction(this.onelineDescription)
-                .imageUrl(this.festivalPosterImages.get(0).getImageUrl())
+                .imageUrl(this.festivalPosterImages.toString())
                 .build();
     }
 
