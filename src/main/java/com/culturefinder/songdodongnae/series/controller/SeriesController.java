@@ -18,7 +18,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("series")
+@RequestMapping("/api/series")
 @RequiredArgsConstructor
 public class SeriesController {
 
