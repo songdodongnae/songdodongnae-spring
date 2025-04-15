@@ -13,5 +13,6 @@
     <div><a href="/admin/delicious_spot">맛집 관리</a></div>
     <div><a href="/admin/creator">크리에이터 관리</a></div>
     <div><a href="/admin/user">유저 관리</a></div>
+    <div><a href="/admin/series_delicious_spot">시리즈-맛집 관리</a></div>
 </body>
 </html>
