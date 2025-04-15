@@ -41,6 +41,7 @@ public class CurationController {
             @RequestParam Long seriesId
     ) {
         // TODO: 시리즈-축제 연결 부분이 아직 구현이 안되서 맛집만 보여줌
+        // TODO: Pagination 필요
         Series series = seriesRepository.findSeriesById(seriesId);
         List<SeriesDeliciousSpot> seriesDeliciousSpotList = series.getSeriesDeliciousSpotList();
         List<CurationThumbnailResDto> dtos = new ArrayList<>();
