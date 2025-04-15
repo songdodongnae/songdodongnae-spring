@@ -14,6 +14,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({ CustomException.class })
     public ResponseEntity<ErrorDto> handleCustomException(CustomException exception) {
+        exception.printStackTrace();
         return new ErrorDto(exception.getErrorCode()).toResponseEntity();
     }
 
@@ -29,6 +30,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({ Exception.class })
     public ResponseEntity<ErrorDto> handleServerException(Exception exception) {
+        exception.printStackTrace();
         return new ErrorDto(ErrorCode.INTERNAL_SERVER_ERROR).toResponseEntity();
     }
 

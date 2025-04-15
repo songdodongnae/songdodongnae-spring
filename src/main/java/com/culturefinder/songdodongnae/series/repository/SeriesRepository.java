@@ -1,8 +1,10 @@
 package com.culturefinder.songdodongnae.series.repository;
 
+import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
 import com.culturefinder.songdodongnae.series.domain.Series;
+import com.culturefinder.songdodongnae.series.domain.SeriesDeliciousSpot;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -44,4 +46,12 @@ public class SeriesRepository {
         return series;
     }
 
+    public SeriesDeliciousSpot addDeliciousSpotToSeries(Series series, DeliciousSpot deliciousSpot) {
+        SeriesDeliciousSpot seriesDeliciousSpot = SeriesDeliciousSpot.builder()
+                .series(series)
+                .deliciousSpot(deliciousSpot)
+                .build();
+        em.persist(seriesDeliciousSpot);
+        return seriesDeliciousSpot;
+    }
 }

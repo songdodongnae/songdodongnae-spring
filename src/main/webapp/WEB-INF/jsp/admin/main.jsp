@@ -10,6 +10,7 @@
     <h1>송도동네 어드민</h1>
     <div><a href="/admin/system">시스템 정보</a></div>
     <div><a href="/admin/series">시리즈 관리</a></div>
+    <div><a href="/admin/delicious_spot">맛집 관리</a></div>
     <div><a href="/admin/creator">크리에이터 관리</a></div>
     <div><a href="/admin/user">유저 관리</a></div>
 </body>

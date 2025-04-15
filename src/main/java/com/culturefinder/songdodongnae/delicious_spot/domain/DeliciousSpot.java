@@ -1,21 +1,20 @@
 package com.culturefinder.songdodongnae.delicious_spot.domain;
 
-import com.culturefinder.songdodongnae.admin.delicious_spot.dto.AdminDeliciousSpotInputDto;
+import com.culturefinder.songdodongnae.admin.delicious_spot.dto.AdminDeliciousSpotCreateRequestDto;
 import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.curation.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.series.domain.SeriesDeliciousSpot;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
+@Data
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeliciousSpot {
@@ -67,7 +66,9 @@ public class DeliciousSpot {
     @OneToMany(mappedBy = "deliciousSpot", cascade = CascadeType.ALL)
     private List<SeriesDeliciousSpot> seriesDeliciousSpotList = new ArrayList<>();
 
-    public DeliciousSpot(AdminDeliciousSpotInputDto deliciousSpot) {
+    private String imageUrl;
+
+    public DeliciousSpot(AdminDeliciousSpotCreateRequestDto deliciousSpot) {
         this.name = deliciousSpot.getName();
         this.location = deliciousSpot.getLocation();
         this.price = deliciousSpot.getPrice();
@@ -92,10 +93,6 @@ public class DeliciousSpot {
                 .introduction(this.onelineDescription)
                 .imageUrl(this.deliciousSpotImages.get(0).getImageUrl())
                 .build();
-    }
-
-    public void setDeliciousSpotImages(List<DeliciousSpotImage> deliciousSpotImages) {
-        this.deliciousSpotImages = deliciousSpotImages;
     }
 
 }

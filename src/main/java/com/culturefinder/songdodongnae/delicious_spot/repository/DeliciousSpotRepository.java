@@ -34,11 +34,7 @@ public class DeliciousSpotRepository {
         return em.createQuery("SELECT d FROM DeliciousSpot d", DeliciousSpot.class).getResultList();
     }
 
-    public void addDeliciousSpot(Long id, DeliciousSpot deliciousSpot) {
-        Series seriesToAdd = seriesRepository.findSeriesById(id);
-        // TODO: 2
-//        deliciousSpot.setSeries(seriesToAdd);
-
+    public void addDeliciousSpot(DeliciousSpot deliciousSpot) {
         em.persist(deliciousSpot);
     }
 
