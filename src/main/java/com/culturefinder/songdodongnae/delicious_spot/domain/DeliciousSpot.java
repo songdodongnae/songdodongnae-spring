@@ -66,8 +66,6 @@ public class DeliciousSpot {
     @OneToMany(mappedBy = "deliciousSpot", cascade = CascadeType.ALL)
     private List<SeriesDeliciousSpot> seriesDeliciousSpotList = new ArrayList<>();
 
-    private String imageUrl;
-
     public DeliciousSpot(AdminDeliciousSpotCreateRequestDto deliciousSpot) {
         this.name = deliciousSpot.getName();
         this.location = deliciousSpot.getLocation();
@@ -91,7 +89,7 @@ public class DeliciousSpot {
                 .id(this.id)
                 .title(this.name)
                 .introduction(this.onelineDescription)
-                .imageUrl(this.deliciousSpotImages.get(0).getImageUrl())
+                .imageUrl(this.deliciousSpotImages.getFirst().getImageUrl())
                 .build();
     }
 
