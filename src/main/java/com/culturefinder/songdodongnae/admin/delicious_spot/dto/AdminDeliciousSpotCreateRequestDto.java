@@ -43,6 +43,8 @@ public class AdminDeliciousSpotCreateRequestDto {
 
     private Integer likes;
 
+    private String imageUrl;
+
     private MultipartFile image;
 
     private List<MultipartFile> files;

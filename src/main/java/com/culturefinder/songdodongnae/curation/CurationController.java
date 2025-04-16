@@ -54,7 +54,6 @@ public class CurationController {
                     .builder()
                     .id(deliciousSpot.getId())
                     .title(deliciousSpot.getName())
-                    .imageUrl(deliciousSpot.getImageUrl())
                     .createdTime(deliciousSpot.getCreatedTime())
                     .introduction(deliciousSpot.getOnelineDescription())
                     .curationType(CurationType.DELICIOUS_SPOT)

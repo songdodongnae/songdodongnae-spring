@@ -3,6 +3,7 @@ package com.culturefinder.songdodongnae.delicious_spot.domain;
 import com.culturefinder.songdodongnae.admin.delicious_spot.dto.AdminDeliciousSpotCreateRequestDto;
 import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.curation.CurationThumbnailResDto;
+import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResponseDto;
 import com.culturefinder.songdodongnae.series.domain.SeriesDeliciousSpot;
 import jakarta.persistence.*;
 import lombok.*;
@@ -60,6 +61,8 @@ public class DeliciousSpot {
 
     private LocalDateTime createdTime;
 
+    private String imageUrl;
+
     @OneToMany(mappedBy = "deliciousSpot", cascade = CascadeType.ALL)
     private List<DeliciousSpotImage> deliciousSpotImages = new ArrayList<>();
 
@@ -82,6 +85,31 @@ public class DeliciousSpot {
         this.instagram = deliciousSpot.getInstagram();
         this.contact = deliciousSpot.getContact();
         this.likes = deliciousSpot.getLikes();
+        this.imageUrl = deliciousSpot.getImageUrl();
+    }
+
+    public DeliciousSpotResponseDto fromEntity() {
+        return DeliciousSpotResponseDto.builder()
+                .id(this.id)
+                .creator(this.creator)
+                .name(this.name)
+                .location(this.location)
+                .price(this.price)
+                .naverRating(this.naverRating)
+                .kakaoRating(this.kakaoRating)
+                .startTime(this.startTime)
+                .endTime(this.endTime)
+                .waiting(this.waiting)
+                .parking(this.parking)
+                .suggestionMenu(this.suggestionMenu)
+                .description(this.description)
+                .onelineDescription(this.onelineDescription)
+                .contact(this.contact)
+                .instagram(this.instagram)
+                .likes(this.likes)
+                .createdTime(this.createdTime)
+                .deliciousSpotImages(this.deliciousSpotImages)
+                .build();
     }
 
     public CurationThumbnailResDto fromThumbEntity() {
