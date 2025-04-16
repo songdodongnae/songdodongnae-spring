@@ -85,7 +85,6 @@ public class DeliciousSpot {
         this.instagram = deliciousSpot.getInstagram();
         this.contact = deliciousSpot.getContact();
         this.likes = deliciousSpot.getLikes();
-        this.imageUrl = deliciousSpot.getImageUrl();
     }
 
     public DeliciousSpotResponseDto fromEntity() {
