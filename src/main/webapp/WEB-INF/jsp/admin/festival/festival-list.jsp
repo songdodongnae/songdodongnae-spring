@@ -43,6 +43,7 @@
     <label class="field">이름</label>
     <label class="long-field">기간</label>
     <label class="long-field">시간</label>
+    <label class="long-field">시간 설명</label>
     <label class="long-field">장소</label>
     <label class="long-field">입장료</label>
     <label class="long-field">연락처</label>
@@ -51,6 +52,8 @@
     <label class="long-field">한줄 설명</label>
     <label class="long-field">상세 설명</label>
     <label class="file">포스터</label>
+    <label class="field">수정</label>
+    <label class="field">삭제</label>
 </div>
 
 <c:if test="${empty festivals}">
@@ -64,6 +67,7 @@
             <label class="field">${festival.name}</label>
             <label class="long-field">${festival.startDate} ~ ${festival.endDate}</label>
             <label class="long-field">${festival.startTime} ~ ${festival.endTime}</label>
+            <label class="long-field">${festival.timeDescription}}</label>
             <label class="long-field">${festival.location}</label>
             <label class="long-field">${festival.fee}</label>
             <label class="long-field">${festival.contact}</label>
@@ -77,6 +81,8 @@
                     <a href="${img}" target="_blank">[이미지]</a>&nbsp;
                 </c:forEach>
             </div>
+            <div><a href="/admin/festival/update/${festival.id}">축제 수정</a></div>
+            <div><a href="/admin/festival/delete/${festival.id}">축제 삭제</a></div>
         </div>
     </c:forEach>
 </div>

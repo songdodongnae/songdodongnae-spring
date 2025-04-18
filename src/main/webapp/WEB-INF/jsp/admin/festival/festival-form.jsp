@@ -51,7 +51,7 @@
         <input type="text" name="location">
     </div>
     <div class="form-group">
-        <label for="fee">요금</label>
+        <label for="fee">입장료</label>
         <input type="text" name="fee">
     </div>
     <div class="form-group">

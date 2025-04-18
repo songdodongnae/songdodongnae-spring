@@ -55,7 +55,7 @@ public class FestivalService {
         return festival.fromEntity();
     }
 
-    public FestivalResDto updateFestival(Long id, FestivalReqDto festivalReqDto) {
+    public FestivalResDto updateFestival(Long id, AdminFestivalReqDto festivalReqDto) {
         if (festivalReqDto.getName() == null || festivalReqDto.getName().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty");
         }
