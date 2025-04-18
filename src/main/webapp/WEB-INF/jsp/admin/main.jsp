@@ -12,5 +12,6 @@
     <div><a href="/admin/series">시리즈 관리</a></div>
     <div><a href="/admin/creator">크리에이터 관리</a></div>
     <div><a href="/admin/user">유저 관리</a></div>
+    <div><a href="/admin/festival">축제 관리</a></div>
 </body>
 </html>
