@@ -13,4 +13,5 @@ public class CurationThumbnailResDto {
     private String introduction;
     private String imageUrl;
     private LocalDateTime createdTime;
+    private CurationType curationType;
 }

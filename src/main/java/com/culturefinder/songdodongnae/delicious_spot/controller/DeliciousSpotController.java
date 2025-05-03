@@ -1,11 +1,11 @@
 package com.culturefinder.songdodongnae.delicious_spot.controller;
 
-import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotThumbnailResponseDto;
-import com.culturefinder.songdodongnae.delicious_spot.dto.SingleDeliciousSpotResponseDto;
-import com.culturefinder.songdodongnae.series.domain.Series;
-import com.culturefinder.songdodongnae.series.repository.SeriesRepository;
+import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResponseDto;
+import com.culturefinder.songdodongnae.delicious_spot.service.DeliciousSpotService;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
-import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,35 +14,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
+@Tag(name = "DeliciousSpot API", description = "맛집 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/delicious-spot")
+@RequestMapping("/api/delicious-spot")
 public class DeliciousSpotController {
 
-    private final DeliciousSpotRepository deliciousSpotRepository;
-    private final SeriesRepository seriesRepository;
+    private final DeliciousSpotService deliciousSpotService;
 
-//    @GetMapping("/thumbnails")
-//    public ResponseEntity<ResponseContainer<List<DeliciousSpotThumbnailResponseDto>>> thumbnails_get() {
-//        List<DeliciousSpotThumbnailResponseDto> data = seriesRepository.findAllSeries()
-//                .stream()
-//                .map(DeliciousSpotThumbnailResponseDto::new)
-//                .toList();
-//
-//        return new ResponseContainer<>(HttpStatus.OK, "", data).toResponseEntity();
-//    }
+    @Operation(summary = "맛집 조회", description = "특정 ID의 맛집을 조회합니다")
+    @ApiResponse(responseCode = "200", description = "맛집 조회 성공")
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseContainer<DeliciousSpotResponseDto>> readDeliciousSpot(
+            @PathVariable Long id) {
 
-//    @GetMapping("/list/{id}")
-//    public ResponseEntity<ResponseContainer<List<SingleDeliciousSpotResponseDto>>> list_get(@PathVariable Long id) {
-//        List<SingleDeliciousSpotResponseDto> data = seriesRepository.findSeriesById(id)
-//                .getDeliciousSpots()
-//                .stream()
-//                .map(SingleDeliciousSpotResponseDto::new)
-//                .toList();
-//
-//        return new ResponseContainer<>(HttpStatus.OK, "", data).toResponseEntity();
-//    }
+        DeliciousSpotResponseDto dto = deliciousSpotService.getDeliciousSpotById(id);
+        return new ResponseContainer<>(HttpStatus.OK, "맛집 조회 성공", dto).toResponseEntity();
+    }
 
 }

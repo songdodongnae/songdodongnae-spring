@@ -3,6 +3,7 @@ package com.culturefinder.songdodongnae.festival.domain;
 import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.curation.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
+import com.culturefinder.songdodongnae.series.domain.SeriesFestival;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -57,6 +58,9 @@ public class Festival {
 
     @OneToMany(mappedBy = "festival", cascade = CascadeType.ALL)
     private List<FestivalImage> festivalImages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "festival", cascade = CascadeType.ALL)
+    private List<SeriesFestival> seriesFestivalList = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "creator_id")

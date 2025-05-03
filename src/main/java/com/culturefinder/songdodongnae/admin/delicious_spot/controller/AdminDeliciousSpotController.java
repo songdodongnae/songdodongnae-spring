@@ -1,12 +1,20 @@
 package com.culturefinder.songdodongnae.admin.delicious_spot.controller;
 
-import com.culturefinder.songdodongnae.admin.delicious_spot.dto.AdminDeliciousSpotInputDto;
+import com.culturefinder.songdodongnae.admin.delicious_spot.dto.AdminDeliciousSpotCreateRequestDto;
+import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
+import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotImage;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
+import com.culturefinder.songdodongnae.s3.S3UploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -15,50 +23,38 @@ import org.springframework.web.bind.annotation.*;
 public class AdminDeliciousSpotController {
 
     private final DeliciousSpotRepository deliciousSpotRepository;
+    private final S3UploadService uploadService;
 
-    @GetMapping("/delicious-list-list")
-    public String delicious_list_get(Model model) {
-//        List<AdminDeliciousSpotListDto> deliciousSpotList = deliciousSpotRepository.findAllDeliciousSpotList()
-//                .stream()
-//                .map(AdminDeliciousSpotListDto::new)
-//                .toList();
-//        model.addAttribute("deliciousSpotList", deliciousSpotList);
-        return "admin/delicious_spot/delicious-list-list";
+    @GetMapping
+    public String delicious_spot_get() {
+        return "admin/delicious_spot";
     }
 
-    @PostMapping("/delicious-list-list")
-    public String delicious_list_post(String title, String imageUrl) {
-//        DeliciousSpotList deliciousSpotList = new DeliciousSpotList(title, imageUrl);
-//        deliciousSpotRepository.addDeliciousSpotList(deliciousSpotList);
-        return "redirect:/admin/delicious_spot/delicious-list-list";
+    @GetMapping("/list")
+    public String delicious_spot_list_get(Model model) {
+        List<DeliciousSpot> deliciousSpotList = deliciousSpotRepository.findAll();
+        model.addAttribute("deliciousSpotList", deliciousSpotList);
+        return "admin/delicious_spot_list";
     }
 
-    @GetMapping("/delicious-list")
-    public String delicious_get(@RequestParam Long id, Model model) {
-//        List<AdminDeliciousSpotDto> deliciousSpotList = deliciousSpotRepository
-//                .findAllDeliciousSpotById(id)
-//                .getDeliciousSpots()
-//                .stream()
-//                .map(AdminDeliciousSpotDto::new)
-//                .toList();
-//        String deliciousSpotTitle = deliciousSpotRepository.findDeliciousSpotListById(id).getTitle();
-//        model.addAttribute("deliciousSpotId", id);
-//        model.addAttribute("deliciousSpotList", deliciousSpotList);
-//        model.addAttribute("deliciousSpotTitle", deliciousSpotTitle);
-        return "admin/delicious_spot/delicious-list";
+    @GetMapping("/create")
+    public String delicious_spot_create_get() {
+        return "admin/delicious_spot_create";
     }
 
-    @PostMapping("/delicious-list")
-    public String delicious_list_post(AdminDeliciousSpotInputDto delicious, @RequestParam Long id) {
-//        if (!delicious.getName().isBlank()) {
-//            deliciousSpotRepository.addDeliciousSpot(id, new DeliciousSpot(delicious));
-//        }
-        return "redirect:/admin/delicious_spot/delicious-list?id=" + id;
+    @PostMapping("/create")
+    public String delicious_spot_create_post(AdminDeliciousSpotCreateRequestDto dto) throws IOException {
+        List<DeliciousSpotImage> imageList = new ArrayList<>();
+        for (MultipartFile file: dto.getFiles()) {
+            String url = uploadService.saveFile(file);
+            imageList.add(new DeliciousSpotImage(url));
+        }
+        String url = uploadService.saveFile(dto.getImage());
+        DeliciousSpot deliciousSpot = new DeliciousSpot(dto);
+        deliciousSpot.setImageUrl(url);
+        deliciousSpot.setDeliciousSpotImages(imageList);
+        deliciousSpotRepository.addDeliciousSpot(deliciousSpot);
+        return "redirect:/admin/delicious_spot/list";
     }
 
-    @PostMapping("/delicious-list-list/delete")
-    public String delicious_list_delete(Long id) {
-//        deliciousSpotRepository.removeDeliciousSpotList(id);
-        return "redirect:/admin/delicious_spot/delicious-list-list";
-    }
 }
