@@ -1,15 +1,20 @@
-package com.culturefinder.songdodongnae.festival.dto;
+package com.culturefinder.songdodongnae.admin.festival.dto;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class FestivalReqDto {
+@Setter
+public class AdminFestivalReqDto {
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;
