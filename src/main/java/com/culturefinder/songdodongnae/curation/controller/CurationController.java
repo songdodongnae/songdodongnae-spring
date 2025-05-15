@@ -1,11 +1,9 @@
 package com.culturefinder.songdodongnae.curation.controller;
 
-import com.culturefinder.songdodongnae.curation.domain.CurationType;
+import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.curation.service.CurationService;
-import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.series.domain.Series;
-import com.culturefinder.songdodongnae.series.domain.SeriesDeliciousSpot;
 import com.culturefinder.songdodongnae.series.repository.SeriesRepository;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,19 +41,19 @@ public class CurationController {
         // TODO: 시리즈-축제 연결 부분이 아직 구현이 안되서 맛집만 보여줌
         // TODO: Pagination 필요
         Series series = seriesRepository.findSeriesById(seriesId);
-        List<SeriesDeliciousSpot> seriesDeliciousSpotList = series.getSeriesDeliciousSpotList();
+        List<Curation> curations = series.getCurations();
         List<CurationThumbnailResDto> dtos = new ArrayList<>();
-        for (SeriesDeliciousSpot e: seriesDeliciousSpotList) {
-            DeliciousSpot deliciousSpot = e.getDeliciousSpot();
-            CurationThumbnailResDto dto = CurationThumbnailResDto
-                    .builder()
-                    .id(deliciousSpot.getId())
-                    .title(deliciousSpot.getTitle())
-                    .createdTime(deliciousSpot.getCreatedAt())
-                    .introduction(deliciousSpot.getOnelineDescription())
-                    .curationType(CurationType.DELICIOUS_SPOT)
-                    .build();
-            dtos.add(dto);
+        for (Curation c: curations) {
+//            DeliciousSpot deliciousSpot = c.getDeliciousSpot();
+//            CurationThumbnailResDto dto = CurationThumbnailResDto
+//                    .builder()
+//                    .id(deliciousSpot.getId())
+//                    .title(deliciousSpot.getTitle())
+//                    .createdTime(deliciousSpot.getCreatedAt())
+//                    .introduction(deliciousSpot.getOnelineDescription())
+//                    .curationType(CurationType.DELICIOUS_SPOT)
+//                    .build();
+//            dtos.add(dto);
         }
 
         return new ResponseContainer<>(HttpStatus.OK, "특정 시리즈에 포함된 모든 큐레이션 조회 성공", dtos).toResponseEntity();

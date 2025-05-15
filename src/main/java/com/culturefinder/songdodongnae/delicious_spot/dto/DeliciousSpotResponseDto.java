@@ -1,18 +1,12 @@
 package com.culturefinder.songdodongnae.delicious_spot.dto;
 
-import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.delicious_spot.domain.CurationDeliciousSpot;
-import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotImage;
-import com.culturefinder.songdodongnae.series.domain.SeriesDeliciousSpot;
-import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
