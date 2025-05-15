@@ -1,5 +1,8 @@
-package com.culturefinder.songdodongnae.curation;
+package com.culturefinder.songdodongnae.curation.controller;
 
+import com.culturefinder.songdodongnae.curation.domain.CurationType;
+import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
+import com.culturefinder.songdodongnae.curation.service.CurationService;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.series.domain.Series;
 import com.culturefinder.songdodongnae.series.domain.SeriesDeliciousSpot;
@@ -25,12 +28,6 @@ public class CurationController {
     private final CurationService curationService;
     private final SeriesRepository seriesRepository;
 
-//    @GetMapping("/thumbnail/all")
-//    public ResponseEntity<ResponseContainer<List<CurationThumbnailResDto>>> getAllCurationThumbnails() {
-//        List<CurationThumbnailResDto> dtos = curationService.getAllCurationThumbnails();
-//        return new ResponseContainer<>(HttpStatus.OK, "큐레이션 썸네일 목록 조회 성공", dtos).toResponseEntity();
-//    }
-
     @GetMapping("/thumbnail/top")
     @Operation(summary = "큐레이션 썸네일 상위 20개 조회", description = "홈화면에 보여지는 큐레이션 썸네일 20개를 조회합니다.")
     public ResponseEntity<ResponseContainer<List<CurationThumbnailResDto>>> getTopCurationThumbnails() {
@@ -53,8 +50,8 @@ public class CurationController {
             CurationThumbnailResDto dto = CurationThumbnailResDto
                     .builder()
                     .id(deliciousSpot.getId())
-                    .title(deliciousSpot.getName())
-                    .createdTime(deliciousSpot.getCreatedTime())
+                    .title(deliciousSpot.getTitle())
+                    .createdTime(deliciousSpot.getCreatedAt())
                     .introduction(deliciousSpot.getOnelineDescription())
                     .curationType(CurationType.DELICIOUS_SPOT)
                     .build();

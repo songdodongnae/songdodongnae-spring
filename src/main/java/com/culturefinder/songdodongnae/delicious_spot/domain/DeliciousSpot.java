@@ -1,9 +1,8 @@
 package com.culturefinder.songdodongnae.delicious_spot.domain;
 
 import com.culturefinder.songdodongnae.admin.delicious_spot.dto.AdminDeliciousSpotCreateRequestDto;
-import com.culturefinder.songdodongnae.curation.CurationThumbnailResDto;
+import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResponseDto;
-import com.culturefinder.songdodongnae.series.domain.SeriesDeliciousSpot;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -114,6 +113,15 @@ public class DeliciousSpot {
                 .imageUrl(this.imageUrl)
                 .deliciousSpotImages(this.deliciousSpotImages)
                 .curationDeliciousSpotList(this.curationDeliciousSpotList)
+                .build();
+    }
+
+    public CurationThumbnailResDto fromThumbEntity() {
+        return CurationThumbnailResDto.builder()
+                .id(this.id)
+                .title(this.title)
+                .introduction(this.onelineDescription)
+                .imageUrl(this.imageUrl)
                 .build();
     }
 

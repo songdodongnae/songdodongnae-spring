@@ -1,9 +1,7 @@
 package com.culturefinder.songdodongnae.festival.domain;
 
-import com.culturefinder.songdodongnae.creator.domain.Creator;
-import com.culturefinder.songdodongnae.curation.CurationThumbnailResDto;
+import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
-import com.culturefinder.songdodongnae.series.domain.SeriesFestival;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -113,6 +111,15 @@ public class Festival {
         this.festivalImages = festival.getFestivalImages();
         this.curationFestivalList = festival.getCurationFestivalList();
 
+    }
+
+    public CurationThumbnailResDto fromThumbEntity() {
+        return CurationThumbnailResDto.builder()
+                .id(this.id)
+                .title(this.title)
+                .introduction(this.onelineDescription)
+                .imageUrl(this.imageUrl)
+                .build();
     }
 
 }
