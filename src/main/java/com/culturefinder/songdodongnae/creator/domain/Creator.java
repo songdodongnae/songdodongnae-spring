@@ -2,11 +2,13 @@ package com.culturefinder.songdodongnae.creator.domain;
 
 import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorThumbnailResDto;
+import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Creator {
+
     @Id @GeneratedValue
     @Column(name = "creator_id")
     private Long id;
@@ -29,14 +32,15 @@ public class Creator {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(mappedBy = "creator")
-    private List<Festival> festivalList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "creator")
-    private List<DeliciousSpot> deliciousSpotList = new ArrayList<>();
-
     @Column(length = 40000)
     private String imageUrl;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    @OneToMany
+    private List<Curation> curationList = new ArrayList<>();
 
     public CreatorResDto fromEntity() {
         return CreatorResDto.builder()
@@ -44,6 +48,10 @@ public class Creator {
                 .name(this.name)
                 .introduction(this.introduction)
                 .description(this.description)
+                .imageUrl(this.imageUrl)
+                .createdAt(this.createdAt)
+                .updatedAt(this.updatedAt)
+                .curationList(this.curationList)
                 .build();
     }
 
