@@ -24,7 +24,7 @@ public class Festival {
     @Column(name = "festival_id")
     private Long id;
 
-    private String name;
+    private String title;
 
     private LocalDate startDate;
 
@@ -36,7 +36,9 @@ public class Festival {
 
     private String timeDescription;
 
-    private String location;
+    private double latitude;
+
+    private double longitude;
 
     private String fee;
 
@@ -51,70 +53,66 @@ public class Festival {
 
     private String onelineDescription;
 
-    private LocalDateTime createdTime;
+    private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "festival", cascade = CascadeType.ALL)
-    private List<FestivalPosterImage> festivalPosterImages = new ArrayList<>();
+    private LocalDateTime updatedAt;
+
+    private String imageUrl;
 
     @OneToMany(mappedBy = "festival", cascade = CascadeType.ALL)
     private List<FestivalImage> festivalImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "festival", cascade = CascadeType.ALL)
-    private List<SeriesFestival> seriesFestivalList = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "creator_id")
-    private Creator creator;
+    private List<CurationFestival> curationFestivalList = new ArrayList<>();
 
     public FestivalResDto fromEntity() {
         return FestivalResDto.builder()
                 .id(this.id)
-                .name(this.name)
+                .title(this.title)
                 .startDate(this.startDate)
                 .endDate(this.endDate)
                 .startTime(this.startTime)
                 .endTime(this.endTime)
                 .timeDescription(this.timeDescription)
-                .location(this.location)
+                .latitude(this.latitude)
+                .longitude(this.longitude)
                 .fee(this.fee)
                 .contact(this.contact)
                 .homePageUrl(this.homePageUrl)
                 .reservationUrl(this.reservationUrl)
                 .description(this.description)
                 .onelineDescription(this.onelineDescription)
-                .createdTime(this.createdTime)
-                .posterImages(this.festivalPosterImages)
-                .images(this.festivalImages)
-                .creator(this.creator != null ? this.creator.fromEntity() : null)
+                .createdAt(this.createdAt)
+                .updatedAt(this.updatedAt)
+                .imageUrl(this.imageUrl)
+                .festivalImages(this.festivalImages)
+                .curationFestivalList(this.curationFestivalList)
                 .build();
+
     }
 
     public void update(Festival festival) {
-        this.name = festival.getName();
+
+        this.title = festival.getTitle();
         this.startDate = festival.getStartDate();
         this.endDate = festival.getEndDate();
         this.startTime = festival.getStartTime();
         this.endTime = festival.getEndTime();
         this.timeDescription = festival.getTimeDescription();
-        this.location = festival.getLocation();
+        this.latitude = festival.getLatitude();
+        this.longitude = festival.getLongitude();
         this.fee = festival.getFee();
         this.contact = festival.getContact();
         this.homePageUrl = festival.getHomePageUrl();
         this.reservationUrl = festival.getReservationUrl();
         this.description = festival.getDescription();
         this.onelineDescription = festival.getOnelineDescription();
-        if (festival.getCreator() != null) {
-            this.creator = festival.getCreator();
-        }
-    }
+        this.createdAt = festival.getCreatedAt();
+        this.updatedAt = festival.getUpdatedAt();
+        this.imageUrl = festival.getImageUrl();
+        this.festivalImages = festival.getFestivalImages();
+        this.curationFestivalList = festival.getCurationFestivalList();
 
-    public CurationThumbnailResDto fromThumbEntity() {
-        return CurationThumbnailResDto.builder()
-                .id(this.id)
-                .title(this.name)
-                .introduction(this.onelineDescription)
-                .imageUrl(this.festivalPosterImages.toString())
-                .build();
     }
 
 }

@@ -117,13 +117,4 @@ public class DeliciousSpot {
                 .build();
     }
 
-    public CurationThumbnailResDto fromThumbEntity() {
-        return CurationThumbnailResDto.builder()
-                .id(this.id)
-                .title(this.title)
-                .introduction(this.onelineDescription)
-                .imageUrl(this.imageUrl)
-                .build();
-    }
-
 }
