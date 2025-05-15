@@ -18,14 +18,13 @@ public class DeliciousSpotRepository {
 
     @PersistenceContext
     private final EntityManager em;
-    private final SeriesRepository seriesRepository;
 
     public DeliciousSpot findDeliciousSpotById(Long id) {
         return em.find(DeliciousSpot.class, id);
     }
 
     public List<DeliciousSpot> findTopByOrderByCreatedTimeDesc() {
-        return em.createQuery("SELECT d FROM DeliciousSpot d ORDER BY d.createdTime DESC", DeliciousSpot.class)
+        return em.createQuery("SELECT d FROM DeliciousSpot d ORDER BY d.createdAt DESC", DeliciousSpot.class)
                 .setMaxResults(20)
                 .getResultList();
     }
@@ -36,12 +35,6 @@ public class DeliciousSpotRepository {
 
     public void addDeliciousSpot(DeliciousSpot deliciousSpot) {
         em.persist(deliciousSpot);
-    }
-
-    public List<DeliciousSpot> findBySeries(Series series) {
-        return em.createQuery("SELECT d FROM DeliciousSpot d WHERE d.series = :series", DeliciousSpot.class)
-                .setParameter("series", series)
-                .getResultList();
     }
 
 }
