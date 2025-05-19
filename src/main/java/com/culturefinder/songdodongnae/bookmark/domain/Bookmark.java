@@ -1,0 +1,22 @@
+package com.culturefinder.songdodongnae.bookmark.domain;
+
+import com.culturefinder.songdodongnae.curation.domain.Curation;
+import com.culturefinder.songdodongnae.user.domain.User;
+import jakarta.persistence.*;
+
+@Entity
+public class Bookmark {
+
+    @Id @GeneratedValue
+    @Column(name = "bookmark_id")
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "curation_id")
+    private Curation curation;
+
+}

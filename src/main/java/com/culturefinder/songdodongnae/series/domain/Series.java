@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.series.domain;
 
+import com.culturefinder.songdodongnae.curation.domain.Curation;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,20 +22,15 @@ public class Series {
     @Column(name = "series_id")
     private Long id;
 
-    @OneToMany(mappedBy = "series")
-    private List<SeriesDeliciousSpot> seriesDeliciousSpotList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "series")
-    private List<SeriesFestival> seriesFestivalList = new ArrayList<>();
-
     private String title;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updateAt;
 
     private String imageUrl;
 
-    private Integer orderNumber;
+    private Integer count;
+
+    private Integer order;
+
+    @OneToMany
+    private List<Curation> curations = new ArrayList<>();
 
 }

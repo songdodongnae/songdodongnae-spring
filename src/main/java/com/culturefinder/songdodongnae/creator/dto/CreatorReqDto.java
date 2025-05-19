@@ -7,8 +7,11 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class CreatorReqDto {
+
     private String name;
+
     private String introduction;
+
     private String description;
 
     public Creator toEntity() {

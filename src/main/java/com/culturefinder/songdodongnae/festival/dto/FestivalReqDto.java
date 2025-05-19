@@ -10,29 +10,45 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Getter
 public class FestivalReqDto {
-    private String name;
+
+    private String title;
+
     private LocalDate startDate;
+
     private LocalDate endDate;
+
     private LocalTime startTime;
+
     private LocalTime endTime;
+
     private String timeDescription;
-    private String location;
+
+    private double latitude;
+
+    private double longitude;
+
     private String fee;
+
     private String contact;
+
     private String homePageUrl;
+
     private String reservationUrl;
+
     private String description;
+
     private String onelineDescription;
 
     public Festival toEntity() {
         return Festival.builder()
-                .name(this.name)
+                .title(this.title)
                 .startDate(this.startDate)
                 .endDate(this.endDate)
                 .startTime(this.startTime)
                 .endTime(this.endTime)
                 .timeDescription(this.timeDescription)
-                .location(this.location)
+                .latitude(this.latitude)
+                .longitude(this.longitude)
                 .fee(this.fee)
                 .contact(this.contact)
                 .homePageUrl(this.homePageUrl)

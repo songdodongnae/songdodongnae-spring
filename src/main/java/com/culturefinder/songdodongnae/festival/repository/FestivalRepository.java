@@ -44,7 +44,7 @@ public class FestivalRepository {
     }
 
     public List<Festival> findTopByOrderByCreatedTimeDesc() {
-        return em.createQuery("SELECT f FROM Festival f ORDER BY f.createdTime DESC", Festival.class)
+        return em.createQuery("SELECT f FROM Festival f ORDER BY f.createdAt DESC", Festival.class)
                 .setMaxResults(20)
                 .getResultList();
     }

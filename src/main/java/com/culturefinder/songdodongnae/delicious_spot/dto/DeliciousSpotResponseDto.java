@@ -1,17 +1,12 @@
 package com.culturefinder.songdodongnae.delicious_spot.dto;
 
-import com.culturefinder.songdodongnae.creator.domain.Creator;
-import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
+import com.culturefinder.songdodongnae.delicious_spot.domain.CurationDeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotImage;
-import com.culturefinder.songdodongnae.series.domain.SeriesDeliciousSpot;
-import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -20,11 +15,13 @@ public class DeliciousSpotResponseDto {
 
     private Long id;
 
-    private Creator creator;
+    private String title;
 
-    private String name;
+    private double latitude;
 
-    private String location;
+    private double longitude;
+
+    private String address;
 
     private Integer price;
 
@@ -35,6 +32,8 @@ public class DeliciousSpotResponseDto {
     private LocalTime startTime;
 
     private LocalTime endTime;
+
+    private String timeDescription;
 
     private String waiting;
 
@@ -50,10 +49,14 @@ public class DeliciousSpotResponseDto {
 
     private String contact;
 
-    private Integer likes;
+    private LocalDateTime createdAt;
 
-    private LocalDateTime createdTime;
+    private LocalDateTime updatedAt;
+
+    private String imageUrl;
 
     private List<DeliciousSpotImage> deliciousSpotImages;
+
+    private List<CurationDeliciousSpot> curationDeliciousSpotList;
 
 }
