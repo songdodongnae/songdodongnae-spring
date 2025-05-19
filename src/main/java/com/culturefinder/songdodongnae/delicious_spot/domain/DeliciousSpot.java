@@ -27,6 +27,8 @@ public class DeliciousSpot {
 
     private double longitude;
 
+    private String address;
+
     private Integer price;
 
     private Float naverRating;
@@ -72,6 +74,7 @@ public class DeliciousSpot {
                 .title(this.title)
                 .latitude(this.latitude)
                 .longitude(this.longitude)
+                .address(this.address)
                 .price(this.price)
                 .naverRating(this.naverRating)
                 .kakaoRating(this.kakaoRating)

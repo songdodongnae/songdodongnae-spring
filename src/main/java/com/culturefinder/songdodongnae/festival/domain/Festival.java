@@ -38,6 +38,8 @@ public class Festival {
 
     private double longitude;
 
+    private String address;
+
     private String fee;
 
     private String contact;
@@ -74,6 +76,7 @@ public class Festival {
                 .timeDescription(this.timeDescription)
                 .latitude(this.latitude)
                 .longitude(this.longitude)
+                .address(this.address)
                 .fee(this.fee)
                 .contact(this.contact)
                 .homePageUrl(this.homePageUrl)
@@ -90,7 +93,6 @@ public class Festival {
     }
 
     public void update(Festival festival) {
-
         this.title = festival.getTitle();
         this.startDate = festival.getStartDate();
         this.endDate = festival.getEndDate();
@@ -99,6 +101,7 @@ public class Festival {
         this.timeDescription = festival.getTimeDescription();
         this.latitude = festival.getLatitude();
         this.longitude = festival.getLongitude();
+        this.address = festival.getAddress();
         this.fee = festival.getFee();
         this.contact = festival.getContact();
         this.homePageUrl = festival.getHomePageUrl();
@@ -110,7 +113,6 @@ public class Festival {
         this.imageUrl = festival.getImageUrl();
         this.festivalImages = festival.getFestivalImages();
         this.curationFestivalList = festival.getCurationFestivalList();
-
     }
 
     public CurationThumbnailResDto fromThumbEntity() {

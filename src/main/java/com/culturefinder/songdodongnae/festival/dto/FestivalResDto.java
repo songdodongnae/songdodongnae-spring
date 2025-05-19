@@ -33,6 +33,8 @@ public class FestivalResDto {
 
     private double longitude;
 
+    private String address;
+
     private String fee;
 
     private String contact;

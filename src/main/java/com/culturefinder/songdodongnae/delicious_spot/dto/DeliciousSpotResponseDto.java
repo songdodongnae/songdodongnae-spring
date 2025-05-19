@@ -21,6 +21,8 @@ public class DeliciousSpotResponseDto {
 
     private double longitude;
 
+    private String address;
+
     private Integer price;
 
     private Float naverRating;
