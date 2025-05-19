@@ -1,6 +1,5 @@
 package com.culturefinder.songdodongnae.delicious_spot.domain;
 
-import com.culturefinder.songdodongnae.admin.delicious_spot.dto.AdminDeliciousSpotCreateRequestDto;
 import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResponseDto;
 import jakarta.persistence.*;
@@ -66,28 +65,6 @@ public class DeliciousSpot {
 
     @OneToMany(mappedBy = "deliciousSpot", cascade = CascadeType.ALL)
     private List<CurationDeliciousSpot> curationDeliciousSpotList = new ArrayList<>();
-
-    public DeliciousSpot(AdminDeliciousSpotCreateRequestDto deliciousSpot) {
-        //this.title = deliciousSpot.getTitle();
-        //this.latitude = deliciousSpot.getLatitude();
-        //this.longitude = deliciousSpot.getLongitude;
-        this.price = deliciousSpot.getPrice();
-        this.naverRating = deliciousSpot.getNaverRating();
-        this.kakaoRating = deliciousSpot.getKakaoRating();
-        this.startTime = deliciousSpot.getStartTime();
-        this.endTime = deliciousSpot.getEndTime();
-        //this.timeDescription = deliciousSpot.getTimeDescription();
-        this.waiting = deliciousSpot.getWaiting();
-        this.parking = deliciousSpot.getParking();
-        this.suggestionMenu = deliciousSpot.getSuggestionMenu();
-        this.description = deliciousSpot.getDescription();
-        this.onelineDescription = deliciousSpot.getOnelineDescription();
-        this.instagram = deliciousSpot.getInstagram();
-        this.contact = deliciousSpot.getContact();
-        //this.createdAt = deliciousSpot.getCreatedAt();
-        //this.updatedAt = deliciousSpot.getUpdatedAt();
-        //this.imageUrl = deliciousSpot.getImageUrl();
-    }
 
     public DeliciousSpotResponseDto fromEntity() {
         return DeliciousSpotResponseDto.builder()
