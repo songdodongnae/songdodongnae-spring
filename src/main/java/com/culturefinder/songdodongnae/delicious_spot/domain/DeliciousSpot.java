@@ -4,13 +4,14 @@ import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Entity
 @Builder
 @AllArgsConstructor
@@ -56,8 +57,10 @@ public class DeliciousSpot {
 
     private String contact;
 
+    @Setter
     private LocalDateTime createdAt;
 
+    @Setter
     private LocalDateTime updatedAt;
 
     private String imageUrl;

@@ -4,6 +4,7 @@ import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -53,8 +54,10 @@ public class Festival {
 
     private String onelineDescription;
 
+    @Setter
     private LocalDateTime createdAt;
 
+    @Setter
     private LocalDateTime updatedAt;
 
     private String imageUrl;

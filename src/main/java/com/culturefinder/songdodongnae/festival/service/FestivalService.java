@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,8 +20,12 @@ public class FestivalService {
 
 
     public FestivalResDto createFestival(FestivalReqDto festivalReqDto) {
-        Festival festival = festivalRepository.saveFestival(festivalReqDto.toEntity());
-        return festival.fromEntity();
+        Festival festival = festivalReqDto.toEntity();
+        LocalDateTime createdAt = LocalDateTime.now();
+        festival.setCreatedAt(createdAt);
+        festival.setUpdatedAt(createdAt);
+        Festival savedFestival = festivalRepository.saveFestival(festival);
+        return savedFestival.fromEntity();
     }
 
     public List<FestivalResDto> getFestivalsByYearAndMonth(int year, int month) {
