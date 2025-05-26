@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.festival.controller;
 
+import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.service.FestivalService;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
@@ -20,6 +21,14 @@ import java.util.List;
 public class FestivalController {
 
     private final FestivalService festivalService;
+
+    @Operation(summary = "축제 생성", description = "축제를 생성합니다.")
+    @ApiResponse(responseCode = "201", description = "축제 생성 성공")
+    @PostMapping
+    public ResponseEntity<ResponseContainer<FestivalResDto>> festivalCreate(@RequestBody FestivalReqDto festivalReqDto) {
+        FestivalResDto dto = festivalService.createFestival(festivalReqDto);
+        return new ResponseContainer<>(HttpStatus.CREATED, "축제 생성 성공", dto).toResponseEntity();
+    }
 
     @Operation(summary = "해당 년/월 축제 조회", description = "해당 년/월에 개최되는 모든 축제 목록을 조회합니다")
     @ApiResponse(responseCode = "200", description = "해당 월 축제 조회 성공")
