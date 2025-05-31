@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,7 +26,11 @@ public class FestivalController {
     @Operation(summary = "축제 생성", description = "축제를 생성합니다.")
     @ApiResponse(responseCode = "201", description = "축제 생성 성공")
     @PostMapping
-    public ResponseEntity<ResponseContainer<FestivalResDto>> festivalCreate(@RequestBody FestivalReqDto festivalReqDto) {
+    public ResponseEntity<ResponseContainer<FestivalResDto>> festivalCreate(
+            @RequestBody FestivalReqDto festivalReqDto,
+            @RequestPart(required = false) MultipartFile mainImage,
+            @RequestPart(required = false) List<MultipartFile> images) {
+
         FestivalResDto dto = festivalService.createFestival(festivalReqDto);
         return new ResponseContainer<>(HttpStatus.CREATED, "축제 생성 성공", dto).toResponseEntity();
     }

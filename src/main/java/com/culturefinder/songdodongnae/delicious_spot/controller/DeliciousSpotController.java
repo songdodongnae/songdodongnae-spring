@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Tag(name = "DeliciousSpot API", description = "맛집 관련 API")
 @RestController
@@ -23,8 +26,10 @@ public class DeliciousSpotController {
     @Operation(summary = "맛집 생성", description = "맛집을 생성합니다")
     @ApiResponse(responseCode = "201", description = "맛집 생성 성공")
     @PostMapping
-    public ResponseEntity<ResponseContainer<DeliciousSpotResponseDto>> readDeliciousSpot(
-            @RequestBody DeliciousSpotReqDto deliciousSpotReqDto) {
+    public ResponseEntity<ResponseContainer<DeliciousSpotResponseDto>> createDeliciousSpot(
+            @RequestBody DeliciousSpotReqDto deliciousSpotReqDto,
+            @RequestPart(required = false) MultipartFile mainImage,
+            @RequestPart(required = false) List<MultipartFile> images) {
 
         DeliciousSpotResponseDto dto = deliciousSpotService.createDeliciousSpot(deliciousSpotReqDto);
         return new ResponseContainer<>(HttpStatus.CREATED, "맛집 생성 성공", dto).toResponseEntity();
