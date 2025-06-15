@@ -27,6 +27,8 @@ public class FestivalReqDto {
 
     private double longitude;
 
+    private String address;
+
     private String fee;
 
     private String contact;
@@ -49,6 +51,7 @@ public class FestivalReqDto {
                 .timeDescription(this.timeDescription)
                 .latitude(this.latitude)
                 .longitude(this.longitude)
+                .address(this.address)
                 .fee(this.fee)
                 .contact(this.contact)
                 .homePageUrl(this.homePageUrl)

@@ -19,6 +19,11 @@ public class DeliciousSpotRepository {
     @PersistenceContext
     private final EntityManager em;
 
+    public DeliciousSpot saveDeliciousSpot(DeliciousSpot deliciousSpot) {
+        em.persist(deliciousSpot);
+        return deliciousSpot;
+    }
+
     public DeliciousSpot findDeliciousSpotById(Long id) {
         return em.find(DeliciousSpot.class, id);
     }

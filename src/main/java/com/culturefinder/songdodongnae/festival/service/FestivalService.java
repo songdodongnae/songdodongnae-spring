@@ -1,12 +1,14 @@
 package com.culturefinder.songdodongnae.festival.service;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
+import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +17,16 @@ import java.util.stream.Collectors;
 public class FestivalService {
 
     private final FestivalRepository festivalRepository;
+
+
+    public FestivalResDto createFestival(FestivalReqDto festivalReqDto) {
+        Festival festival = festivalReqDto.toEntity();
+        LocalDateTime createdAt = LocalDateTime.now();
+        festival.setCreatedAt(createdAt);
+        festival.setUpdatedAt(createdAt);
+        Festival savedFestival = festivalRepository.saveFestival(festival);
+        return savedFestival.fromEntity();
+    }
 
     public List<FestivalResDto> getFestivalsByYearAndMonth(int year, int month) {
 
