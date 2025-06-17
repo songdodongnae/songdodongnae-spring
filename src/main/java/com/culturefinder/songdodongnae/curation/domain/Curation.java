@@ -3,6 +3,7 @@ package com.culturefinder.songdodongnae.curation.domain;
 import com.culturefinder.songdodongnae.delicious_spot.domain.CurationDeliciousSpot;
 import com.culturefinder.songdodongnae.festival.domain.CurationFestival;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Entity
+@Getter
 public class Curation {
 
     @Id
@@ -18,6 +20,8 @@ public class Curation {
     private Long id;
 
     private String title;
+
+    private String introduction;
 
     private LocalDateTime createdAt;
 

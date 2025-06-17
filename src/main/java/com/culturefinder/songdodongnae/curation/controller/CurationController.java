@@ -5,7 +5,6 @@ import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.curation.service.CurationService;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotSummaryDto;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
-import com.culturefinder.songdodongnae.delicious_spot.service.DeliciousSpotService;
 import com.culturefinder.songdodongnae.series.domain.Series;
 import com.culturefinder.songdodongnae.series.dto.SeriesSummaryDto;
 import com.culturefinder.songdodongnae.series.repository.SeriesRepository;
@@ -84,5 +83,7 @@ public class CurationController {
                 .toList();
         return new ResponseContainer<>(HttpStatus.OK, "모든 시리즈 id와 title 조회 성공", seriesSummaries).toResponseEntity();
     }
+
+
 
 }
