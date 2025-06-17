@@ -3,10 +3,15 @@ package com.culturefinder.songdodongnae.curation.controller;
 import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.curation.service.CurationService;
+import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotSummaryDto;
+import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
+import com.culturefinder.songdodongnae.delicious_spot.service.DeliciousSpotService;
 import com.culturefinder.songdodongnae.series.domain.Series;
+import com.culturefinder.songdodongnae.series.dto.SeriesSummaryDto;
 import com.culturefinder.songdodongnae.series.repository.SeriesRepository;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +30,7 @@ public class CurationController {
 
     private final CurationService curationService;
     private final SeriesRepository seriesRepository;
+    private final DeliciousSpotRepository deliciousSpotRepository;
 
     @GetMapping("/thumbnail/top")
     @Operation(summary = "큐레이션 썸네일 상위 20개 조회", description = "홈화면에 보여지는 큐레이션 썸네일 20개를 조회합니다.")
@@ -57,6 +63,26 @@ public class CurationController {
         }
 
         return new ResponseContainer<>(HttpStatus.OK, "특정 시리즈에 포함된 모든 큐레이션 조회 성공", dtos).toResponseEntity();
+    }
+
+    @Operation(summary = "모든 맛집 조회", description = "모든 맛집의 id와 title을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "모든 맛집 id와 title 조회 성공")
+    @GetMapping("/delicious-spot")
+    public ResponseEntity<ResponseContainer<List<DeliciousSpotSummaryDto>>> getAllDeliciousSpotThumbnails() {
+        List<DeliciousSpotSummaryDto> deliciousSpotSummaries = deliciousSpotRepository.findAll().stream()
+                .map(DeliciousSpotSummaryDto::fromEntity)
+                .toList();
+        return new ResponseContainer<>(HttpStatus.OK, "모든 맛집 id와 title 조회 성공", deliciousSpotSummaries).toResponseEntity();
+    }
+
+    @Operation(summary = "모든 시리즈 조회", description = "모든 시리즈의 id와 title을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "모든 시리즈 id와 title 조회 성공")
+    @GetMapping("/series")
+    public ResponseEntity<ResponseContainer<List<SeriesSummaryDto>>> getAllSeries() {
+        List<SeriesSummaryDto> seriesSummaries = seriesRepository.findAllSeries().stream()
+                .map(SeriesSummaryDto::fromEntity)
+                .toList();
+        return new ResponseContainer<>(HttpStatus.OK, "모든 시리즈 id와 title 조회 성공", seriesSummaries).toResponseEntity();
     }
 
 }
