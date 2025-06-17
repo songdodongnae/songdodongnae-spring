@@ -84,6 +84,36 @@ public class CurationController {
         return new ResponseContainer<>(HttpStatus.OK, "모든 시리즈 id와 title 조회 성공", seriesSummaries).toResponseEntity();
     }
 
+    @Operation(summary = "모든 큐레이션 썸네일 조회", description = "모든 큐레이션의 썸네일을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "모든 큐레이션 썸네일 조회 성공")
+    @GetMapping("/thumbnail/all")
+    public ResponseEntity<ResponseContainer<List<CurationThumbnailResDto>>> getAllCurationThumbnails() {
+        List<CurationThumbnailResDto> dtos = curationService.getAllCurationThumbnails();
+        return new ResponseContainer<>(HttpStatus.OK, "모든 큐레이션 썸네일 조회 성공", dtos).toResponseEntity();
+    }
 
+    @Operation(summary = "큐레이션 상세 조회", description = "큐레이션의 상세 정보를 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "큐레이션 상세 조회 성공")
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<ResponseContainer<Curation>> getCurationDetail(@RequestParam Long id) {
+        Curation curation = curationService.findCurationById(id);
+        return new ResponseContainer<>(HttpStatus.OK, "큐레이션 상세 조회 성공", curation).toResponseEntity();
+    }
+
+    @Operation(summary = "큐레이션 등록", description = "큐레이션을 등록합니다.")
+    @ApiResponse(responseCode = "20", description = "큐레이션 등록 성공")
+    @GetMapping("/create")
+    public ResponseEntity<ResponseContainer<Curation>> createCuration(@RequestParam Curation curation) {
+        Curation createdCuration = curationService.createCuration(curation);
+        return new ResponseContainer<>(HttpStatus.CREATED, "큐레이션 등록 성공", createdCuration).toResponseEntity();
+    }
+
+    @Operation(summary = "큐레이션 삭제", description = "큐레이션을 삭제합니다.")
+    @ApiResponse(responseCode = "200", description = "큐레이션 삭제 성공")
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<ResponseContainer<Curation>> deleteCuration(@RequestParam Long id) {
+        Curation deletedCuration = curationService.deleteCuration(id);
+        return new ResponseContainer<>(HttpStatus.OK, "큐레이션 삭제 성공", deletedCuration).toResponseEntity();
+    }
 
 }
