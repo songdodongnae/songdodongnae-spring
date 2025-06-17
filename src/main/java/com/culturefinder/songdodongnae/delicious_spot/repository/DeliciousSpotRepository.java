@@ -1,14 +1,15 @@
 package com.culturefinder.songdodongnae.delicious_spot.repository;
 
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
-import com.culturefinder.songdodongnae.series.domain.Series;
-import com.culturefinder.songdodongnae.series.repository.SeriesRepository;
+import com.culturefinder.songdodongnae.exception.CustomException;
+import com.culturefinder.songdodongnae.exception.ErrorCode;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -25,7 +26,11 @@ public class DeliciousSpotRepository {
     }
 
     public DeliciousSpot findDeliciousSpotById(Long id) {
-        return em.find(DeliciousSpot.class, id);
+        DeliciousSpot deliciousSpot = em.find(DeliciousSpot.class, id);
+        if (deliciousSpot == null) {
+            throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
+        }
+        return deliciousSpot;
     }
 
     public List<DeliciousSpot> findTopByOrderByCreatedTimeDesc() {
@@ -38,8 +43,24 @@ public class DeliciousSpotRepository {
         return em.createQuery("SELECT d FROM DeliciousSpot d", DeliciousSpot.class).getResultList();
     }
 
-    public void addDeliciousSpot(DeliciousSpot deliciousSpot) {
-        em.persist(deliciousSpot);
+    public DeliciousSpot updateDeliciousSpot(Long id, DeliciousSpot deliciousSpot) {
+        DeliciousSpot existingDeliciousSpot = em.find(DeliciousSpot.class, id);
+        if (existingDeliciousSpot != null) {
+            existingDeliciousSpot.updateDeliciousSpot(deliciousSpot);
+            existingDeliciousSpot.setUpdatedAt(LocalDateTime.now());
+            return existingDeliciousSpot;
+        } else {
+            throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
+        }
+    }
+
+    public void deleteDeliciousSpot(Long id) {
+        DeliciousSpot deliciousSpot = em.find(DeliciousSpot.class, id);
+        if (deliciousSpot != null) {
+            em.remove(deliciousSpot);
+        } else {
+            throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
+        }
     }
 
 }

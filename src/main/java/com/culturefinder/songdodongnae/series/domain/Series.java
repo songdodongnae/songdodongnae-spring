@@ -28,7 +28,7 @@ public class Series {
 
     private Integer count;
 
-    private Integer order;
+    private Integer orderNumber;
 
     @OneToMany
     private List<Curation> curations = new ArrayList<>();

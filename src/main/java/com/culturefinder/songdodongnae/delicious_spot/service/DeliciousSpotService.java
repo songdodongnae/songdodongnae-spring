@@ -8,13 +8,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class DeliciousSpotService {
 
     public final DeliciousSpotRepository deliciousSpotRepository;
-
 
     public DeliciousSpotResponseDto createDeliciousSpot(DeliciousSpotReqDto deliciousSpotReqDto) {
         DeliciousSpot deliciousSpot = deliciousSpotReqDto.toEntity();
@@ -26,12 +27,21 @@ public class DeliciousSpotService {
     }
 
     public DeliciousSpotResponseDto getDeliciousSpotById(Long id) {
-        DeliciousSpot deliciousSpot = deliciousSpotRepository.findDeliciousSpotById(id);
-
-        if (deliciousSpot == null) {
-            throw new IllegalArgumentException("해당 맛집이 존재하지 않습니다");
-        }
-
-        return deliciousSpot.fromEntity();
+        return deliciousSpotRepository.findDeliciousSpotById(id).fromEntity();
     }
+
+    public DeliciousSpotResponseDto updateDeliciousSpot(Long id, DeliciousSpotReqDto deliciousSpotReqDto) {
+        return deliciousSpotRepository.updateDeliciousSpot(id, deliciousSpotReqDto.toEntity()).fromEntity();
+    }
+
+    public void deleteDeliciousSpot(Long id) {
+        deliciousSpotRepository.deleteDeliciousSpot(id);
+    }
+
+    public List<DeliciousSpotResponseDto> getAllDeliciousSpots() {
+        return deliciousSpotRepository.findAll().stream()
+                .map(DeliciousSpot::fromEntity)
+                .collect(Collectors.toList());
+    }
+
 }
