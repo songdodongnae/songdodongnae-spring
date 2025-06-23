@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.curation.service;
 
+import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
@@ -13,27 +14,34 @@ import java.util.*;
 public class CurationService {
 
     private final CurationRepository curationRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     public List<CurationThumbnailResDto> getAllCurationThumbnails() {
         return curationRepository.findAllCurations().stream()
                 .map(CurationThumbnailResDto::fromEntity)
+                .sorted((c1, c2) -> c2.getCreatedTime().compareTo(c1.getCreatedTime()))
                 .toList();
     }
 
-    public List<CurationThumbnailResDto> getTopCurationThumbnails() {
-        return curationRepository.findAllCurations().stream()
-                .sorted((c1, c2) -> c2.getCreatedAt().compareTo(c1.getCreatedAt()))
-                .limit(20)
+    public List<CurationThumbnailResDto> getUserCurationThumbnails(Long userId) {
+        List<CurationThumbnailResDto> curationThumbnails = curationRepository.findAllCurations().stream()
                 .map(CurationThumbnailResDto::fromEntity)
+                .sorted((c1, c2) -> c2.getCreatedTime().compareTo(c1.getCreatedTime()))
                 .toList();
+
+        Set<Long> bookmarkedCurationIds = new HashSet<>(bookmarkRepository.findUserBookmarks(userId).stream()
+                .map(bookmark -> bookmark.getCuration().getId())
+                .toList());
+
+        for (CurationThumbnailResDto thumbnail : curationThumbnails) {
+            thumbnail.setBookmarked(bookmarkedCurationIds.contains(thumbnail.getId()));
+        }
+
+        return curationThumbnails;
     }
 
     public Curation findCurationById(Long id) {
         return curationRepository.findCurationById(id);
-    }
-
-    public List<Curation> findAllCurations() {
-        return curationRepository.findAllCurations();
     }
 
     public Curation createCuration(Curation curation) {
