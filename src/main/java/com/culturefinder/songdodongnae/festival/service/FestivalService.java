@@ -25,7 +25,7 @@ public class FestivalService {
         festival.setCreatedAt(createdAt);
         festival.setUpdatedAt(createdAt);
         Festival savedFestival = festivalRepository.saveFestival(festival);
-        return savedFestival.fromEntity();
+        return FestivalResDto.fromEntity(savedFestival);
     }
 
     public List<FestivalResDto> getFestivalsByYearAndMonth(int year, int month) {
@@ -35,14 +35,14 @@ public class FestivalService {
 
         return festivalRepository.findByYearAndMonth(startOfMonth, endOfMonth)
                 .stream()
-                .map(Festival::fromEntity)
+                .map(FestivalResDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
     public List<FestivalResDto> getAllFestival() {
         return festivalRepository.findAll()
                 .stream()
-                .map(Festival::fromEntity)
+                .map(FestivalResDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -51,7 +51,7 @@ public class FestivalService {
         if (festival == null) {
             throw new IllegalArgumentException("해당 축제가 존재하지 않습니다");
         }
-        return festival.fromEntity();
+        return FestivalResDto.fromEntity(festival);
     }
 
     public FestivalResDto deleteFestival(Long id) {
@@ -60,7 +60,7 @@ public class FestivalService {
             throw new IllegalArgumentException("Festival not found");
         }
         festivalRepository.deleteFestival(id);
-        return findFestival.fromEntity();
+        return FestivalResDto.fromEntity(findFestival);
     }
 
     public FestivalResDto updateFestival(Long id, FestivalReqDto festivalUpdateReqDto) {
@@ -70,6 +70,6 @@ public class FestivalService {
         }
         findFestival.update(festivalUpdateReqDto.toEntity());
         festivalRepository.saveFestival(findFestival);
-        return findFestival.fromEntity();
+        return FestivalResDto.fromEntity(findFestival);
     }
 }
