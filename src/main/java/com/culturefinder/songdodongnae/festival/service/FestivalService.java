@@ -5,6 +5,10 @@ import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -39,9 +43,10 @@ public class FestivalService {
                 .collect(Collectors.toList());
     }
 
-    public List<FestivalResDto> getAllFestival() {
-        return festivalRepository.findAll()
-                .stream()
+    public List<FestivalResDto> getAllFestival(int page, int size) {
+        int offset = page * size;
+        List<Festival> festivals = festivalRepository.findAll(offset, size);
+        return festivals.stream()
                 .map(FestivalResDto::fromEntity)
                 .collect(Collectors.toList());
     }

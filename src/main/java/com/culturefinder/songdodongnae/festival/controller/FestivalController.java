@@ -49,8 +49,11 @@ public class FestivalController {
     @Operation(summary = "모든 축제 조회", description = "등록된 모든 축제 목록을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "모든 축제 조회 성공")
     @GetMapping
-    public ResponseEntity<ResponseContainer<List<FestivalResDto>>> festivalAll() {
-        List<FestivalResDto> dtos = festivalService.getAllFestival();
+    public ResponseEntity<ResponseContainer<List<FestivalResDto>>> festivalAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        List<FestivalResDto> dtos = festivalService.getAllFestival(page, size);
         return new ResponseContainer<>(HttpStatus.OK, "모든 축제 조회 성공", dtos).toResponseEntity();
     }
 
