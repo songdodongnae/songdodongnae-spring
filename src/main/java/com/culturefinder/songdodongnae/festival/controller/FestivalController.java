@@ -48,9 +48,12 @@ public class FestivalController {
 
     @Operation(summary = "모든 축제 조회", description = "등록된 모든 축제 목록을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "모든 축제 조회 성공")
-    @GetMapping("/all")
-    public ResponseEntity<ResponseContainer<List<FestivalResDto>>> festivalAll() {
-        List<FestivalResDto> dtos = festivalService.getAllFestival();
+    @GetMapping
+    public ResponseEntity<ResponseContainer<List<FestivalResDto>>> festivalAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        List<FestivalResDto> dtos = festivalService.getAllFestival(page, size);
         return new ResponseContainer<>(HttpStatus.OK, "모든 축제 조회 성공", dtos).toResponseEntity();
     }
 
@@ -62,4 +65,19 @@ public class FestivalController {
         return new ResponseContainer<>(HttpStatus.OK, "축제 조회 성공", dto).toResponseEntity();
     }
 
+    @Operation(summary = "축제 삭제", description = "특정 ID의 축제 정보를 삭제합니다.")
+    @ApiResponse(responseCode = "200", description = "축제 삭제 성공")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseContainer<FestivalResDto>> festivalDelete(@PathVariable Long id) {
+        FestivalResDto dto = festivalService.deleteFestival(id);
+        return new ResponseContainer<>(HttpStatus.OK, "축제 삭제 성공", dto).toResponseEntity();
+    }
+
+    @Operation(summary = "축제 수정", description = "특정 ID의 축제 정보를 수정합니다.")
+    @ApiResponse(responseCode = "200", description = "축제 수정 성공")
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseContainer<FestivalResDto>> festivalUpdate(@PathVariable Long id, @RequestBody FestivalReqDto festivalUpdateReqDto) {
+        FestivalResDto dto = festivalService.updateFestival(id, festivalUpdateReqDto);
+        return new ResponseContainer<>(HttpStatus.OK, "축제 수정 성공", dto).toResponseEntity();
+    }
 }
