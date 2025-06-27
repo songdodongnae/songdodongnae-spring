@@ -27,20 +27,16 @@ public class FestivalRepository {
         return em.find(Festival.class, id);
     }
 
-    public Festival updateFestival(Long id, Festival festival) {
-        Festival findFestival = em.find(Festival.class, id);
-        findFestival.update(festival);
-        em.persist(findFestival);
-        return findFestival;
-    }
-
     public void deleteFestival(Long id) {
         Festival findFestival = em.find(Festival.class, id);
         em.remove(findFestival);
     }
 
-    public List<Festival> findAll() {
-        return em.createQuery("SELECT f from Festival f", Festival.class).getResultList();
+    public List<Festival> findAll(int offset, int limit) {
+        return em.createQuery("SELECT f from Festival f ORDER BY f.id", Festival.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
     public List<Festival> findTopByOrderByCreatedTimeDesc() {
