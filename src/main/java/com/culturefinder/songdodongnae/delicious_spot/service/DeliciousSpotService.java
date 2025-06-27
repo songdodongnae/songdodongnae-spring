@@ -23,15 +23,15 @@ public class DeliciousSpotService {
         deliciousSpot.setCreatedAt(createdAt);
         deliciousSpot.setUpdatedAt(createdAt);
         DeliciousSpot savedDeliciousSpot = deliciousSpotRepository.saveDeliciousSpot(deliciousSpot);
-        return savedDeliciousSpot.fromEntity();
+        return DeliciousSpotResponseDto.fromEntity(savedDeliciousSpot);
     }
 
     public DeliciousSpotResponseDto getDeliciousSpotById(Long id) {
-        return deliciousSpotRepository.findDeliciousSpotById(id).fromEntity();
+        return DeliciousSpotResponseDto.fromEntity(deliciousSpotRepository.findDeliciousSpotById(id));
     }
 
     public DeliciousSpotResponseDto updateDeliciousSpot(Long id, DeliciousSpotReqDto deliciousSpotReqDto) {
-        return deliciousSpotRepository.updateDeliciousSpot(id, deliciousSpotReqDto.toEntity()).fromEntity();
+        return DeliciousSpotResponseDto.fromEntity(deliciousSpotRepository.updateDeliciousSpot(id, deliciousSpotReqDto.toEntity()));
     }
 
     public void deleteDeliciousSpot(Long id) {
@@ -40,7 +40,7 @@ public class DeliciousSpotService {
 
     public List<DeliciousSpotResponseDto> getAllDeliciousSpots() {
         return deliciousSpotRepository.findAll().stream()
-                .map(DeliciousSpot::fromEntity)
+                .map(DeliciousSpotResponseDto::fromEntity)
                 .collect(Collectors.toList());
     }
 

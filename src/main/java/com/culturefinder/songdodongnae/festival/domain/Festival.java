@@ -1,6 +1,5 @@
 package com.culturefinder.songdodongnae.festival.domain;
 
-import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -63,9 +62,6 @@ public class Festival {
     @OneToMany(mappedBy = "festival", cascade = CascadeType.ALL)
     private List<FestivalImage> festivalImages = new ArrayList<>();
 
-    @OneToMany(mappedBy = "festival", cascade = CascadeType.ALL)
-    private List<CurationFestival> curationFestivalList = new ArrayList<>();
-
     public void update(Festival festival) {
         this.title = festival.getTitle();
         this.startDate = festival.getStartDate();
@@ -86,15 +82,6 @@ public class Festival {
         this.updatedAt = festival.getUpdatedAt();
         this.imageUrl = festival.getImageUrl();
         this.festivalImages = festival.getFestivalImages();
-        this.curationFestivalList = festival.getCurationFestivalList();
-    }
-
-    public CurationThumbnailResDto fromThumbEntity() {
-        return CurationThumbnailResDto.builder()
-                .id(this.id)
-                .title(this.title)
-                .imageUrl(this.imageUrl)
-                .build();
     }
 
 }

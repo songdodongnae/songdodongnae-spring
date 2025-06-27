@@ -1,6 +1,6 @@
 package com.culturefinder.songdodongnae.delicious_spot.dto;
 
-import com.culturefinder.songdodongnae.delicious_spot.domain.CurationDeliciousSpot;
+import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotImage;
 import lombok.Builder;
 import lombok.Getter;
@@ -57,6 +57,30 @@ public class DeliciousSpotResponseDto {
 
     private List<DeliciousSpotImage> deliciousSpotImages;
 
-    private List<CurationDeliciousSpot> curationDeliciousSpotList;
-
+    public static DeliciousSpotResponseDto fromEntity(DeliciousSpot deliciousSpot) {
+        return DeliciousSpotResponseDto.builder()
+                .id(deliciousSpot.getId())
+                .title(deliciousSpot.getTitle())
+                .latitude(deliciousSpot.getLatitude())
+                .longitude(deliciousSpot.getLongitude())
+                .address(deliciousSpot.getAddress())
+                .price(deliciousSpot.getPrice())
+                .naverRating(deliciousSpot.getNaverRating())
+                .kakaoRating(deliciousSpot.getKakaoRating())
+                .startTime(deliciousSpot.getStartTime())
+                .endTime(deliciousSpot.getEndTime())
+                .timeDescription(deliciousSpot.getTimeDescription())
+                .waiting(deliciousSpot.getWaiting())
+                .parking(deliciousSpot.getParking())
+                .suggestionMenu(deliciousSpot.getSuggestionMenu())
+                .description(deliciousSpot.getDescription())
+                .onelineDescription(deliciousSpot.getOnelineDescription())
+                .instagram(deliciousSpot.getInstagram())
+                .contact(deliciousSpot.getContact())
+                .createdAt(deliciousSpot.getCreatedAt())
+                .updatedAt(deliciousSpot.getUpdatedAt())
+                .imageUrl(deliciousSpot.getImageUrl())
+                .deliciousSpotImages(deliciousSpot.getDeliciousSpotImages())
+                .build();
+    }
 }

@@ -1,6 +1,5 @@
 package com.culturefinder.songdodongnae.festival.dto;
 
-import com.culturefinder.songdodongnae.festival.domain.CurationFestival;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.domain.FestivalImage;
 import lombok.Builder;

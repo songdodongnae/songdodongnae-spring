@@ -1,10 +1,7 @@
 package com.culturefinder.songdodongnae.delicious_spot.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Entity
@@ -17,6 +14,7 @@ public class DeliciousSpotImage {
     @Column(name = "delicious_spot_image_id")
     private Long id;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "delicious_spot_id")
     private DeliciousSpot deliciousSpot;
@@ -26,10 +24,6 @@ public class DeliciousSpotImage {
 
     public DeliciousSpotImage(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public void setDeliciousSpot(DeliciousSpot deliciousSpot) {
-        this.deliciousSpot = deliciousSpot;
     }
 
 }
