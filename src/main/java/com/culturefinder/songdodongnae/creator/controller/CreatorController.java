@@ -1,6 +1,5 @@
 package com.culturefinder.songdodongnae.creator.controller;
 
-import com.culturefinder.songdodongnae.creator.dto.CreatorReqDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorThumbnailResDto;
 import com.culturefinder.songdodongnae.creator.service.CreatorService;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("/creator")
+@RequestMapping("/creators")
 @RestController
 public class CreatorController {
 

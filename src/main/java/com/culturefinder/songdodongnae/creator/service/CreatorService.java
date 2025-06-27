@@ -5,8 +5,6 @@ import com.culturefinder.songdodongnae.creator.dto.CreatorReqDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorThumbnailResDto;
 import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
-import com.culturefinder.songdodongnae.festival.domain.Festival;
-import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,17 +22,17 @@ public class CreatorService {
     public CreatorResDto createCreator(CreatorReqDto creatorReqDto) {
         Creator creator = creatorReqDto.toEntity();
         Creator savedCreator = creatorRepository.saveCreator(creator);
-        return savedCreator.fromEntity();
+        return CreatorResDto.fromEntity(savedCreator);
     }
 
     public List<CreatorThumbnailResDto> getCreatorThumbnails() {
         return creatorRepository.findAll().stream()
-                .map(Creator::fromThumbEntity)
+                .map(CreatorThumbnailResDto::fromThumbEntity)
                 .collect(Collectors.toList());
     }
 
     public CreatorResDto getCreator(Long id) {
-        return creatorRepository.findById(id).fromEntity();
+        return CreatorResDto.fromEntity(creatorRepository.findById(id));
     }
 
 }

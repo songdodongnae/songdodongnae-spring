@@ -1,11 +1,10 @@
 package com.culturefinder.songdodongnae.creator.dto;
 
-import com.culturefinder.songdodongnae.curation.domain.Curation;
+import com.culturefinder.songdodongnae.creator.domain.Creator;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Builder
@@ -25,6 +24,15 @@ public class CreatorResDto {
 
     private String imageUrl;
 
-    private List<Curation> curationList;
-
+    public static CreatorResDto fromEntity(Creator creator) {
+        return CreatorResDto.builder()
+                .id(creator.getId())
+                .name(creator.getName())
+                .introduction(creator.getIntroduction())
+                .description(creator.getDescription())
+                .createdAt(creator.getCreatedAt())
+                .updatedAt(creator.getUpdatedAt())
+                .imageUrl(creator.getImageUrl())
+                .build();
+    }
 }
