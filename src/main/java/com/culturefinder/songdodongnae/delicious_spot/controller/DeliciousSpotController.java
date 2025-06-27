@@ -18,7 +18,7 @@ import java.util.List;
 @Tag(name = "DeliciousSpot API", description = "맛집 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/delicious-spot")
+@RequestMapping("/api/delicious-spots")
 public class DeliciousSpotController {
 
     private final DeliciousSpotService deliciousSpotService;
@@ -66,7 +66,7 @@ public class DeliciousSpotController {
 
     @Operation(summary = "모든 맛집 조회", description = "모든 맛집을 조회합니다")
     @ApiResponse(responseCode = "200", description = "모든 맛집 조회 성공")
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<ResponseContainer<List<DeliciousSpotResponseDto>>> getAllDeliciousSpots() {
         List<DeliciousSpotResponseDto> deliciousSpots = deliciousSpotService.getAllDeliciousSpots();
         return new ResponseContainer<>(HttpStatus.OK, "모든 맛집 조회 성공", deliciousSpots).toResponseEntity();

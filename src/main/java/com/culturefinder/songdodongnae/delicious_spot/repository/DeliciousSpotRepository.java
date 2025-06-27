@@ -33,12 +33,6 @@ public class DeliciousSpotRepository {
         return deliciousSpot;
     }
 
-    public List<DeliciousSpot> findTopByOrderByCreatedTimeDesc() {
-        return em.createQuery("SELECT d FROM DeliciousSpot d ORDER BY d.createdAt DESC", DeliciousSpot.class)
-                .setMaxResults(20)
-                .getResultList();
-    }
-
     public List<DeliciousSpot> findAll() {
         return em.createQuery("SELECT d FROM DeliciousSpot d", DeliciousSpot.class).getResultList();
     }
