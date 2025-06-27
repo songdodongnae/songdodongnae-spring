@@ -3,6 +3,7 @@ package com.culturefinder.songdodongnae.festival.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -13,6 +14,7 @@ public class FestivalImage {
     @Column(name = "festival_image_id")
     private Long id;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "festival_id")
     private Festival festival;
@@ -23,7 +25,4 @@ public class FestivalImage {
         this.imageUrl = imageUrl;
     }
 
-    public void setFestival(Festival festival) {
-        this.festival = festival;
-    }
 }

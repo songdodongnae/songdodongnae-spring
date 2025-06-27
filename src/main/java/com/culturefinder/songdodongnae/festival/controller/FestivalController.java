@@ -18,7 +18,7 @@ import java.util.List;
 @Tag(name = "Festival API", description = "축제 관련 API")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/festival")
+@RequestMapping("/api/festivals")
 public class FestivalController {
 
     private final FestivalService festivalService;

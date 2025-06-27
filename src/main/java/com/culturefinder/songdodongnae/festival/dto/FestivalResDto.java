@@ -54,8 +54,6 @@ public class FestivalResDto {
 
     private List<FestivalImage> festivalImages;
 
-    private List<CurationFestival> curationFestivalList;
-
     public static FestivalResDto fromEntity(Festival festival) {
         return FestivalResDto.builder()
                 .id(festival.getId())
@@ -78,7 +76,6 @@ public class FestivalResDto {
                 .updatedAt(festival.getUpdatedAt())
                 .imageUrl(festival.getImageUrl())
                 .festivalImages(festival.getFestivalImages())
-                .curationFestivalList(festival.getCurationFestivalList())
                 .build();
     }
 
