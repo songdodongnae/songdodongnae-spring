@@ -29,7 +29,7 @@ public class SeriesController {
     public ResponseEntity<ResponseContainer<List<SeriesThumbnailResponseDto>>> thumbnails_get() {
         List<SeriesThumbnailResponseDto> seriesList = seriesRepository.findAllSeries()
                 .stream()
-                .sorted(Comparator.comparingInt(Series::getOrder))
+                .sorted(Comparator.comparingInt(Series::getOrderNumber))
                 .map(SeriesThumbnailResponseDto::new)
                 .toList();
         return new ResponseContainer<>(HttpStatus.OK, "", seriesList)

@@ -3,11 +3,13 @@ package com.culturefinder.songdodongnae.delicious_spot.dto;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalTime;
 
 @AllArgsConstructor
 @Getter
+@Setter
 public class DeliciousSpotReqDto {
     private String title;
 

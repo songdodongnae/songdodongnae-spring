@@ -1,6 +1,8 @@
 package com.culturefinder.songdodongnae.s3;
 
+import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.culturefinder.songdodongnae.utils.ImageCompressor;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Date;
 
 @Slf4j
 @Service
@@ -48,5 +51,13 @@ public class S3UploadService {
 
         log.info("파일 업로드 완료. 파일이름={} 파일사이즈={}MB", originalFilename, String.format("%.3f", (double) fileData.length / MB));
         return amazonS3.getUrl(bucket, originalFilename).toString();
+    }
+
+    public String generatePresignedUrl(String objectKey) {
+        Date expiration = new Date(System.currentTimeMillis() + 3600 * 1000); // 1시간 유효
+        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucket, objectKey)
+                .withMethod(HttpMethod.PUT)
+                .withExpiration(expiration);
+        return amazonS3.generatePresignedUrl(request).toString();
     }
 }

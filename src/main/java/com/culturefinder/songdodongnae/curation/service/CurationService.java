@@ -1,59 +1,55 @@
 package com.culturefinder.songdodongnae.curation.service;
 
+import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
+import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
-import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
-import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
-import com.culturefinder.songdodongnae.festival.domain.Festival;
-import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
+import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class CurationService {
-    private final FestivalRepository festivalRepository;
-    private final DeliciousSpotRepository deliciousSpotRepository;
+
+    private final CurationRepository curationRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     public List<CurationThumbnailResDto> getAllCurationThumbnails() {
-//        List<CurationThumbnailResDto> festivals = festivalRepository.findAll().stream()
-//                .map(Festival::fromThumbEntity)
-//                .toList();
-//
-//        List<CurationThumbnailResDto> deliciousSpots = deliciousSpotRepository.findAll().stream()
-//                .map(DeliciousSpot::fromThumbEntity)
-//                .toList();
-//
-//        List<CurationThumbnailResDto> curation = new ArrayList<>();
-//        curation.addAll(festivals);
-//        curation.addAll(deliciousSpots);
-//
-//        return curation;
-        return null;
+        return curationRepository.findAllCurations().stream()
+                .map(CurationThumbnailResDto::fromEntity)
+                .sorted((c1, c2) -> c2.getCreatedTime().compareTo(c1.getCreatedTime()))
+                .toList();
     }
 
-    public List<CurationThumbnailResDto> getTopCurationThumbnails() {
-        List<CurationThumbnailResDto> festivals = festivalRepository.findTopByOrderByCreatedTimeDesc().stream()
-                .map(Festival::fromThumbEntity)
+    public List<CurationThumbnailResDto> getUserCurationThumbnails(Long userId) {
+        List<CurationThumbnailResDto> curationThumbnails = curationRepository.findAllCurations().stream()
+                .map(CurationThumbnailResDto::fromEntity)
+                .sorted((c1, c2) -> c2.getCreatedTime().compareTo(c1.getCreatedTime()))
                 .toList();
 
-        List<CurationThumbnailResDto> deliciousSpots = deliciousSpotRepository.findTopByOrderByCreatedTimeDesc().stream()
-                .map(DeliciousSpot::fromThumbEntity)
-                .toList();
+        Set<Long> bookmarkedCurationIds = new HashSet<>(bookmarkRepository.findUserBookmarks(userId).stream()
+                .map(bookmark -> bookmark.getCuration().getId())
+                .toList());
 
-        List<CurationThumbnailResDto> curation = new ArrayList<>();
-        curation.addAll(festivals);
-        curation.addAll(deliciousSpots);
+        for (CurationThumbnailResDto thumbnail : curationThumbnails) {
+            thumbnail.setBookmarked(bookmarkedCurationIds.contains(thumbnail.getId()));
+        }
 
-        return curation.stream()
-                .sorted(Comparator.comparing(CurationThumbnailResDto::getCreatedTime).reversed())
-                .limit(20)
-                .collect(Collectors.toList());
+        return curationThumbnails;
+    }
 
+    public Curation findCurationById(Long id) {
+        return curationRepository.findCurationById(id);
+    }
+
+    public Curation createCuration(Curation curation) {
+        return curationRepository.createCuration(curation);
+    }
+
+    public Curation deleteCuration(Long id) {
+        return curationRepository.deleteCuration(id);
     }
 
 }

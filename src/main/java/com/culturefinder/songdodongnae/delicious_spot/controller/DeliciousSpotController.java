@@ -24,7 +24,7 @@ public class DeliciousSpotController {
     private final DeliciousSpotService deliciousSpotService;
 
     @Operation(summary = "맛집 생성", description = "맛집을 생성합니다")
-    @ApiResponse(responseCode = "201", description = "맛집 생성 성공")
+    @ApiResponse(responseCode = "200", description = "맛집 생성 성공")
     @PostMapping
     public ResponseEntity<ResponseContainer<DeliciousSpotResponseDto>> createDeliciousSpot(
             @RequestBody DeliciousSpotReqDto deliciousSpotReqDto,
@@ -43,6 +43,33 @@ public class DeliciousSpotController {
 
         DeliciousSpotResponseDto dto = deliciousSpotService.getDeliciousSpotById(id);
         return new ResponseContainer<>(HttpStatus.OK, "맛집 조회 성공", dto).toResponseEntity();
+    }
+
+    @Operation(summary = "맛집 수정", description = "특정 ID의 맛집을 수정합니다")
+    @ApiResponse(responseCode = "200", description = "맛집 수정 성공")
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseContainer<DeliciousSpotResponseDto>> updateDeliciousSpot(
+            @PathVariable Long id,
+            @RequestBody DeliciousSpotReqDto deliciousSpotReqDto) {
+        DeliciousSpotResponseDto dto = deliciousSpotService.updateDeliciousSpot(id, deliciousSpotReqDto);
+        return new ResponseContainer<>(HttpStatus.OK, "맛집 수정 성공", dto).toResponseEntity();
+    }
+
+    @Operation(summary = "맛집 삭제", description = "특정 ID의 맛집을 삭제합니다")
+    @ApiResponse(responseCode = "200", description = "맛집 삭제 성공")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseContainer<Object>> deleteDeliciousSpot(
+            @PathVariable Long id) {
+        deliciousSpotService.deleteDeliciousSpot(id);
+        return new ResponseContainer<>(HttpStatus.OK, "맛집 삭제 성공", null).toResponseEntity();
+    }
+
+    @Operation(summary = "모든 맛집 조회", description = "모든 맛집을 조회합니다")
+    @ApiResponse(responseCode = "200", description = "모든 맛집 조회 성공")
+    @GetMapping("/all")
+    public ResponseEntity<ResponseContainer<List<DeliciousSpotResponseDto>>> getAllDeliciousSpots() {
+        List<DeliciousSpotResponseDto> deliciousSpots = deliciousSpotService.getAllDeliciousSpots();
+        return new ResponseContainer<>(HttpStatus.OK, "모든 맛집 조회 성공", deliciousSpots).toResponseEntity();
     }
 
 }

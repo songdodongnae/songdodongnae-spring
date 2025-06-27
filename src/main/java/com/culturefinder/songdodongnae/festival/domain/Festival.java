@@ -93,7 +93,6 @@ public class Festival {
         return CurationThumbnailResDto.builder()
                 .id(this.id)
                 .title(this.title)
-                .introduction(this.onelineDescription)
                 .imageUrl(this.imageUrl)
                 .build();
     }
