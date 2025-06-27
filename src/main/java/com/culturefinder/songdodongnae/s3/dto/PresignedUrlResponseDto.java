@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PresignedUrlDto {
+public class PresignedUrlResponseDto {
     private String presignedUrl;
+    private String imageUrl;
 }
