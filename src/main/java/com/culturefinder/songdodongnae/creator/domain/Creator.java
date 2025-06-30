@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.creator.domain;
 
+import com.culturefinder.songdodongnae.curation.domain.Curation;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,6 +32,10 @@ public class Creator {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    @OneToOne
+    @JoinColumn(name = "curation_id")
+    private Curation curation;
 
 }
 
