@@ -5,6 +5,7 @@ import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorThumbnailResDto;
 import com.culturefinder.songdodongnae.creator.service.CreatorService;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class CreatorController {
     private final CreatorService creatorService;
 
     @PostMapping
-    public ResponseEntity<ResponseContainer<CreatorResDto>> createCreator(@RequestBody CreatorReqDto creatorReqDto) {
+    public ResponseEntity<ResponseContainer<CreatorResDto>> createCreator(@Valid @RequestBody CreatorReqDto creatorReqDto) {
         CreatorResDto dto = creatorService.createCreator(creatorReqDto);
         return new ResponseContainer<>(HttpStatus.OK, "크리에이터 생성 성공", dto).toResponseEntity();
     }
@@ -38,7 +39,7 @@ public class CreatorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseContainer<CreatorResDto>> updateCreator(@PathVariable Long id, @RequestBody CreatorReqDto creatorReqDto) {
+    public ResponseEntity<ResponseContainer<CreatorResDto>> updateCreator(@PathVariable Long id,@Valid @RequestBody CreatorReqDto creatorReqDto) {
         CreatorResDto dto = creatorService.updateCreator(id, creatorReqDto);
         return new ResponseContainer<>(HttpStatus.OK, "크리에이터 수정 성공", dto).toResponseEntity();
     }
