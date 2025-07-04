@@ -25,7 +25,7 @@ public class CreatorService {
         return CreatorResDto.fromEntity(savedCreator);
     }
 
-    public List<CreatorThumbnailResDto> getCreatorThumbnails() {
+    public List<CreatorThumbnailResDto> getAllCreator() {
         return creatorRepository.findAll().stream()
                 .map(CreatorThumbnailResDto::fromThumbEntity)
                 .collect(Collectors.toList());

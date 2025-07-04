@@ -25,9 +25,9 @@ public class CreatorController {
         return new ResponseContainer<>(HttpStatus.OK, "크리에이터 생성 성공", dto).toResponseEntity();
     }
 
-    @GetMapping("/thumbnail")
-    public ResponseEntity<ResponseContainer<List<CreatorThumbnailResDto>>> getCreatorThumbnails() {
-        List<CreatorThumbnailResDto> dtos = creatorService.getCreatorThumbnails();
+    @GetMapping
+    public ResponseEntity<ResponseContainer<List<CreatorThumbnailResDto>>> getAllCreator() {
+        List<CreatorThumbnailResDto> dtos = creatorService.getAllCreator();
         return new ResponseContainer<>(HttpStatus.OK, "크리에이터 썸네일 목록 조회 성공", dtos).toResponseEntity();
     }
 
