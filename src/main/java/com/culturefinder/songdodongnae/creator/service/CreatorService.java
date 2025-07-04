@@ -5,6 +5,7 @@ import com.culturefinder.songdodongnae.creator.dto.CreatorReqDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorThumbnailResDto;
 import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,4 +36,10 @@ public class CreatorService {
         return CreatorResDto.fromEntity(creatorRepository.findById(id));
     }
 
+    @Transactional
+    public CreatorResDto updateCreator(Long id, CreatorReqDto creatorReqDto) {
+        Creator findCreator = creatorRepository.findById(id);
+        findCreator.update(creatorReqDto.toEntity());
+        return CreatorResDto.fromEntity(findCreator);
+    }
 }

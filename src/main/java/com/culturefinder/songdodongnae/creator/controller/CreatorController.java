@@ -37,4 +37,11 @@ public class CreatorController {
         return new ResponseContainer<>(HttpStatus.OK, "크리에이터 조회 성공", dto).toResponseEntity();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseContainer<CreatorResDto>> updateCreator(@PathVariable Long id, @RequestBody CreatorReqDto creatorReqDto) {
+        CreatorResDto dto = creatorService.updateCreator(id, creatorReqDto);
+        return new ResponseContainer<>(HttpStatus.OK, "크리에이터 수정 성공", dto).toResponseEntity();
+    }
+
+
 }

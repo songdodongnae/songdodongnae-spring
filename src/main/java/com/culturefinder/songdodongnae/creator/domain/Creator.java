@@ -42,5 +42,12 @@ public class Creator {
     @JoinColumn(name = "curation_id")
     private Curation curation;
 
+    public void update(Creator entity) {
+        this.name = entity.getName();
+        this.introduction = entity.getIntroduction();
+        this.description = entity.getDescription();
+        this.imageUrl = entity.getImageUrl();
+        this.curation = entity.getCuration();
+    }
 }
 
