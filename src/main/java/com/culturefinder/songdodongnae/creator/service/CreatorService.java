@@ -42,4 +42,10 @@ public class CreatorService {
         findCreator.update(creatorReqDto.toEntity());
         return CreatorResDto.fromEntity(findCreator);
     }
+
+    public CreatorResDto deleteCreator(Long id) {
+        Creator findCreator = creatorRepository.findById(id);
+        creatorRepository.deleteById(id);
+        return CreatorResDto.fromEntity(findCreator);
+    }
 }

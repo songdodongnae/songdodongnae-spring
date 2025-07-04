@@ -43,5 +43,9 @@ public class CreatorController {
         return new ResponseContainer<>(HttpStatus.OK, "크리에이터 수정 성공", dto).toResponseEntity();
     }
 
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseContainer<CreatorResDto>> deleteCreator(@PathVariable Long id) {
+        CreatorResDto dto = creatorService.deleteCreator(id);
+        return new ResponseContainer<>(HttpStatus.OK, "크리에이터 삭제 성공", dto).toResponseEntity();
+    }
 }
