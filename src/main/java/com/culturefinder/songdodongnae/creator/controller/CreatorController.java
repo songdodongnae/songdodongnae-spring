@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.creator.controller;
 
+import com.culturefinder.songdodongnae.creator.dto.CreatorReqDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorThumbnailResDto;
 import com.culturefinder.songdodongnae.creator.service.CreatorService;
@@ -12,11 +13,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("/creators")
+@RequestMapping("/api/creators")
 @RestController
 public class CreatorController {
 
     private final CreatorService creatorService;
+
+    @PostMapping
+    public ResponseEntity<ResponseContainer<CreatorResDto>> createCreator(@RequestBody CreatorReqDto creatorReqDto) {
+        CreatorResDto dto = creatorService.createCreator(creatorReqDto);
+        return new ResponseContainer<>(HttpStatus.OK, "크리에이터 생성 성공", dto).toResponseEntity();
+    }
 
     @GetMapping("/thumbnail")
     public ResponseEntity<ResponseContainer<List<CreatorThumbnailResDto>>> getCreatorThumbnails() {

@@ -3,6 +3,9 @@ package com.culturefinder.songdodongnae.creator.domain;
 import com.culturefinder.songdodongnae.curation.domain.Curation;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 
 import java.time.LocalDateTime;
 
@@ -29,8 +32,10 @@ public class Creator {
     @Column(length = 40000)
     private String imageUrl;
 
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     @OneToOne

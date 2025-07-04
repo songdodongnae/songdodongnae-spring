@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.creator.dto;
 
 import com.culturefinder.songdodongnae.creator.domain.Creator;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,6 +9,7 @@ import lombok.Getter;
 @Getter
 public class CreatorReqDto {
 
+    @NotNull
     private String name;
 
     private String introduction;
