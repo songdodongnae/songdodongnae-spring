@@ -2,6 +2,8 @@ package com.culturefinder.songdodongnae.festival.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -51,10 +53,10 @@ public class Festival {
 
     private String onelineDescription;
 
-    @Setter
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Setter
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     private String imageUrl;

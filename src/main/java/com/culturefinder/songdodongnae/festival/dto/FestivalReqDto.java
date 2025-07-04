@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.festival.dto;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,6 +12,7 @@ import java.time.LocalTime;
 @Getter
 public class FestivalReqDto {
 
+    @NotNull
     private String title;
 
     private LocalDate startDate;
@@ -37,6 +39,7 @@ public class FestivalReqDto {
 
     private String reservationUrl;
 
+    @NotNull
     private String description;
 
     private String onelineDescription;
