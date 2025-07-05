@@ -2,10 +2,12 @@ package com.culturefinder.songdodongnae.bookmark.domain;
 
 import com.culturefinder.songdodongnae.user.domain.User;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 @Entity
 @Getter
+@Builder
+@ToString
 public class Bookmark {
 
     @Id @GeneratedValue
