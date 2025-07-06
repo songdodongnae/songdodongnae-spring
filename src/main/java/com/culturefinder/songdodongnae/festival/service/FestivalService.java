@@ -4,11 +4,11 @@ import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,9 +21,6 @@ public class FestivalService {
 
     public FestivalResDto createFestival(FestivalReqDto festivalReqDto) {
         Festival festival = festivalReqDto.toEntity();
-        LocalDateTime createdAt = LocalDateTime.now();
-        festival.setCreatedAt(createdAt);
-        festival.setUpdatedAt(createdAt);
         Festival savedFestival = festivalRepository.saveFestival(festival);
         return FestivalResDto.fromEntity(savedFestival);
     }
@@ -64,6 +61,7 @@ public class FestivalService {
         return FestivalResDto.fromEntity(findFestival);
     }
 
+    @Transactional
     public FestivalResDto updateFestival(Long id, FestivalReqDto festivalUpdateReqDto) {
         Festival findFestival = festivalRepository.findById(id);
         if (findFestival == null) {

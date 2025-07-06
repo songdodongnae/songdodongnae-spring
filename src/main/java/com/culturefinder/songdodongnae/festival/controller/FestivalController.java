@@ -7,6 +7,7 @@ import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class FestivalController {
     @ApiResponse(responseCode = "201", description = "축제 생성 성공")
     @PostMapping
     public ResponseEntity<ResponseContainer<FestivalResDto>> festivalCreate(
-            @RequestBody FestivalReqDto festivalReqDto,
+            @Valid @RequestBody FestivalReqDto festivalReqDto,
             @RequestPart(required = false) MultipartFile mainImage,
             @RequestPart(required = false) List<MultipartFile> images) {
 
@@ -76,7 +77,7 @@ public class FestivalController {
     @Operation(summary = "축제 수정", description = "특정 ID의 축제 정보를 수정합니다.")
     @ApiResponse(responseCode = "200", description = "축제 수정 성공")
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseContainer<FestivalResDto>> festivalUpdate(@PathVariable Long id, @RequestBody FestivalReqDto festivalUpdateReqDto) {
+    public ResponseEntity<ResponseContainer<FestivalResDto>> festivalUpdate(@PathVariable Long id,@Valid @RequestBody FestivalReqDto festivalUpdateReqDto) {
         FestivalResDto dto = festivalService.updateFestival(id, festivalUpdateReqDto);
         return new ResponseContainer<>(HttpStatus.OK, "축제 수정 성공", dto).toResponseEntity();
     }
