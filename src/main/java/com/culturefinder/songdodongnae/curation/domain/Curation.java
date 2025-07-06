@@ -20,13 +20,15 @@ public class Curation {
     @Column(name = "curation_id")
     private Long id;
 
+    private Integer type;
+
     @OneToMany
     private List<DeliciousSpot> deliciousSpots = new ArrayList<>();
 
     @OneToMany
     private List<Festival> festivals = new ArrayList<>();
 
-    @OneToOne(mappedBy = "creator")
+    @OneToOne(mappedBy = "curation")
     private Creator creator;
 
     private LocalDateTime createdAt;
