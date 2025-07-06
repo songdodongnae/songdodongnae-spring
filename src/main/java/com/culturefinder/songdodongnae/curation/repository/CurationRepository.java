@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.curation.repository;
 
+import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
@@ -27,4 +28,9 @@ public class CurationRepository {
         return curation;
     }
 
+    public Curation deleteById(Long id){
+        Curation curation = findCurationById(id);
+        em.remove(curation);
+        return curation;
+    }
 }

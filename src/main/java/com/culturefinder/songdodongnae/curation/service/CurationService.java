@@ -26,4 +26,15 @@ public class CurationService {
         Curation savedCuration = curationRepository.saveCuration(curation);
         return CurationResDto.fromEntity(savedCuration);
     }
+
+    public CurationResDto updateCuration(Long id, CurationReqDto curationReqDto){
+        Curation curation = curationRepository.findCurationById(id);
+        curation.update(curationReqDto.toEntity());
+        return CurationResDto.fromEntity(curation);
+    }
+
+    public CurationResDto deleteCuration(Long id) {
+        Curation curation = curationRepository.deleteById(id);
+        return CurationResDto.fromEntity(curation);
+    }
 }

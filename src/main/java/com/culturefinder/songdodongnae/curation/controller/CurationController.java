@@ -28,4 +28,16 @@ public class CurationController {
         CurationResDto curationResDto = curationService.createCuration(curationReqDto);
         return new ResponseContainer<>(HttpStatus.OK, "큐레이션 생성 성공", curationResDto).toResponseEntity();
     }
+
+    @PutMapping("/{id")
+    public ResponseEntity<ResponseContainer<CurationResDto>> updateCuration(@PathVariable Long id, @Valid @RequestBody CurationReqDto curationReqDto){
+        CurationResDto curationResDto = curationService.updateCuration(id, curationReqDto);
+        return new ResponseContainer<>(HttpStatus.OK, "큐레이션 수정 성공", curationResDto).toResponseEntity();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseContainer<CurationResDto>> deleteCuration(@PathVariable Long id){
+        CurationResDto curationResDto = curationService.deleteCuration(id);
+        return new ResponseContainer<>(HttpStatus.OK, "큐레이션 삭제 성공", curationResDto).toResponseEntity();
+    }
 }

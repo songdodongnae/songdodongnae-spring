@@ -41,4 +41,14 @@ public class Curation {
 
     private String imageUrl;
 
+    public void update(Curation curation) {
+        this.type = curation.type;
+        this.deliciousSpots = curation.deliciousSpots;
+        this.festivals = curation.festivals;
+        this.creator = curation.creator;
+        this.updatedAt = curation.updatedAt;
+        this.title = curation.title;
+        this.description = curation.description;
+        this.imageUrl = curation.imageUrl;
+    }
 }
