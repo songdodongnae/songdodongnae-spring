@@ -6,12 +6,13 @@ import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResponseD
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class DeliciousSpotService {
 
@@ -19,9 +20,6 @@ public class DeliciousSpotService {
 
     public DeliciousSpotResponseDto createDeliciousSpot(DeliciousSpotReqDto deliciousSpotReqDto) {
         DeliciousSpot deliciousSpot = deliciousSpotReqDto.toEntity();
-        LocalDateTime createdAt = LocalDateTime.now();
-        deliciousSpot.setCreatedAt(createdAt);
-        deliciousSpot.setUpdatedAt(createdAt);
         DeliciousSpot savedDeliciousSpot = deliciousSpotRepository.saveDeliciousSpot(deliciousSpot);
         return DeliciousSpotResponseDto.fromEntity(savedDeliciousSpot);
     }

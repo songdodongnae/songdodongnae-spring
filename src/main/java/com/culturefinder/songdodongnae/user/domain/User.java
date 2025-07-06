@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -22,8 +24,10 @@ public class User {
 
     private String email;
 
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
@@ -38,8 +42,6 @@ public class User {
     public User(UserProfile userProfile) {
         this.nickname = userProfile.getName();
         this.email = userProfile.getEmail();
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
         this.role = Role.ROLE_USER;
         this.providerId = userProfile.getOauthId();
         this.provider = userProfile.getProvider();
@@ -48,7 +50,6 @@ public class User {
     public User update(String nickname, String email) {
         this.nickname = nickname;
         this.email = email;
-        this.updatedAt = LocalDateTime.now();
         return this;
     }
 }

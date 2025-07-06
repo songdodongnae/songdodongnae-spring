@@ -2,6 +2,8 @@ package com.culturefinder.songdodongnae.delicious_spot.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -54,10 +56,10 @@ public class DeliciousSpot {
 
     private String contact;
 
-    @Setter
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Setter
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     private String imageUrl;

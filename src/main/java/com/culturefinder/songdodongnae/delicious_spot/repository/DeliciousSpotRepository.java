@@ -41,7 +41,6 @@ public class DeliciousSpotRepository {
         DeliciousSpot existingDeliciousSpot = em.find(DeliciousSpot.class, id);
         if (existingDeliciousSpot != null) {
             existingDeliciousSpot.updateDeliciousSpot(deliciousSpot);
-            existingDeliciousSpot.setUpdatedAt(LocalDateTime.now());
             return existingDeliciousSpot;
         } else {
             throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);

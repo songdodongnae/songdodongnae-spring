@@ -5,6 +5,7 @@ import com.culturefinder.songdodongnae.bookmark.service.BookmarkService;
 import com.culturefinder.songdodongnae.user.service.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,8 @@ public class BookmarkController {
 
     @Operation(summary = "북마크 생성")
     @PostMapping("/create")
-    public void createBookmark(HttpServletRequest request, BookmarkReqDto bookmarkReqDto) {
+    public void createBookmark(HttpServletRequest request,
+                               @Valid @RequestBody BookmarkReqDto bookmarkReqDto) {
         String accessToken = jwtService.extractAccessToken(request).get();
         Long userId = jwtService.extractId(accessToken).get();
         bookmarkService.createBookmark(bookmarkReqDto, userId);

@@ -4,20 +4,29 @@ import com.culturefinder.songdodongnae.creator.dto.CreatorReqDto;
 import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
+import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CurationReqDto {
+
+    @NotNull
     private Integer type;
+
     private List<DeliciousSpotReqDto> deliciousSpots = new ArrayList<>();
+
     private List<FestivalReqDto> festivals = new ArrayList<>();
+
+    @NotNull
     private CreatorReqDto creator;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+
+    @NotNull
     private String title;
+
+    @NotNull
     private String description;
+
     private String imageUrl;
 
     public Curation toEntity() {
@@ -36,8 +45,6 @@ public class CurationReqDto {
                 .creator(
                         this.creator != null ? this.creator.toEntity() :null
                 )
-                .createdAt(this.createdAt != null ? this.createdAt : LocalDateTime.now())
-                .updatedAt(this.updatedAt != null ? this.updatedAt : LocalDateTime.now())
                 .title(this.title)
                 .description(this.description)
                 .imageUrl(this.imageUrl)

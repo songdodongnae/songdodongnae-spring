@@ -7,6 +7,7 @@ import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class DeliciousSpotController {
     @ApiResponse(responseCode = "200", description = "맛집 생성 성공")
     @PostMapping
     public ResponseEntity<ResponseContainer<DeliciousSpotResponseDto>> createDeliciousSpot(
-            @RequestBody DeliciousSpotReqDto deliciousSpotReqDto,
+            @Valid @RequestBody DeliciousSpotReqDto deliciousSpotReqDto,
             @RequestPart(required = false) MultipartFile mainImage,
             @RequestPart(required = false) List<MultipartFile> images) {
 
@@ -50,7 +51,7 @@ public class DeliciousSpotController {
     @PutMapping("/{id}")
     public ResponseEntity<ResponseContainer<DeliciousSpotResponseDto>> updateDeliciousSpot(
             @PathVariable Long id,
-            @RequestBody DeliciousSpotReqDto deliciousSpotReqDto) {
+            @Valid @RequestBody DeliciousSpotReqDto deliciousSpotReqDto) {
         DeliciousSpotResponseDto dto = deliciousSpotService.updateDeliciousSpot(id, deliciousSpotReqDto);
         return new ResponseContainer<>(HttpStatus.OK, "맛집 수정 성공", dto).toResponseEntity();
     }

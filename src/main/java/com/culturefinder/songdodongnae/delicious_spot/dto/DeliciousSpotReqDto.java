@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.delicious_spot.dto;
 
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,28 +12,41 @@ import java.time.LocalTime;
 @Getter
 @Setter
 public class DeliciousSpotReqDto {
+
+    @NotNull
     private String title;
 
     private double latitude;
+
     private double longitude;
 
     private String address;
+
     private Integer price;
 
     private Float naverRating;
+
     private Float kakaoRating;
 
     private LocalTime startTime;
+
     private LocalTime endTime;
+
     private String timeDescription;
 
     private String waiting;
+
     private String parking;
+
     private String suggestionMenu;
+
+    @NotNull
     private String description;
 
     private String onelineDescription;
+
     private String instagram;
+
     private String contact;
 
     public DeliciousSpot toEntity() {
