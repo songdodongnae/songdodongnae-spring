@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.curation.service;
 
 import com.culturefinder.songdodongnae.curation.domain.Curation;
+import com.culturefinder.songdodongnae.curation.dto.CurationReqDto;
 import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
 import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
 import jakarta.transaction.Transactional;
@@ -18,5 +19,11 @@ public class CurationService {
         Curation curationById = curationRepository.findCurationById(id);
         CurationResDto curationResDto = CurationResDto.fromEntity(curationById);
         return curationResDto;
+    }
+
+    public CurationResDto createCuration(CurationReqDto curationReqDto) {
+        Curation curation = curationReqDto.toEntity();
+        Curation savedCuration = curationRepository.saveCuration(curation);
+        return CurationResDto.fromEntity(savedCuration);
     }
 }

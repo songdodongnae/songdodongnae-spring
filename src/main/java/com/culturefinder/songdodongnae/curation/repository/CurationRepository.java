@@ -21,4 +21,10 @@ public class CurationRepository {
         if(curation == null) throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
         return curation;
     }
+
+    public Curation saveCuration(Curation curation) {
+        em.persist(curation);
+        return curation;
+    }
+
 }
