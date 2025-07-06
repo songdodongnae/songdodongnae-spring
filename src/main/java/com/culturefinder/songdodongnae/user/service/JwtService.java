@@ -2,19 +2,21 @@ package com.culturefinder.songdodongnae.user.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.culturefinder.songdodongnae.exception.CustomException;
+import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Optional;
+
+import static com.culturefinder.songdodongnae.exception.ErrorCode.RESOURCE_NOT_FOUND;
 
 @Getter
 @Service
@@ -102,11 +104,12 @@ public class JwtService {
     }
 
     public void updateRefreshToken(Long id, String refreshToken) {
-        userRepository.findById(id)
-                .ifPresentOrElse(
-                        user -> user.setRefreshToken(refreshToken),
-                        () -> new Exception("일치하는 회원이 없습니다.")
-                );
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(RESOURCE_NOT_FOUND));
+
+        user.setRefreshToken(refreshToken);
+        userRepository.saveUser(user);
+        log.info("유저 refreshToken 저장 = {}", user);
     }
 
     public boolean isTokenValid(String token) {
