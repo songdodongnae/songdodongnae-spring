@@ -29,7 +29,7 @@ public class CurationController {
         return new ResponseContainer<>(HttpStatus.OK, "큐레이션 생성 성공", curationResDto).toResponseEntity();
     }
 
-    @PutMapping("/{id")
+    @PutMapping("/{id}")
     public ResponseEntity<ResponseContainer<CurationResDto>> updateCuration(@PathVariable Long id, @Valid @RequestBody CurationReqDto curationReqDto){
         CurationResDto curationResDto = curationService.updateCuration(id, curationReqDto);
         return new ResponseContainer<>(HttpStatus.OK, "큐레이션 수정 성공", curationResDto).toResponseEntity();
