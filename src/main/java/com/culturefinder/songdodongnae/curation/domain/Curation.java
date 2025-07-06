@@ -20,6 +20,8 @@ public class Curation {
     @Column(name = "curation_id")
     private Long id;
 
+    private Integer type;
+
     @OneToMany
     private List<DeliciousSpot> deliciousSpots = new ArrayList<>();
 
@@ -39,4 +41,14 @@ public class Curation {
 
     private String imageUrl;
 
+    public void update(Curation curation) {
+        this.type = curation.type;
+        this.deliciousSpots = curation.deliciousSpots;
+        this.festivals = curation.festivals;
+        this.creator = curation.creator;
+        this.updatedAt = curation.updatedAt;
+        this.title = curation.title;
+        this.description = curation.description;
+        this.imageUrl = curation.imageUrl;
+    }
 }
