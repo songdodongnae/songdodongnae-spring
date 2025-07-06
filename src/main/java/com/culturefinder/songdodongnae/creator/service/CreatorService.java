@@ -5,6 +5,7 @@ import com.culturefinder.songdodongnae.creator.dto.CreatorReqDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorThumbnailResDto;
 import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class CreatorService {
         return CreatorResDto.fromEntity(savedCreator);
     }
 
-    public List<CreatorThumbnailResDto> getCreatorThumbnails() {
+    public List<CreatorThumbnailResDto> getAllCreator() {
         return creatorRepository.findAll().stream()
                 .map(CreatorThumbnailResDto::fromThumbEntity)
                 .collect(Collectors.toList());
@@ -35,4 +36,16 @@ public class CreatorService {
         return CreatorResDto.fromEntity(creatorRepository.findById(id));
     }
 
+    @Transactional
+    public CreatorResDto updateCreator(Long id, CreatorReqDto creatorReqDto) {
+        Creator findCreator = creatorRepository.findById(id);
+        findCreator.update(creatorReqDto.toEntity());
+        return CreatorResDto.fromEntity(findCreator);
+    }
+
+    public CreatorResDto deleteCreator(Long id) {
+        Creator findCreator = creatorRepository.findById(id);
+        creatorRepository.deleteById(id);
+        return CreatorResDto.fromEntity(findCreator);
+    }
 }
