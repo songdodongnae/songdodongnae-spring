@@ -30,7 +30,8 @@ public class SecurityConfig {
             "/admin/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/**", // 개발용 코드
+            "/api/users/**", // 개발용 코드
+//            "/**", // 개발용 코드
     };
 
     @Bean
