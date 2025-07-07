@@ -30,6 +30,8 @@ public class SecurityConfig {
             "/admin/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
+            "/api/curations/**",
+            "/api/delicious-spots/**",
             "/api/users/**", // 개발용 코드
 //            "/**", // 개발용 코드
     };
