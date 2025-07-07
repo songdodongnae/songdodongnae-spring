@@ -3,11 +3,9 @@ package com.culturefinder.songdodongnae.user.repository;
 import com.culturefinder.songdodongnae.user.domain.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.cors.PreFlightRequestHandler;
 
 import java.util.Optional;
 
@@ -18,7 +16,6 @@ public class UserRepository {
 
     @PersistenceContext
     private final EntityManager em;
-    private final PreFlightRequestHandler preFlightRequestHandler;
 
     public Optional<User> findById(Long id){
         if(id == null) return Optional.empty();
@@ -59,7 +56,12 @@ public class UserRepository {
     }
 
     public User saveUser(User user) {
-        em.persist(user);
+        if (user.getId() == null) {
+            em.persist(user);
+        }
+        else {
+            em.merge(user);
+        }
         return user;
     }
 

@@ -49,7 +49,7 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
 
         if (findUser.isEmpty()) {
             userRepository.saveUser(user);
-            log.info("유저 저장 유저 = {}", user.toString());
+            log.info("유저 저장 유저 = {}", user);
         } else {
             userRepository.updateUser(findUser.get());
         }
