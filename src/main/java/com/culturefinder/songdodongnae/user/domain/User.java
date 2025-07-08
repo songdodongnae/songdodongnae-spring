@@ -52,4 +52,8 @@ public class User {
         this.email = email;
         return this;
     }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }
