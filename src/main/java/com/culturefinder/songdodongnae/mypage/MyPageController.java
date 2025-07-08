@@ -20,10 +20,13 @@ public class MyPageController {
     @Operation(summary = "닉네임 변경", description = "닉네임을 변경합니다.")
     @ApiResponse(responseCode = "200", description = "닉네임 변경 성공")
     @PutMapping("/nickname")
-    public ResponseEntity<ResponseContainer<String>> festivalCreate(
+    public ResponseEntity<ResponseContainer<String>> updateNickName(
             @Valid @RequestBody NickNameReqDto nickNameReqDto) {
 
         String dto = myPageService.updateNickName(nickNameReqDto);
         return new ResponseContainer<>(HttpStatus.OK, "닉네임 변경 성공", dto).toResponseEntity();
     }
+
+
+
 }
