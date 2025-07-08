@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -25,6 +27,14 @@ public class MyPageController {
 
         String dto = myPageService.updateNickName(nickNameReqDto);
         return new ResponseContainer<>(HttpStatus.OK, "닉네임 변경 성공", dto).toResponseEntity();
+    }
+
+    @Operation(summary = "북마크 조회", description = "북마크 타입별로 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "북마크 조회 성공")
+    @GetMapping("/bookmark/{type}")
+    public ResponseEntity<ResponseContainer<List<ThumbnailResDto>>> getPostByType(@PathVariable String type) {
+        List<ThumbnailResDto> dto = myPageService.getPostByType(type.toUpperCase());
+        return new ResponseContainer<>(HttpStatus.OK, "북마크 조회 성공", dto).toResponseEntity();
     }
 
 

@@ -8,6 +8,8 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Repository
 public class CurationRepository {
@@ -30,5 +32,9 @@ public class CurationRepository {
         Curation curation = findCurationById(id);
         em.remove(curation);
         return curation;
+    }
+
+    public List<Curation> findAll() {
+        return em.createQuery("select c from Curation c", Curation.class).getResultList();
     }
 }
