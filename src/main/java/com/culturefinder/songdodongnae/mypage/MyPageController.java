@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +26,9 @@ public class MyPageController {
     @PutMapping("/nickname")
     public ResponseEntity<ResponseContainer<String>> updateNickName(
             @Valid @RequestBody NickNameReqDto nickNameReqDto) {
-
-        String dto = myPageService.updateNickName(nickNameReqDto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+        String dto = myPageService.updateNickName(nickNameReqDto, userId);
         return new ResponseContainer<>(HttpStatus.OK, "닉네임 변경 성공", dto).toResponseEntity();
     }
 

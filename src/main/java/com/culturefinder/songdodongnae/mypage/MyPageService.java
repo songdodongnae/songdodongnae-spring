@@ -1,8 +1,9 @@
 package com.culturefinder.songdodongnae.mypage;
 
-import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
+import com.culturefinder.songdodongnae.exception.CustomException;
+import com.culturefinder.songdodongnae.exception.ErrorCode;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.culturefinder.songdodongnae.exception.ErrorCode.RESOURCE_NOT_FOUND;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,15 +25,11 @@ public class MyPageService {
     private final FestivalRepository festivalRepository;
     private final DeliciousSpotRepository deliciousSpotRepository;
     private final CurationRepository curationRepository;
-    private final BookmarkRepository bookmarkRepository;
 
 
-    public String updateNickName(NickNameReqDto nickNameReqDto) {
-      //   String memberId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String memberId = "1";
-        log.info("memberId = {} ", memberId);
-        User findUser = userRepository.findById(Long.parseLong(memberId))
-                .orElseThrow(() -> new RuntimeException(String.valueOf(RESOURCE_NOT_FOUND)));
+    public String updateNickName(NickNameReqDto nickNameReqDto, Long userId) {
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 
         findUser.updateNickname(nickNameReqDto.getNickName());
         return nickNameReqDto.getNickName();
