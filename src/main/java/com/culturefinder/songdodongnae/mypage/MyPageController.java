@@ -29,7 +29,7 @@ public class MyPageController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.parseLong(authentication.getName());
         String dto = myPageService.updateNickName(nickNameReqDto, userId);
-        return new ResponseContainer<>(HttpStatus.OK, "닉네임 변경 성공", dto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "닉네임 변경 성공", dto);
     }
 
     @Operation(summary = "북마크 조회", description = "북마크 타입별로 조회합니다.")
@@ -37,7 +37,7 @@ public class MyPageController {
     @GetMapping("/bookmark/{type}")
     public ResponseEntity<ResponseContainer<List<ThumbnailResDto>>> getPostByType(@PathVariable String type) {
         List<ThumbnailResDto> dto = myPageService.getPostByType(type.toUpperCase());
-        return new ResponseContainer<>(HttpStatus.OK, "북마크 조회 성공", dto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "북마크 조회 성공", dto);
     }
 
 
