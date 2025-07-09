@@ -29,7 +29,7 @@ public class CreatorController {
     @PostMapping
     public ResponseEntity<ResponseContainer<CreatorResDto>> createCreator(@Valid @RequestBody CreatorReqDto creatorReqDto) {
         CreatorResDto dto = creatorService.createCreator(creatorReqDto);
-        return new ResponseContainer<>(HttpStatus.OK, "크리에이터 생성 성공", dto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "크리에이터 생성 성공", dto);
     }
 
     @Operation(summary = "크리에이터 모두 조회", description = "크리에이터 썸네일 목록 조회합니다.")
@@ -37,7 +37,7 @@ public class CreatorController {
     @GetMapping
     public ResponseEntity<ResponseContainer<List<CreatorThumbnailResDto>>> getAllCreator() {
         List<CreatorThumbnailResDto> dtos = creatorService.getAllCreator();
-        return new ResponseContainer<>(HttpStatus.OK, "크리에이터 썸네일 목록 조회 성공", dtos).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "크리에이터 썸네일 목록 조회 성공", dtos);
     }
 
     @Operation(summary = "크리에이터 상세 조회", description = "크리에이터 상세 조회합니다.")
@@ -45,7 +45,7 @@ public class CreatorController {
     @GetMapping("/{id}")
     public ResponseEntity<ResponseContainer<CreatorResDto>> getCreator(@PathVariable Long id) {
         CreatorResDto dto = creatorService.getCreator(id);
-        return new ResponseContainer<>(HttpStatus.OK, "크리에이터 상세 조회 성공", dto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "크리에이터 상세 조회 성공", dto);
     }
 
     @Operation(summary = "크리에이터 수정", description = "크리에이터 수정합니다.")
@@ -53,7 +53,7 @@ public class CreatorController {
     @PutMapping("/{id}")
     public ResponseEntity<ResponseContainer<CreatorResDto>> updateCreator(@PathVariable Long id,@Valid @RequestBody CreatorReqDto creatorReqDto) {
         CreatorResDto dto = creatorService.updateCreator(id, creatorReqDto);
-        return new ResponseContainer<>(HttpStatus.OK, "크리에이터 수정 성공", dto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "크리에이터 수정 성공", dto);
     }
 
     @Operation(summary = "크리에이터 삭제", description = "크리에이터 삭제합니다.")
@@ -61,6 +61,6 @@ public class CreatorController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseContainer<CreatorResDto>> deleteCreator(@PathVariable Long id) {
         CreatorResDto dto = creatorService.deleteCreator(id);
-        return new ResponseContainer<>(HttpStatus.OK, "크리에이터 삭제 성공", dto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "크리에이터 삭제 성공", dto);
     }
 }

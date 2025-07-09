@@ -33,7 +33,7 @@ public class DeliciousSpotController {
             @RequestPart(required = false) List<MultipartFile> images) {
 
         DeliciousSpotResponseDto dto = deliciousSpotService.createDeliciousSpot(deliciousSpotReqDto);
-        return new ResponseContainer<>(HttpStatus.CREATED, "맛집 생성 성공", dto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.CREATED, "맛집 생성 성공", dto);
     }
 
     @Operation(summary = "맛집 조회", description = "특정 ID의 맛집을 조회합니다")
@@ -43,7 +43,7 @@ public class DeliciousSpotController {
             @PathVariable Long id) {
 
         DeliciousSpotResponseDto dto = deliciousSpotService.getDeliciousSpotById(id);
-        return new ResponseContainer<>(HttpStatus.OK, "맛집 조회 성공", dto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "맛집 조회 성공", dto);
     }
 
     @Operation(summary = "맛집 수정", description = "특정 ID의 맛집을 수정합니다")
@@ -53,7 +53,7 @@ public class DeliciousSpotController {
             @PathVariable Long id,
             @Valid @RequestBody DeliciousSpotReqDto deliciousSpotReqDto) {
         DeliciousSpotResponseDto dto = deliciousSpotService.updateDeliciousSpot(id, deliciousSpotReqDto);
-        return new ResponseContainer<>(HttpStatus.OK, "맛집 수정 성공", dto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "맛집 수정 성공", dto);
     }
 
     @Operation(summary = "맛집 삭제", description = "특정 ID의 맛집을 삭제합니다")
@@ -62,7 +62,7 @@ public class DeliciousSpotController {
     public ResponseEntity<ResponseContainer<Object>> deleteDeliciousSpot(
             @PathVariable Long id) {
         deliciousSpotService.deleteDeliciousSpot(id);
-        return new ResponseContainer<>(HttpStatus.OK, "맛집 삭제 성공", null).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "맛집 삭제 성공", null);
     }
 
     @Operation(summary = "모든 맛집 조회", description = "모든 맛집을 조회합니다")
@@ -70,7 +70,7 @@ public class DeliciousSpotController {
     @GetMapping
     public ResponseEntity<ResponseContainer<List<DeliciousSpotResponseDto>>> getAllDeliciousSpots() {
         List<DeliciousSpotResponseDto> deliciousSpots = deliciousSpotService.getAllDeliciousSpots();
-        return new ResponseContainer<>(HttpStatus.OK, "모든 맛집 조회 성공", deliciousSpots).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "모든 맛집 조회 성공", deliciousSpots);
     }
 
 }
