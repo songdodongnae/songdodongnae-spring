@@ -5,12 +5,11 @@ import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.search.dto.SearchSummaryResDto;
-import com.culturefinder.songdodongnae.search.repository.FestivalRepository;
+import com.culturefinder.songdodongnae.search.repository.FestivalSearchRepository;
 import com.culturefinder.songdodongnae.search.repository.SearchRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +20,7 @@ import java.util.List;
 public class SearchService {
 
     private final SearchRepository searchRepository;
-    private final FestivalRepository festivalRepository;
+    private final FestivalSearchRepository festivalRepository;
 
     public SearchSummaryResDto getSearchSummary(String query) {
         List<Festival> top3Festival = searchRepository.findTop3Festival(query);
@@ -32,6 +31,6 @@ public class SearchService {
     }
 
     public Page<FestivalResDto> getFestivalPage(String query) {
-
+        return null;
     }
 }
