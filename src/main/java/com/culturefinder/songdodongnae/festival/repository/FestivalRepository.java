@@ -39,6 +39,11 @@ public class FestivalRepository {
                 .getResultList();
     }
 
+    public List<Festival> findAll() {
+        return em.createQuery("SELECT f from Festival f ORDER BY f.id", Festival.class)
+                .getResultList();
+    }
+
     public List<Festival> findTopByOrderByCreatedTimeDesc() {
         return em.createQuery("SELECT f FROM Festival f ORDER BY f.createdAt DESC", Festival.class)
                 .setMaxResults(20)

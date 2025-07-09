@@ -106,6 +106,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        log.info("security context holder = {}", SecurityContextHolder.getContext().getAuthentication());
     }
 
     private boolean isUriInWhiteList(String uri) {
