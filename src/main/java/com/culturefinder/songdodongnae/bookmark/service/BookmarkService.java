@@ -1,7 +1,7 @@
 package com.culturefinder.songdodongnae.bookmark.service;
 
 import com.culturefinder.songdodongnae.bookmark.domain.Bookmark;
-import com.culturefinder.songdodongnae.bookmark.domain.BookmarkReqDto;
+import com.culturefinder.songdodongnae.bookmark.dto.BookmarkReqDto;
 import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
@@ -9,6 +9,9 @@ import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 
 @Service
 @AllArgsConstructor
@@ -18,7 +21,12 @@ public class BookmarkService {
     private final UserRepository userRepository;
 
     public Bookmark createBookmark(BookmarkReqDto bookmarkReqDto, Long userId) {
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+        if (bookmarkReqDto.getTargetId() == null) {
+            throw new CustomException(ErrorCode.INVALID_PARAMETER);
+        }
+
         Bookmark bookmark = Bookmark.builder()
                 .user(user)
                 .bookmarkType(bookmarkReqDto.getBookmarkType())
@@ -34,5 +42,9 @@ public class BookmarkService {
 
     public Bookmark deleteBookmark(Long id) {
         return bookmarkRepository.deleteBookmark(id);
+    }
+
+    public List<Bookmark> findUserBookmarks(Long userId) {
+        return bookmarkRepository.findUserBookmarks(userId);
     }
 }

@@ -29,7 +29,7 @@ public class S3Controller {
         String presignedUrl = s3UploadService.generatePresignedUrl(uuid.toString());
         String imageUrl = "https://songdo-s3-bucket.s3.ap-northeast-2.amazonaws.com/" + uuid.toString();
         PresignedUrlResponseDto presignedUrlDto = new PresignedUrlResponseDto(presignedUrl, imageUrl);
-        return new ResponseContainer<>(HttpStatus.OK, "Presigned URL, Image URL 생성 성공", presignedUrlDto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "Presigned URL, Image URL 생성 성공", presignedUrlDto);
     }
 
 }
