@@ -20,24 +20,24 @@ public class CurationController {
     @GetMapping("/{id}")
     public ResponseEntity<ResponseContainer<CurationResDto>> getCuration(@PathVariable Long id){
         CurationResDto curationResDto = curationService.getCuration(id);
-        return new ResponseContainer<>(HttpStatus.OK, "큐레이션 조회 성공", curationResDto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "큐레이션 조회 성공", curationResDto);
     }
 
     @PostMapping
     public ResponseEntity<ResponseContainer<CurationResDto>> createCuration(@Valid @RequestBody CurationReqDto curationReqDto) {
         CurationResDto curationResDto = curationService.createCuration(curationReqDto);
-        return new ResponseContainer<>(HttpStatus.OK, "큐레이션 생성 성공", curationResDto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.CREATED, "큐레이션 생성 성공", curationResDto);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseContainer<CurationResDto>> updateCuration(@PathVariable Long id, @Valid @RequestBody CurationReqDto curationReqDto){
         CurationResDto curationResDto = curationService.updateCuration(id, curationReqDto);
-        return new ResponseContainer<>(HttpStatus.OK, "큐레이션 수정 성공", curationResDto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "큐레이션 수정 성공", curationResDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseContainer<CurationResDto>> deleteCuration(@PathVariable Long id){
         CurationResDto curationResDto = curationService.deleteCuration(id);
-        return new ResponseContainer<>(HttpStatus.OK, "큐레이션 삭제 성공", curationResDto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "큐레이션 삭제 성공", curationResDto);
     }
 }
