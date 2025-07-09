@@ -1,5 +1,6 @@
-package com.culturefinder.songdodongnae.bookmark.domain;
+package com.culturefinder.songdodongnae.bookmark.dto;
 
+import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 

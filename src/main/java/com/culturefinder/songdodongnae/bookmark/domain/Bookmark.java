@@ -8,6 +8,8 @@ import lombok.*;
 @Getter
 @Builder
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Bookmark {
 
     @Id @GeneratedValue

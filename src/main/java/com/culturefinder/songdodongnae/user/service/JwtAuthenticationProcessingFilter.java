@@ -44,6 +44,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         if (refreshToken != null) {
             validateRefreshTokenAndReIssueAccessToken(response, refreshToken);
         } else {
+            log.info("리프레시 토큰 없음");
             checkAccessToken(request, response);
         }
 
@@ -61,7 +62,10 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                             );
                             log.info("access 재발급");
                         },
-                        () -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED)
+                        () -> {
+                            log.info("리프레시 토큰 유효하지 않음");
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        }
         );
     }
 
