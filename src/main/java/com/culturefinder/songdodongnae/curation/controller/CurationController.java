@@ -26,7 +26,7 @@ public class CurationController {
     @GetMapping("/{id}")
     public ResponseEntity<ResponseContainer<CurationResDto>> getCuration(@PathVariable Long id) {
         CurationResDto curationResDto = curationService.getCuration(id);
-        return new ResponseContainer<>(HttpStatus.OK, "큐레이션 조회 성공", curationResDto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "큐레이션 조회 성공", curationResDto);
     }
 
     @Operation(summary = "큐레이션 생성", description = "큐레이션 하나를 생성합니다.")
@@ -34,7 +34,7 @@ public class CurationController {
     @PostMapping
     public ResponseEntity<ResponseContainer<CurationResDto>> createCuration(@Valid @RequestBody CurationReqDto curationReqDto) {
         CurationResDto curationResDto = curationService.createCuration(curationReqDto);
-        return new ResponseContainer<>(HttpStatus.OK, "큐레이션 생성 성공", curationResDto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.CREATED, "큐레이션 생성 성공", curationResDto);
     }
 
     @Operation(summary = "큐레이션 수정", description = "큐레이션 하나를 수정합니다.")
@@ -42,7 +42,7 @@ public class CurationController {
     @PutMapping("/{id}")
     public ResponseEntity<ResponseContainer<CurationResDto>> updateCuration(@PathVariable Long id, @Valid @RequestBody CurationReqDto curationReqDto){
         CurationResDto curationResDto = curationService.updateCuration(id, curationReqDto);
-        return new ResponseContainer<>(HttpStatus.OK, "큐레이션 수정 성공", curationResDto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "큐레이션 수정 성공", curationResDto);
     }
 
     @Operation(summary = "큐레이션 삭제", description = "큐레이션 하나를 삭제합니다.")
@@ -50,6 +50,6 @@ public class CurationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseContainer<CurationResDto>> deleteCuration(@PathVariable Long id){
         CurationResDto curationResDto = curationService.deleteCuration(id);
-        return new ResponseContainer<>(HttpStatus.OK, "큐레이션 삭제 성공", curationResDto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "큐레이션 삭제 성공", curationResDto);
     }
 }

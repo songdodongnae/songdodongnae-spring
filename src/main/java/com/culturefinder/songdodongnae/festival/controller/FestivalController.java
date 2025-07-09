@@ -33,7 +33,7 @@ public class FestivalController {
             @RequestPart(required = false) List<MultipartFile> images) {
 
         FestivalResDto dto = festivalService.createFestival(festivalReqDto);
-        return new ResponseContainer<>(HttpStatus.CREATED, "축제 생성 성공", dto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.CREATED, "축제 생성 성공", dto);
     }
 
     @Operation(summary = "해당 년/월 축제 조회", description = "해당 년/월에 개최되는 모든 축제 목록을 조회합니다")
@@ -44,7 +44,7 @@ public class FestivalController {
             @RequestParam int month) {
 
         List<FestivalResDto> dtos = festivalService.getFestivalsByYearAndMonth(year, month);
-        return new ResponseContainer<>(HttpStatus.OK, "년/월 해당 축제 조회 성공", dtos).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "년/월 해당 축제 조회 성공", dtos);
     }
 
     @Operation(summary = "모든 축제 조회", description = "등록된 모든 축제 목록을 조회합니다.")
@@ -55,7 +55,7 @@ public class FestivalController {
             @RequestParam(defaultValue = "10") int size) {
 
         List<FestivalResDto> dtos = festivalService.getAllFestival(page, size);
-        return new ResponseContainer<>(HttpStatus.OK, "모든 축제 조회 성공", dtos).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "모든 축제 조회 성공", dtos);
     }
 
     @Operation(summary = "축제 조회", description = "특정 ID의 축제 정보를 조회합니다.")
@@ -63,7 +63,7 @@ public class FestivalController {
     @GetMapping("/{id}")
     public ResponseEntity<ResponseContainer<FestivalResDto>> festivalRead(@PathVariable Long id) {
         FestivalResDto dto = festivalService.getFestival(id);
-        return new ResponseContainer<>(HttpStatus.OK, "축제 조회 성공", dto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "축제 조회 성공", dto);
     }
 
     @Operation(summary = "축제 삭제", description = "특정 ID의 축제 정보를 삭제합니다.")
@@ -71,7 +71,7 @@ public class FestivalController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseContainer<FestivalResDto>> festivalDelete(@PathVariable Long id) {
         FestivalResDto dto = festivalService.deleteFestival(id);
-        return new ResponseContainer<>(HttpStatus.OK, "축제 삭제 성공", dto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "축제 삭제 성공", dto);
     }
 
     @Operation(summary = "축제 수정", description = "특정 ID의 축제 정보를 수정합니다.")
@@ -79,6 +79,6 @@ public class FestivalController {
     @PutMapping("/{id}")
     public ResponseEntity<ResponseContainer<FestivalResDto>> festivalUpdate(@PathVariable Long id,@Valid @RequestBody FestivalReqDto festivalUpdateReqDto) {
         FestivalResDto dto = festivalService.updateFestival(id, festivalUpdateReqDto);
-        return new ResponseContainer<>(HttpStatus.OK, "축제 수정 성공", dto).toResponseEntity();
+        return ResponseContainer.create(HttpStatus.OK, "축제 수정 성공", dto);
     }
 }

@@ -20,16 +20,17 @@ public class ResponseContainer<T> {
     @Schema(description = "응답 데이터")
     private T data;
 
-    public ResponseContainer(HttpStatus statusCode, String message, T data) {
+    private ResponseContainer() {}
+
+    private ResponseContainer(HttpStatus statusCode, String message, T data) {
         this.statusCode = statusCode.value();
         this.message = message;
         this.data = data;
     }
 
-    public ResponseEntity<ResponseContainer<T>> toResponseEntity() {
-        return ResponseEntity
-                .status(statusCode)
-                .body(this);
+    public static <D> ResponseEntity<ResponseContainer<D>> create(HttpStatus statusCode, String message, D data) {
+        ResponseContainer<D> responseContainer = new ResponseContainer<>(statusCode, message, data);
+        return ResponseEntity.status(statusCode).body(responseContainer);
     }
 
 }
