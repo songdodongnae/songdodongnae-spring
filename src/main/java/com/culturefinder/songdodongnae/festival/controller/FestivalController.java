@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "Festival API", description = "축제 관련 API")
@@ -28,11 +29,11 @@ public class FestivalController {
     @ApiResponse(responseCode = "201", description = "축제 생성 성공")
     @PostMapping
     public ResponseEntity<ResponseContainer<FestivalResDto>> createFestival(
-            @Valid @RequestBody FestivalReqDto festivalReqDto,
+            @Valid @RequestPart FestivalReqDto festivalReqDto,
             @RequestPart(required = false) MultipartFile mainImage,
-            @RequestPart(required = false) List<MultipartFile> images) {
+            @RequestPart(required = false) List<MultipartFile> images) throws IOException {
 
-        FestivalResDto dto = festivalService.createFestival(festivalReqDto);
+        FestivalResDto dto = festivalService.createFestival(festivalReqDto, mainImage, images);
         return ResponseContainer.create(HttpStatus.CREATED, "축제 생성 성공", dto);
     }
 

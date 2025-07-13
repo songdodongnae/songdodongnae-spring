@@ -3,11 +3,13 @@ package com.culturefinder.songdodongnae.curation.dto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorReqDto;
 import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
+import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class CurationReqDto {
 
@@ -39,7 +41,7 @@ public class CurationReqDto {
                 )
                 .festivals(
                         this.festivals.stream()
-                                .map(FestivalReqDto::toEntity)
+                                .map(festival -> FestivalReqDto.toEntity(festival, imageUrl, null))
                                 .toList()
                 )
                 .creator(

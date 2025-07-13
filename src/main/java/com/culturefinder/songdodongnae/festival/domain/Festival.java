@@ -62,6 +62,7 @@ public class Festival {
     private String imageUrl;
 
     @OneToMany(mappedBy = "festival", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FestivalImage> festivalImages = new ArrayList<>();
 
     public void update(Festival festival) {

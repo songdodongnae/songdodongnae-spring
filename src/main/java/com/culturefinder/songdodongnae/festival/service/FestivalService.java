@@ -1,14 +1,19 @@
 package com.culturefinder.songdodongnae.festival.service;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
+import com.culturefinder.songdodongnae.festival.domain.FestivalImage;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
+import com.culturefinder.songdodongnae.s3.S3UploadService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,10 +22,23 @@ import java.util.stream.Collectors;
 public class FestivalService {
 
     private final FestivalRepository festivalRepository;
+    private final S3UploadService s3UploadService;
 
+    public FestivalResDto createFestival(FestivalReqDto festivalReqDto, MultipartFile mainImage, List<MultipartFile> images) throws IOException {
+        String imageUrl = null;
+        if (mainImage != null) {
+            imageUrl = s3UploadService.saveFile(mainImage);
+        }
 
-    public FestivalResDto createFestival(FestivalReqDto festivalReqDto) {
-        Festival festival = festivalReqDto.toEntity();
+        List<FestivalImage> festivalImages = new ArrayList<>();
+        if (images != null && !images.isEmpty()) {
+            for (MultipartFile image : images) {
+                String savedImage = s3UploadService.saveFile(image);
+                festivalImages.add(new FestivalImage(savedImage));
+            }
+        }
+
+        Festival festival = FestivalReqDto.toEntity(festivalReqDto ,imageUrl, festivalImages);
         Festival savedFestival = festivalRepository.saveFestival(festival);
         return FestivalResDto.fromEntity(savedFestival);
     }
@@ -67,7 +85,7 @@ public class FestivalService {
         if (findFestival == null) {
             throw new IllegalArgumentException("Festival not found");
         }
-        findFestival.update(festivalUpdateReqDto.toEntity());
+        findFestival.update(FestivalReqDto.toEntity(festivalUpdateReqDto, null, null));
         festivalRepository.saveFestival(findFestival);
         return FestivalResDto.fromEntity(findFestival);
     }
