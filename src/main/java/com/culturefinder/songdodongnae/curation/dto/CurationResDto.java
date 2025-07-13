@@ -3,11 +3,11 @@ package com.culturefinder.songdodongnae.curation.dto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
 import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResponseDto;
+import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -29,7 +29,7 @@ public class CurationResDto {
                 .toList();
 
         List<FestivalResDto> festivalDto = curation.getFestivals().stream()
-                .map(FestivalResDto::fromEntity)
+                .map((Festival festival) -> FestivalResDto.fromEntity(festival, false)) // 수정 필요
                 .toList();
 
         CreatorResDto creatorDto = CreatorResDto.fromEntity(curation.getCreator());

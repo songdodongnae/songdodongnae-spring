@@ -16,6 +16,8 @@ public class FestivalResDto {
 
     private Long id;
 
+    private boolean isBookmarked;
+
     private String title;
 
     private LocalDate startDate;
@@ -54,9 +56,10 @@ public class FestivalResDto {
 
     private List<FestivalImage> festivalImages;
 
-    public static FestivalResDto fromEntity(Festival festival) {
+    public static FestivalResDto fromEntity(Festival festival, boolean isBookmarked) {
         return FestivalResDto.builder()
                 .id(festival.getId())
+                .isBookmarked(isBookmarked)
                 .title(festival.getTitle())
                 .startDate(festival.getStartDate())
                 .endDate(festival.getEndDate())

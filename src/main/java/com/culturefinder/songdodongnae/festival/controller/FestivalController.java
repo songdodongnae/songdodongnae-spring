@@ -11,6 +11,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,8 +34,8 @@ public class FestivalController {
             @Valid @RequestPart FestivalReqDto festivalReqDto,
             @RequestPart(required = false) MultipartFile mainImage,
             @RequestPart(required = false) List<MultipartFile> images) throws IOException {
-
-        FestivalResDto dto = festivalService.createFestival(festivalReqDto, mainImage, images);
+        Long userId = getUserId();
+        FestivalResDto dto = festivalService.createFestival(festivalReqDto, mainImage, images, userId);
         return ResponseContainer.create(HttpStatus.CREATED, "축제 생성 성공", dto);
     }
 
@@ -63,7 +65,8 @@ public class FestivalController {
     @ApiResponse(responseCode = "200", description = "축제 조회 성공")
     @GetMapping("/{id}")
     public ResponseEntity<ResponseContainer<FestivalResDto>> getFestival(@PathVariable Long id) {
-        FestivalResDto dto = festivalService.getFestival(id);
+        Long userId = getUserId();
+        FestivalResDto dto = festivalService.getFestival(id, userId);
         return ResponseContainer.create(HttpStatus.OK, "축제 조회 성공", dto);
     }
 
@@ -71,7 +74,8 @@ public class FestivalController {
     @ApiResponse(responseCode = "200", description = "축제 삭제 성공")
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseContainer<FestivalResDto>> deleteFestival(@PathVariable Long id) {
-        FestivalResDto dto = festivalService.deleteFestival(id);
+        Long userId = getUserId();
+        FestivalResDto dto = festivalService.deleteFestival(id, userId);
         return ResponseContainer.create(HttpStatus.OK, "축제 삭제 성공", dto);
     }
 
@@ -82,7 +86,15 @@ public class FestivalController {
             @PathVariable Long id, @Valid @RequestPart FestivalReqDto festivalReqDto,
             @RequestPart(required = false) MultipartFile mainImage,
             @RequestPart(required = false) List<MultipartFile> images) throws IOException {
-        FestivalResDto dto = festivalService.updateFestival(id, festivalReqDto, mainImage, images);
+        Long userId = getUserId();
+        FestivalResDto dto = festivalService.updateFestival(id, festivalReqDto, mainImage, images, userId);
         return ResponseContainer.create(HttpStatus.OK, "축제 수정 성공", dto);
+    }
+
+    private Long getUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Long userId = Long.parseLong(authentication.getName());
+        Long userId = 1L;
+        return userId;
     }
 }
