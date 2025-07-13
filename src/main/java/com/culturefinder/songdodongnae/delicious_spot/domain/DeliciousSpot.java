@@ -6,15 +6,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Builder
 @Getter
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class DeliciousSpot {
 
     @Id @GeneratedValue
@@ -35,9 +32,9 @@ public class DeliciousSpot {
 
     private Float kakaoRating;
 
-    private LocalTime startTime;
+    private String startTime;
 
-    private LocalTime endTime;
+    private String endTime;
 
     private String timeDescription;
 
@@ -62,30 +59,6 @@ public class DeliciousSpot {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    private String imageUrl;
-
-    @OneToMany(mappedBy = "deliciousSpot", cascade = CascadeType.ALL)
-    private List<DeliciousSpotImage> deliciousSpotImages = new ArrayList<>();
-
-    public void updateDeliciousSpot(DeliciousSpot deliciousSpot) {
-        this.title = deliciousSpot.getTitle();
-        this.latitude = deliciousSpot.getLatitude();
-        this.longitude = deliciousSpot.getLongitude();
-        this.address = deliciousSpot.getAddress();
-        this.price = deliciousSpot.getPrice();
-        this.naverRating = deliciousSpot.getNaverRating();
-        this.kakaoRating = deliciousSpot.getKakaoRating();
-        this.startTime = deliciousSpot.getStartTime();
-        this.endTime = deliciousSpot.getEndTime();
-        this.timeDescription = deliciousSpot.getTimeDescription();
-        this.waiting = deliciousSpot.getWaiting();
-        this.parking = deliciousSpot.getParking();
-        this.suggestionMenu = deliciousSpot.getSuggestionMenu();
-        this.description = deliciousSpot.getDescription();
-        this.onelineDescription = deliciousSpot.getOnelineDescription();
-        this.instagram = deliciousSpot.getInstagram();
-        this.contact = deliciousSpot.getContact();
-        this.imageUrl = deliciousSpot.getImageUrl();
-    }
+    private String thumbnailImageUrl;
 
 }

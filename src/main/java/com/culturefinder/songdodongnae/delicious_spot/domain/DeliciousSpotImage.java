@@ -5,25 +5,19 @@ import lombok.*;
 
 @Getter
 @Entity
+@Builder
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class DeliciousSpotImage {
 
     @Id @GeneratedValue
     @Column(name = "delicious_spot_image_id")
     private Long id;
 
-    @Setter
-    @ManyToOne
-    @JoinColumn(name = "delicious_spot_id")
-    private DeliciousSpot deliciousSpot;
+    private Long deliciousSpotId;
 
     @Column(length = 40000)
     private String imageUrl;
-
-    public DeliciousSpotImage(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 
 }
