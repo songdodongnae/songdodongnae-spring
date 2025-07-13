@@ -1,12 +1,10 @@
 package com.culturefinder.songdodongnae.delicious_spot.dto;
 
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
-import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotImage;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -29,9 +27,9 @@ public class DeliciousSpotResponseDto {
 
     private Float kakaoRating;
 
-    private LocalTime startTime;
+    private String startTime;
 
-    private LocalTime endTime;
+    private String endTime;
 
     private String timeDescription;
 
@@ -53,9 +51,36 @@ public class DeliciousSpotResponseDto {
 
     private LocalDateTime updatedAt;
 
-    private String imageUrl;
+    private String thumbnailImageUrl;
 
-    private List<DeliciousSpotImage> deliciousSpotImages;
+    private List<String> imageUrls;
+
+    public static DeliciousSpotResponseDto fromEntity(DeliciousSpot deliciousSpot, List<String> imageUrls) {
+        return DeliciousSpotResponseDto.builder()
+                .id(deliciousSpot.getId())
+                .title(deliciousSpot.getTitle())
+                .latitude(deliciousSpot.getLatitude())
+                .longitude(deliciousSpot.getLongitude())
+                .address(deliciousSpot.getAddress())
+                .price(deliciousSpot.getPrice())
+                .naverRating(deliciousSpot.getNaverRating())
+                .kakaoRating(deliciousSpot.getKakaoRating())
+                .startTime(deliciousSpot.getStartTime())
+                .endTime(deliciousSpot.getEndTime())
+                .timeDescription(deliciousSpot.getTimeDescription())
+                .waiting(deliciousSpot.getWaiting())
+                .parking(deliciousSpot.getParking())
+                .suggestionMenu(deliciousSpot.getSuggestionMenu())
+                .description(deliciousSpot.getDescription())
+                .onelineDescription(deliciousSpot.getOnelineDescription())
+                .instagram(deliciousSpot.getInstagram())
+                .contact(deliciousSpot.getContact())
+                .createdAt(deliciousSpot.getCreatedAt())
+                .updatedAt(deliciousSpot.getUpdatedAt())
+                .thumbnailImageUrl(deliciousSpot.getThumbnailImageUrl())
+                .imageUrls(imageUrls)
+                .build();
+    }
 
     public static DeliciousSpotResponseDto fromEntity(DeliciousSpot deliciousSpot) {
         return DeliciousSpotResponseDto.builder()
@@ -79,8 +104,7 @@ public class DeliciousSpotResponseDto {
                 .contact(deliciousSpot.getContact())
                 .createdAt(deliciousSpot.getCreatedAt())
                 .updatedAt(deliciousSpot.getUpdatedAt())
-                .imageUrl(deliciousSpot.getImageUrl())
-                .deliciousSpotImages(deliciousSpot.getDeliciousSpotImages())
+                .thumbnailImageUrl(deliciousSpot.getThumbnailImageUrl())
                 .build();
     }
 }

@@ -2,15 +2,11 @@ package com.culturefinder.songdodongnae.delicious_spot.dto;
 
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import java.util.*;
 
-import java.time.LocalTime;
-
+@Data
 @AllArgsConstructor
-@Getter
-@Setter
 public class DeliciousSpotReqDto {
 
     @NotNull
@@ -28,9 +24,9 @@ public class DeliciousSpotReqDto {
 
     private Float kakaoRating;
 
-    private LocalTime startTime;
+    private String startTime;
 
-    private LocalTime endTime;
+    private String endTime;
 
     private String timeDescription;
 
@@ -42,6 +38,10 @@ public class DeliciousSpotReqDto {
 
     @NotNull
     private String description;
+
+    private String thumbnailImageUrl;
+
+    private List<String> imageUrls = new ArrayList<>();
 
     private String onelineDescription;
 
@@ -65,9 +65,11 @@ public class DeliciousSpotReqDto {
                 .parking(this.parking)
                 .suggestionMenu(this.suggestionMenu)
                 .description(this.description)
+                .thumbnailImageUrl(this.thumbnailImageUrl)
                 .onelineDescription(this.onelineDescription)
                 .instagram(this.instagram)
                 .contact(this.contact)
                 .build();
     }
+
 }

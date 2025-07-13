@@ -61,4 +61,26 @@ public class DeliciousSpot {
 
     private String thumbnailImageUrl;
 
+    public DeliciousSpot updateDeliciousSpot(DeliciousSpot deliciousSpot) {
+        this.title = deliciousSpot.getTitle();
+        this.latitude = deliciousSpot.getLatitude();
+        this.longitude = deliciousSpot.getLongitude();
+        this.address = deliciousSpot.getAddress();
+        this.price = deliciousSpot.getPrice();
+        this.naverRating = deliciousSpot.getNaverRating();
+        this.kakaoRating = deliciousSpot.getKakaoRating();
+        this.startTime = deliciousSpot.getStartTime();
+        this.endTime = deliciousSpot.getEndTime();
+        this.timeDescription = deliciousSpot.getTimeDescription();
+        this.waiting = deliciousSpot.getWaiting();
+        this.parking = deliciousSpot.getParking();
+        this.suggestionMenu = deliciousSpot.getSuggestionMenu();
+        this.description = deliciousSpot.getDescription();
+        this.onelineDescription = deliciousSpot.getOnelineDescription();
+        this.instagram = deliciousSpot.getInstagram();
+        this.contact = deliciousSpot.getContact();
+        this.thumbnailImageUrl = deliciousSpot.getThumbnailImageUrl();
+        return this;
+    }
+
 }
