@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.festival.dto;
 
+import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.domain.FestivalImage;
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +17,8 @@ public class FestivalReqDto {
 
     @NotNull
     private String title;
+
+    private String creatorName;
 
     private LocalDate startDate;
 
@@ -46,7 +49,7 @@ public class FestivalReqDto {
 
     private String onelineDescription;
 
-    public static Festival toEntity(FestivalReqDto festivalReqDto, String imageUrl, List<FestivalImage> festivalImages) {
+    public static Festival toEntity(FestivalReqDto festivalReqDto, String imageUrl, List<FestivalImage> festivalImages, Creator creator) {
         return Festival.builder()
                 .title(festivalReqDto.title)
                 .startDate(festivalReqDto.startDate)
@@ -63,6 +66,7 @@ public class FestivalReqDto {
                 .reservationUrl(festivalReqDto.reservationUrl)
                 .description(festivalReqDto.description)
                 .onelineDescription(festivalReqDto.onelineDescription)
+                .creator(creator)
                 .imageUrl(imageUrl)
                 .festivalImages(festivalImages)
                 .build();

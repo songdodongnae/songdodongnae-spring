@@ -17,6 +17,8 @@ public class FestivalResDto {
 
     private Long id;
 
+    private String creatorName;
+
     private boolean isBookmarked;
 
     private String title;
@@ -65,6 +67,7 @@ public class FestivalResDto {
     public static FestivalResDto fromEntity(Festival festival, boolean isBookmarked) {
         return FestivalResDto.builder()
                 .id(festival.getId())
+                .creatorName(festival.getCreator() == null ? null : festival.getCreator().getName())
                 .isBookmarked(isBookmarked)
                 .title(festival.getTitle())
                 .startDate(festival.getStartDate())

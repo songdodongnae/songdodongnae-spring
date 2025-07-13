@@ -1,6 +1,8 @@
 package com.culturefinder.songdodongnae.festival.service;
 
 import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
+import com.culturefinder.songdodongnae.creator.domain.Creator;
+import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.domain.FestivalImage;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
@@ -18,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -28,6 +29,7 @@ public class FestivalService {
     private final S3UploadService s3UploadService;
     private final BookmarkRepository bookmarkRepository;
     private final UserRepository userRepository;
+    private final CreatorRepository creatorRepository;
 
     public FestivalResDto createFestival(FestivalReqDto festivalReqDto, MultipartFile mainImage, List<MultipartFile> images, Long userId) throws IOException {
         String imageUrl = null;
@@ -42,8 +44,9 @@ public class FestivalService {
                 festivalImages.add(new FestivalImage(savedImage));
             }
         }
-
-        Festival festival = FestivalReqDto.toEntity(festivalReqDto ,imageUrl, festivalImages);
+        Creator findCreator = creatorRepository.findByName(festivalReqDto.getCreatorName())
+                .orElseThrow(()-> new EntityNotFoundException("Creator not found"));
+        Festival festival = FestivalReqDto.toEntity(festivalReqDto ,imageUrl, festivalImages, findCreator);
         Festival savedFestival = festivalRepository.saveFestival(festival);
 
         User findUser = userRepository.findById(userId)
@@ -124,7 +127,9 @@ public class FestivalService {
                 festivalImages.add(new FestivalImage(savedImage));
             }
         }
-        findFestival.update(FestivalReqDto.toEntity(festivalReqDto, imageUrl, festivalImages));
+        Creator findCreator = creatorRepository.findByName(festivalReqDto.getCreatorName())
+                .orElseThrow(()-> new EntityNotFoundException("Creator not found"));
+        findFestival.update(FestivalReqDto.toEntity(festivalReqDto, imageUrl, festivalImages, findCreator));
         festivalRepository.saveFestival(findFestival);
         festivalRepository.deleteFestival(id);
         User findUser = userRepository.findById(userId)

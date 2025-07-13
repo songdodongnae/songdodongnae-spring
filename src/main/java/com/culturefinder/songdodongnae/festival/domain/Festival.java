@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.festival.domain;
 
+import com.culturefinder.songdodongnae.creator.domain.Creator;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -58,6 +59,9 @@ public class Festival {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Creator creator;
 
     private String imageUrl;
 

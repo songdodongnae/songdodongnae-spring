@@ -41,7 +41,7 @@ public class CurationReqDto {
                 )
                 .festivals(
                         this.festivals.stream()
-                                .map(festival -> FestivalReqDto.toEntity(festival, imageUrl, null)) // 수정 필요
+                                .map(festival -> FestivalReqDto.toEntity(festival, imageUrl, null, null)) // 수정 필요
                                 .toList()
                 )
                 .creator(
