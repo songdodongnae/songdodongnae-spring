@@ -3,6 +3,7 @@ package com.culturefinder.songdodongnae.festival.service;
 import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
+import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.domain.FestivalImage;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
@@ -11,7 +12,6 @@ import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import com.culturefinder.songdodongnae.s3.S3UploadService;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
+
+import static com.culturefinder.songdodongnae.exception.ErrorCode.ENTITY_NOT_FOUND;
 
 @RequiredArgsConstructor
 @Service
@@ -45,12 +47,12 @@ public class FestivalService {
             }
         }
         Creator findCreator = creatorRepository.findByName(festivalReqDto.getCreatorName())
-                .orElseThrow(()-> new EntityNotFoundException("Creator not found"));
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
         Festival festival = FestivalReqDto.toEntity(festivalReqDto ,imageUrl, festivalImages, findCreator);
         Festival savedFestival = festivalRepository.saveFestival(festival);
 
         User findUser = userRepository.findById(userId)
-                        .orElseThrow(()-> new EntityNotFoundException("User not found"));
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
         boolean isBookmarked = bookmarkRepository.existsByUserAndFestival(findUser, savedFestival.getId());
         return FestivalResDto.fromEntity(savedFestival, isBookmarked);
     }
@@ -62,7 +64,7 @@ public class FestivalService {
 
         List<Festival> findFestivalsByYearAndMonth = festivalRepository.findByYearAndMonth(startOfMonth, endOfMonth);
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new EntityNotFoundException("User not found"));
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
         Set<Long> bookmarkedFestivalIds = bookmarkRepository.findBookmarkedFestivalIdsByUser(user);
         return findFestivalsByYearAndMonth.stream()
                 .map(festival -> FestivalResDto.fromEntity(
@@ -76,7 +78,7 @@ public class FestivalService {
         int offset = page * size;
         List<Festival> festivals = festivalRepository.findAll(offset, size);
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new EntityNotFoundException("User not found"));
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
         Set<Long> bookmarkedFestivalIds = bookmarkRepository.findBookmarkedFestivalIdsByUser(user);
         return festivals.stream()
                 .map(festival -> FestivalResDto.fromEntity(
@@ -89,10 +91,10 @@ public class FestivalService {
     public FestivalResDto getFestival(Long id, Long userId) {
         Festival findFestival = festivalRepository.findById(id);
         if (findFestival == null) {
-            throw new IllegalArgumentException("해당 축제가 존재하지 않습니다");
+            throw new CustomException(ENTITY_NOT_FOUND);
         }
         User findUser = userRepository.findById(userId)
-                .orElseThrow(()-> new EntityNotFoundException("User not found"));
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
         boolean isBookmarked = bookmarkRepository.existsByUserAndFestival(findUser, findFestival.getId());
         return FestivalResDto.fromEntity(findFestival, isBookmarked);
     }
@@ -100,11 +102,11 @@ public class FestivalService {
     public FestivalResDto deleteFestival(Long id, Long userId) {
         Festival findFestival = festivalRepository.findById(id);
         if (findFestival == null) {
-            throw new IllegalArgumentException("Festival not found");
+            throw new CustomException(ENTITY_NOT_FOUND);
         }
         festivalRepository.deleteFestival(id);
         User findUser = userRepository.findById(userId)
-                .orElseThrow(()-> new EntityNotFoundException("User not found"));
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
         boolean isBookmarked = bookmarkRepository.existsByUserAndFestival(findUser, findFestival.getId());
         return FestivalResDto.fromEntity(findFestival, isBookmarked);
     }
@@ -113,7 +115,7 @@ public class FestivalService {
     public FestivalResDto updateFestival(Long id, FestivalReqDto festivalReqDto, MultipartFile mainImage, List<MultipartFile> images, Long userId) throws IOException {
         Festival findFestival = festivalRepository.findById(id);
         if (findFestival == null) {
-            throw new IllegalArgumentException("Festival not found");
+            throw new CustomException(ENTITY_NOT_FOUND);
         }
         String imageUrl = null;
         if (mainImage != null) {
@@ -128,12 +130,12 @@ public class FestivalService {
             }
         }
         Creator findCreator = creatorRepository.findByName(festivalReqDto.getCreatorName())
-                .orElseThrow(()-> new EntityNotFoundException("Creator not found"));
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
         findFestival.update(FestivalReqDto.toEntity(festivalReqDto, imageUrl, festivalImages, findCreator));
         festivalRepository.saveFestival(findFestival);
         festivalRepository.deleteFestival(id);
         User findUser = userRepository.findById(userId)
-                .orElseThrow(()-> new EntityNotFoundException("User not found"));
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
         boolean isBookmarked = bookmarkRepository.existsByUserAndFestival(findUser, findFestival.getId());
         return FestivalResDto.fromEntity(findFestival, isBookmarked);
     }
