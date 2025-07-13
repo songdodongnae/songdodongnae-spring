@@ -80,12 +80,24 @@ public class FestivalService {
     }
 
     @Transactional
-    public FestivalResDto updateFestival(Long id, FestivalReqDto festivalUpdateReqDto) {
+    public FestivalResDto updateFestival(Long id, FestivalReqDto festivalReqDto, MultipartFile mainImage, List<MultipartFile> images) throws IOException {
         Festival findFestival = festivalRepository.findById(id);
         if (findFestival == null) {
             throw new IllegalArgumentException("Festival not found");
         }
-        findFestival.update(FestivalReqDto.toEntity(festivalUpdateReqDto, null, null));
+        String imageUrl = null;
+        if (mainImage != null) {
+            imageUrl = s3UploadService.saveFile(mainImage);
+        }
+
+        List<FestivalImage> festivalImages = new ArrayList<>();
+        if (images != null && !images.isEmpty()) {
+            for (MultipartFile image : images) {
+                String savedImage = s3UploadService.saveFile(image);
+                festivalImages.add(new FestivalImage(savedImage));
+            }
+        }
+        findFestival.update(FestivalReqDto.toEntity(festivalReqDto, imageUrl, festivalImages));
         festivalRepository.saveFestival(findFestival);
         return FestivalResDto.fromEntity(findFestival);
     }

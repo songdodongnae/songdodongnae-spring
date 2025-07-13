@@ -78,8 +78,11 @@ public class FestivalController {
     @Operation(summary = "축제 수정", description = "특정 ID의 축제 정보를 수정합니다.")
     @ApiResponse(responseCode = "200", description = "축제 수정 성공")
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseContainer<FestivalResDto>> updateFestival(@PathVariable Long id, @Valid @RequestBody FestivalReqDto festivalUpdateReqDto) {
-        FestivalResDto dto = festivalService.updateFestival(id, festivalUpdateReqDto);
+    public ResponseEntity<ResponseContainer<FestivalResDto>> updateFestival(
+            @PathVariable Long id, @Valid @RequestPart FestivalReqDto festivalReqDto,
+            @RequestPart(required = false) MultipartFile mainImage,
+            @RequestPart(required = false) List<MultipartFile> images) throws IOException {
+        FestivalResDto dto = festivalService.updateFestival(id, festivalReqDto, mainImage, images);
         return ResponseContainer.create(HttpStatus.OK, "축제 수정 성공", dto);
     }
 }
