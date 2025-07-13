@@ -2,6 +2,7 @@ package com.culturefinder.songdodongnae.festival.dto;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.domain.FestivalImage;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -55,6 +56,11 @@ public class FestivalResDto {
     private String imageUrl;
 
     private List<FestivalImage> festivalImages;
+
+    @JsonProperty("isBookmarked")
+    public boolean getIsBookmarked() {
+        return isBookmarked;
+    }
 
     public static FestivalResDto fromEntity(Festival festival, boolean isBookmarked) {
         return FestivalResDto.builder()
