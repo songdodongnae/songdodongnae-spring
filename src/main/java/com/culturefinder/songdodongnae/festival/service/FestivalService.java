@@ -17,8 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -52,25 +52,35 @@ public class FestivalService {
         return FestivalResDto.fromEntity(savedFestival, isBookmarked);
     }
 
-    public List<FestivalResDto> getFestivalsByYearAndMonth(int year, int month) {
+    public List<FestivalResDto> getFestivalsByYearAndMonth(int year, int month, Long userId) {
 
         LocalDate startOfMonth = LocalDate.of(year, month, 1);
         LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
 
-//        return festivalRepository.findByYearAndMonth(startOfMonth, endOfMonth)
-//                .stream()
-//                .map(FestivalResDto::fromEntity)
-//                .collect(Collectors.toList());
-        return null;
+        List<Festival> findFestivalsByYearAndMonth = festivalRepository.findByYearAndMonth(startOfMonth, endOfMonth);
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new EntityNotFoundException("User not found"));
+        Set<Long> bookmarkedFestivalIds = bookmarkRepository.findBookmarkedFestivalIdsByUser(user);
+        return findFestivalsByYearAndMonth.stream()
+                .map(festival -> FestivalResDto.fromEntity(
+                        festival,
+                        bookmarkedFestivalIds.contains(festival.getId())
+                ))
+                .toList();
     }
 
-    public List<FestivalResDto> getAllFestival(int page, int size) {
+    public List<FestivalResDto> getAllFestival(int page, int size, Long userId) {
         int offset = page * size;
         List<Festival> festivals = festivalRepository.findAll(offset, size);
-//        return festivals.stream()
-//                .map(FestivalResDto::fromEntity)
-//                .collect(Collectors.toList());
-        return null;
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new EntityNotFoundException("User not found"));
+        Set<Long> bookmarkedFestivalIds = bookmarkRepository.findBookmarkedFestivalIdsByUser(user);
+        return festivals.stream()
+                .map(festival -> FestivalResDto.fromEntity(
+                        festival,
+                        bookmarkedFestivalIds.contains(festival.getId())
+                ))
+                .toList();
     }
 
     public FestivalResDto getFestival(Long id, Long userId) {

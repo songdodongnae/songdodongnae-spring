@@ -45,8 +45,8 @@ public class FestivalController {
     public ResponseEntity<ResponseContainer<List<FestivalResDto>>> getFestivalsByYearAndMonth(
             @RequestParam int year,
             @RequestParam int month) {
-
-        List<FestivalResDto> dtos = festivalService.getFestivalsByYearAndMonth(year, month);
+        Long userId = getUserId();
+        List<FestivalResDto> dtos = festivalService.getFestivalsByYearAndMonth(year, month, userId);
         return ResponseContainer.create(HttpStatus.OK, "년/월 해당 축제 조회 성공", dtos);
     }
 
@@ -56,8 +56,8 @@ public class FestivalController {
     public ResponseEntity<ResponseContainer<List<FestivalResDto>>> getAllFestival(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
-        List<FestivalResDto> dtos = festivalService.getAllFestival(page, size);
+        Long userId = getUserId();
+        List<FestivalResDto> dtos = festivalService.getAllFestival(page, size, userId);
         return ResponseContainer.create(HttpStatus.OK, "모든 축제 조회 성공", dtos);
     }
 

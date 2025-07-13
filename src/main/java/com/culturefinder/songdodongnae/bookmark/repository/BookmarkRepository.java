@@ -8,11 +8,14 @@ import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.user.domain.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 @Transactional
@@ -61,6 +64,19 @@ public class BookmarkRepository {
                 .getSingleResult();
         return count > 0;
     }
+
+    public Set<Long> findBookmarkedFestivalIdsByUser(User user) {
+        String jpql = "SELECT b.targetId FROM Bookmark b " +
+                "WHERE b.user = :user " +
+                "AND b.bookmarkType = :bookmarkType";
+
+        List<Long> ids = em.createQuery(jpql, Long.class)
+                .setParameter("user", user)
+                .setParameter("bookmarkType", BookmarkType.FESTIVAL)
+                .getResultList();
+        return new HashSet<>(ids);
+    }
+
 
 
 }
