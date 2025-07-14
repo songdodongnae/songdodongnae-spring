@@ -46,4 +46,10 @@ public class BookmarkRepository {
                  .getResultList();
     }
 
+    public void deleteUserBookmarks(Long userId) {
+        em.createQuery("DELETE FROM Bookmark b WHERE b.user.id = :userId")
+          .setParameter("userId", userId)
+          .executeUpdate();
+    }
+
 }
