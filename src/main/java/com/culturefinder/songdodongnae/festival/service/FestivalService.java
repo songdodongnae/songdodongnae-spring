@@ -4,6 +4,7 @@ import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
+import com.culturefinder.songdodongnae.utils.CustomPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,12 +37,19 @@ public class FestivalService {
                 .collect(Collectors.toList());
     }
 
-    public List<FestivalResDto> getAllFestival(int page, int size) {
-        int offset = page * size;
-        List<Festival> festivals = festivalRepository.findAll(offset, size);
-        return festivals.stream()
+    public CustomPage<FestivalResDto> getAllFestival(int page, int size) {
+        int offset = (page - 1) * size;
+        List<FestivalResDto> festivals = festivalRepository.findAll(offset, size).stream()
                 .map(FestivalResDto::fromEntity)
-                .collect(Collectors.toList());
+                .toList();
+        Long totalElements = festivalRepository.countFestivals();
+
+        return CustomPage.of(
+                festivals,
+                page,
+                size,
+                totalElements
+        );
     }
 
     public FestivalResDto getFestival(Long id) {

@@ -63,7 +63,7 @@ public class SearchController {
         );
     }
 
-    @GetMapping("/curationss")
+    @GetMapping("/curations")
     @Operation(summary = "큐레이션 검색", description = "검색어에 맞는 큐레이션을 페이지네이션하여 조회합니다.")
     public ResponseEntity<ResponseContainer<CustomPage<CurationResDto>>> searchCurations(
             @RequestParam String keyword,

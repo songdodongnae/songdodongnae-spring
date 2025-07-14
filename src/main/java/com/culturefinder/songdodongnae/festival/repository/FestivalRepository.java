@@ -77,4 +77,12 @@ public class FestivalRepository {
                 .setParameter("keyword", "%" + keyword + "%")
                 .getSingleResult();
     }
+
+    public long countFestivals() {
+        return em.createQuery(
+                        "SELECT COUNT(f) FROM Festival f",
+                        Long.class
+                )
+                .getSingleResult();
+    }
 }
