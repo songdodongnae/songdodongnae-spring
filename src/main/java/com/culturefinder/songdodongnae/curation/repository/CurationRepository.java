@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.curation.repository;
 
+import com.culturefinder.songdodongnae.bookmark.domain.Bookmark;
 import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
@@ -36,5 +37,20 @@ public class CurationRepository {
 
     public List<Curation> findAll() {
         return em.createQuery("select c from Curation c", Curation.class).getResultList();
+    }
+
+    public List<Curation> findAll(int offset, int pageSize) {
+        return em.createQuery("SELECT c FROM Curation c", Curation.class)
+                .setFirstResult(offset)
+                .setMaxResults(pageSize)
+                .getResultList();
+    }
+
+    public long countCuration() {
+        return em.createQuery(
+                        "SELECT COUNT(c) FROM Curation c",
+                        Long.class
+                )
+                .getSingleResult();
     }
 }
