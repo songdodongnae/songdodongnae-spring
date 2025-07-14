@@ -1,5 +1,7 @@
 package com.culturefinder.songdodongnae.user.repository;
 
+import com.culturefinder.songdodongnae.exception.CustomException;
+import com.culturefinder.songdodongnae.exception.ErrorCode;
 import com.culturefinder.songdodongnae.user.domain.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -77,5 +79,12 @@ public class UserRepository {
         findUser.setRefreshToken(refreshToken);
         em.persist(findUser);
         return findUser;
+    }
+
+    public void deleteUser(Long userId) {
+        User findUser = em.createQuery("select u from User u where u.id = :id", User.class)
+                .setParameter("id", userId)
+                .getSingleResult();
+        em.remove(findUser);
     }
 }
