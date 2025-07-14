@@ -5,7 +5,6 @@ import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.search.dto.SearchSummaryResDto;
-import com.culturefinder.songdodongnae.search.repository.FestivalSearchRepository;
 import com.culturefinder.songdodongnae.search.repository.SearchRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,6 @@ import java.util.List;
 public class SearchService {
 
     private final SearchRepository searchRepository;
-    private final FestivalSearchRepository festivalRepository;
 
     public SearchSummaryResDto getSearchSummary(String query) {
         List<Festival> top3Festival = searchRepository.findTop3Festival(query);
@@ -30,7 +28,4 @@ public class SearchService {
         return SearchSummaryResDto.from(query, top3Festival, top3DeliciousSpot, top3Curation);
     }
 
-    public Page<FestivalResDto> getFestivalPage(String query) {
-        return null;
-    }
 }

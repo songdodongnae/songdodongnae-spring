@@ -27,10 +27,4 @@ public class SearchController {
         return ResponseContainer.create(HttpStatus.OK, "요약 검색 성공", searchSummary);
     }
 
-    @GetMapping("/festivals")
-    public ResponseEntity<ResponseContainer<?>> getSearchFestivals(
-            @RequestParam @NotBlank(message = "검색어를 입력해주세요.") String query
-    ) {
-        return null;
-    }
 }
