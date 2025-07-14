@@ -4,6 +4,7 @@ import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
+import com.culturefinder.songdodongnae.festival.domain.Festival;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -72,4 +73,23 @@ public class DeliciousSpotRepository {
                 .getSingleResult();
     }
 
+    public List<DeliciousSpot> searchDeliciousSpots(String keyword, int offset, int pageSize) {
+        return em.createQuery(
+                        "SELECT d FROM DeliciousSpot d WHERE d.title LIKE :keyword ORDER BY d.createdAt DESC",
+                        DeliciousSpot.class
+                )
+                .setParameter("keyword", "%" + keyword + "%")
+                .setFirstResult(offset)
+                .setMaxResults(pageSize)
+                .getResultList();
+    }
+
+    public long countSearchDeliciousSpot(String keyword) {
+        return em.createQuery(
+                        "SELECT COUNT(d) FROM DeliciousSpot d WHERE d.title LIKE :keyword",
+                        Long.class
+                )
+                .setParameter("keyword", "%" + keyword + "%")
+                .getSingleResult();
+    }
 }
