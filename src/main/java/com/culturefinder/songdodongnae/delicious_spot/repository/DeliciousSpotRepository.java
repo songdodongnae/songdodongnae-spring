@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.delicious_spot.repository;
 
+import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
@@ -54,6 +55,21 @@ public class DeliciousSpotRepository {
         } else {
             throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
         }
+    }
+
+    public List<DeliciousSpot> findAll(int offset, int pageSize) {
+        return em.createQuery("SELECT d FROM DeliciousSpot d", DeliciousSpot.class)
+                .setFirstResult(offset)
+                .setMaxResults(pageSize)
+                .getResultList();
+    }
+
+    public long countDeliciousSpot() {
+        return em.createQuery(
+                        "SELECT COUNT(d) FROM DeliciousSpot d",
+                        Long.class
+                )
+                .getSingleResult();
     }
 
 }
