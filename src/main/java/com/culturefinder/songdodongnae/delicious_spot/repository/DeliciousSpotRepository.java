@@ -1,7 +1,6 @@
 package com.culturefinder.songdodongnae.delicious_spot.repository;
 
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
-import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotImage;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
 import jakarta.persistence.EntityManager;
@@ -59,19 +58,4 @@ public class DeliciousSpotRepository {
         }
     }
 
-    public void saveImageUrls(Long deliciousSpotId, List<String> imageUrls) {
-        for (String imageUrl : imageUrls) {
-            DeliciousSpotImage deliciousSpotImage = DeliciousSpotImage.builder()
-                    .deliciousSpotId(deliciousSpotId)
-                    .imageUrl(imageUrl)
-                    .build();
-            em.persist(deliciousSpotImage);
-        }
-    }
-
-    public List<String> getImageUrlsByDeliciousSpotId(Long deliciousSpotId) {
-        return em.createQuery("SELECT dsi.imageUrl FROM DeliciousSpotImage dsi WHERE dsi.deliciousSpotId = :deliciousSpotId", String.class)
-                .setParameter("deliciousSpotId", deliciousSpotId)
-                .getResultList();
-    }
 }

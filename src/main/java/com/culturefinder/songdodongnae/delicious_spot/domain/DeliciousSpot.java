@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,9 +34,9 @@ public class DeliciousSpot {
 
     private Float kakaoRating;
 
-    private String startTime;
+    private LocalTime startTime;
 
-    private String endTime;
+    private LocalTime endTime;
 
     private String timeDescription;
 
@@ -60,6 +62,11 @@ public class DeliciousSpot {
     private LocalDateTime updatedAt;
 
     private String thumbnailImageUrl;
+
+    @ElementCollection
+    @CollectionTable(name = "delicious_spot_image_urls",
+            joinColumns = @JoinColumn(name = "delicious_spot_id"))
+    private List<String> imageUrls;
 
     public DeliciousSpot updateDeliciousSpot(DeliciousSpot deliciousSpot) {
         this.title = deliciousSpot.getTitle();

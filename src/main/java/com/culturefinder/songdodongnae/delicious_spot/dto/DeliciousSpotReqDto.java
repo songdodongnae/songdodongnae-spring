@@ -3,6 +3,8 @@ package com.culturefinder.songdodongnae.delicious_spot.dto;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.time.LocalTime;
 import java.util.*;
 
 @Data
@@ -24,9 +26,9 @@ public class DeliciousSpotReqDto {
 
     private Float kakaoRating;
 
-    private String startTime;
+    private LocalTime startTime;
 
-    private String endTime;
+    private LocalTime endTime;
 
     private String timeDescription;
 
@@ -41,7 +43,7 @@ public class DeliciousSpotReqDto {
 
     private String thumbnailImageUrl;
 
-    private List<String> imageUrls = new ArrayList<>();
+    private List<String> imageUrls;
 
     private String onelineDescription;
 
@@ -69,6 +71,7 @@ public class DeliciousSpotReqDto {
                 .onelineDescription(this.onelineDescription)
                 .instagram(this.instagram)
                 .contact(this.contact)
+                .imageUrls(this.imageUrls)
                 .build();
     }
 

@@ -20,20 +20,17 @@ public class DeliciousSpotService {
     public DeliciousSpotResponseDto createDeliciousSpot(DeliciousSpotReqDto deliciousSpotReqDto) {
         DeliciousSpot deliciousSpot = deliciousSpotReqDto.toEntity();
         DeliciousSpot savedDeliciousSpot = deliciousSpotRepository.saveDeliciousSpot(deliciousSpot);
-        deliciousSpotRepository.saveImageUrls(savedDeliciousSpot.getId(), deliciousSpotReqDto.getImageUrls());
-        return DeliciousSpotResponseDto.fromEntity(savedDeliciousSpot, deliciousSpotReqDto.getImageUrls());
+        return DeliciousSpotResponseDto.fromEntity(savedDeliciousSpot);
     }
 
     public DeliciousSpotResponseDto getDeliciousSpotById(Long id) {
         DeliciousSpot deliciousSpot = deliciousSpotRepository.findDeliciousSpotById(id);
-        List<String> imageUrls = deliciousSpotRepository.getImageUrlsByDeliciousSpotId(id);
-        return DeliciousSpotResponseDto.fromEntity(deliciousSpot, imageUrls);
+        return DeliciousSpotResponseDto.fromEntity(deliciousSpot);
     }
 
     public DeliciousSpotResponseDto updateDeliciousSpot(Long id, DeliciousSpotReqDto deliciousSpotReqDto) {
         DeliciousSpot updatedDeliciousSpot = deliciousSpotRepository.updateDeliciousSpot(id, deliciousSpotReqDto.toEntity());
-        List<String> imageUrls = deliciousSpotRepository.getImageUrlsByDeliciousSpotId(id);
-        return DeliciousSpotResponseDto.fromEntity(updatedDeliciousSpot, imageUrls);
+        return DeliciousSpotResponseDto.fromEntity(updatedDeliciousSpot);
     }
 
     public void deleteDeliciousSpot(Long id) {
@@ -41,14 +38,9 @@ public class DeliciousSpotService {
     }
 
     public List<DeliciousSpotResponseDto> getAllDeliciousSpots() {
-        List<DeliciousSpotResponseDto> ret = new ArrayList<>();
-        List<DeliciousSpot> deliciousSpots = deliciousSpotRepository.findAll();
-        for (DeliciousSpot deliciousSpot : deliciousSpots) {
-            List<String> imageUrls = deliciousSpotRepository.getImageUrlsByDeliciousSpotId(deliciousSpot.getId());
-            DeliciousSpotResponseDto dto = DeliciousSpotResponseDto.fromEntity(deliciousSpot, imageUrls);
-            ret.add(dto);
-        }
-        return ret;
+        return deliciousSpotRepository.findAll().stream()
+                .map(DeliciousSpotResponseDto::fromEntity)
+                .toList();
     }
 
 }
