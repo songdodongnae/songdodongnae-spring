@@ -1,7 +1,6 @@
 package com.culturefinder.songdodongnae.delicious_spot.dto;
 
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
-import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpotImage;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -53,9 +52,9 @@ public class DeliciousSpotResponseDto {
 
     private LocalDateTime updatedAt;
 
-    private String imageUrl;
+    private String thumbnailImageUrl;
 
-    private List<DeliciousSpotImage> deliciousSpotImages;
+    private List<String> imageUrls;
 
     public static DeliciousSpotResponseDto fromEntity(DeliciousSpot deliciousSpot) {
         return DeliciousSpotResponseDto.builder()
@@ -79,8 +78,7 @@ public class DeliciousSpotResponseDto {
                 .contact(deliciousSpot.getContact())
                 .createdAt(deliciousSpot.getCreatedAt())
                 .updatedAt(deliciousSpot.getUpdatedAt())
-                .imageUrl(deliciousSpot.getImageUrl())
-                .deliciousSpotImages(deliciousSpot.getDeliciousSpotImages())
+                .thumbnailImageUrl(deliciousSpot.getThumbnailImageUrl())
                 .build();
     }
 }
