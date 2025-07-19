@@ -4,6 +4,7 @@ import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResponseDto;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
+import com.culturefinder.songdodongnae.s3.S3UploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class DeliciousSpotService {
 
-    public final DeliciousSpotRepository deliciousSpotRepository;
+    private final DeliciousSpotRepository deliciousSpotRepository;
+    private final S3UploadService s3UploadService;
 
     public DeliciousSpotResponseDto createDeliciousSpot(DeliciousSpotReqDto deliciousSpotReqDto) {
         DeliciousSpot deliciousSpot = deliciousSpotReqDto.toEntity();
@@ -34,6 +36,15 @@ public class DeliciousSpotService {
     }
 
     public void deleteDeliciousSpot(Long id) {
+        DeliciousSpot deliciousSpot = deliciousSpotRepository.findDeliciousSpotById(id);
+        if (deliciousSpot.getThumbnailImageUrl() != null) {
+            s3UploadService.deleteFile(deliciousSpot.getThumbnailImageUrl());
+        }
+        if (deliciousSpot.getImageUrls() != null) {
+            for (String imageUrl : deliciousSpot.getImageUrls()) {
+                s3UploadService.deleteFile(imageUrl);
+            }
+        }
         deliciousSpotRepository.deleteDeliciousSpot(id);
     }
 
