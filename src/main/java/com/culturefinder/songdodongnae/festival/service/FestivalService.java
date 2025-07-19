@@ -30,12 +30,10 @@ public class FestivalService {
     private final UserRepository userRepository;
     private final CreatorRepository creatorRepository;
 
-    public FestivalResDto createFestival(FestivalReqDto festivalReqDto, Long userId){
+    public FestivalResDto createFestival(FestivalReqDto festivalReqDto, Long userId) {
         Creator findCreator = creatorRepository.findByName(festivalReqDto.getCreatorName())
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
         Festival festival = FestivalReqDto.toEntity(festivalReqDto, findCreator);
-        // String imageUrl = s3UploadService.saveFile(festival.getImageUrl())
-        //        .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
         Festival savedFestival = festivalRepository.saveFestival(festival);
 
         User findUser = userRepository.findById(userId)
@@ -101,6 +99,9 @@ public class FestivalService {
     @Transactional
     public FestivalResDto updateFestival(Long id, FestivalReqDto festivalReqDto, Long userId) {
         Festival findFestival = festivalRepository.findById(id);
+        if (findFestival == null) {
+            throw new CustomException(ENTITY_NOT_FOUND);
+        }
 
         Creator findCreator = creatorRepository.findByName(festivalReqDto.getCreatorName())
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));

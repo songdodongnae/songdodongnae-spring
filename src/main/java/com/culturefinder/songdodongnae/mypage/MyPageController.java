@@ -40,6 +40,14 @@ public class MyPageController {
         return ResponseContainer.create(HttpStatus.OK, "북마크 조회 성공", dto);
     }
 
-
+    @Operation(summary = "회원 탈퇴", description = "회원 탈퇴를 합니다.")
+    @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공")
+    @DeleteMapping("/delete")
+    public ResponseEntity<ResponseContainer<String>> deleteUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+        myPageService.deleteUser(userId);
+        return ResponseContainer.create(HttpStatus.OK, "회원 탈퇴 성공", "회원 탈퇴가 완료되었습니다.");
+    }
 
 }

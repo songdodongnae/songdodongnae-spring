@@ -7,14 +7,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Builder
 @Getter
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class DeliciousSpot {
 
     @Id @GeneratedValue
@@ -62,12 +61,14 @@ public class DeliciousSpot {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    private String imageUrl;
+    private String thumbnailImageUrl;
 
-    @OneToMany(mappedBy = "deliciousSpot", cascade = CascadeType.ALL)
-    private List<DeliciousSpotImage> deliciousSpotImages = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(name = "delicious_spot_image_urls",
+            joinColumns = @JoinColumn(name = "delicious_spot_id"))
+    private List<String> imageUrls;
 
-    public void updateDeliciousSpot(DeliciousSpot deliciousSpot) {
+    public DeliciousSpot updateDeliciousSpot(DeliciousSpot deliciousSpot) {
         this.title = deliciousSpot.getTitle();
         this.latitude = deliciousSpot.getLatitude();
         this.longitude = deliciousSpot.getLongitude();
@@ -85,7 +86,8 @@ public class DeliciousSpot {
         this.onelineDescription = deliciousSpot.getOnelineDescription();
         this.instagram = deliciousSpot.getInstagram();
         this.contact = deliciousSpot.getContact();
-        this.imageUrl = deliciousSpot.getImageUrl();
+        this.thumbnailImageUrl = deliciousSpot.getThumbnailImageUrl();
+        return this;
     }
 
 }

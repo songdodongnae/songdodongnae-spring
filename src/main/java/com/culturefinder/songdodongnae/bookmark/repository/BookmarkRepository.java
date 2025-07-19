@@ -4,11 +4,9 @@ import com.culturefinder.songdodongnae.bookmark.domain.Bookmark;
 import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
-import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.user.domain.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +20,8 @@ import java.util.Set;
 @AllArgsConstructor
 public class BookmarkRepository {
 
-    @PersistenceContext private final EntityManager em;
+    @PersistenceContext
+    private final EntityManager em;
 
     public Bookmark createBookmark(Bookmark bookmark) {
         em.persist(bookmark);
@@ -48,8 +47,8 @@ public class BookmarkRepository {
 
     public List<Bookmark> findUserBookmarks(Long userId) {
         return em.createQuery("SELECT b FROM Bookmark b WHERE b.user.id = :userId", Bookmark.class)
-                 .setParameter("userId", userId)
-                 .getResultList();
+                .setParameter("userId", userId)
+                .getResultList();
     }
 
     public boolean existsByUserAndFestival(User user, Long festivalId) {
@@ -77,6 +76,12 @@ public class BookmarkRepository {
         return new HashSet<>(ids);
     }
 
+
+    public void deleteUserBookmarks(Long userId) {
+        em.createQuery("DELETE FROM Bookmark b WHERE b.user.id = :userId")
+                .setParameter("userId", userId)
+                .executeUpdate();
+    }
 
 
 }
