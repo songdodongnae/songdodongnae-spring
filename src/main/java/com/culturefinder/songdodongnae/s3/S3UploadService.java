@@ -60,4 +60,14 @@ public class S3UploadService {
                 .withExpiration(expiration);
         return amazonS3.generatePresignedUrl(request).toString();
     }
+
+    public void deleteFile(String imageUrl) {
+        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+        if (amazonS3.doesObjectExist(bucket, fileName)) {
+            amazonS3.deleteObject(bucket, fileName);
+            log.info("파일 삭제 완료. 파일이름={}", fileName);
+        } else {
+            log.warn("파일이 존재하지 않습니다. 파일이름={}", fileName);
+        }
+    }
 }
