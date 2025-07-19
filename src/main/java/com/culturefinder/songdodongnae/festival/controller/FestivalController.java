@@ -31,11 +31,9 @@ public class FestivalController {
     @ApiResponse(responseCode = "201", description = "축제 생성 성공")
     @PostMapping
     public ResponseEntity<ResponseContainer<FestivalResDto>> createFestival(
-            @Valid @RequestPart FestivalReqDto festivalReqDto,
-            @RequestPart(required = false) MultipartFile mainImage,
-            @RequestPart(required = false) List<MultipartFile> images) throws IOException {
+            @Valid @RequestBody FestivalReqDto festivalReqDto) {
         Long userId = getUserId();
-        FestivalResDto dto = festivalService.createFestival(festivalReqDto, mainImage, images, userId);
+        FestivalResDto dto = festivalService.createFestival(festivalReqDto, userId);
         return ResponseContainer.create(HttpStatus.CREATED, "축제 생성 성공", dto);
     }
 
@@ -83,11 +81,9 @@ public class FestivalController {
     @ApiResponse(responseCode = "200", description = "축제 수정 성공")
     @PutMapping("/{id}")
     public ResponseEntity<ResponseContainer<FestivalResDto>> updateFestival(
-            @PathVariable Long id, @Valid @RequestPart FestivalReqDto festivalReqDto,
-            @RequestPart(required = false) MultipartFile mainImage,
-            @RequestPart(required = false) List<MultipartFile> images) throws IOException {
+            @PathVariable Long id, @Valid @RequestBody FestivalReqDto festivalReqDto)  {
         Long userId = getUserId();
-        FestivalResDto dto = festivalService.updateFestival(id, festivalReqDto, mainImage, images, userId);
+        FestivalResDto dto = festivalService.updateFestival(id, festivalReqDto, userId);
         return ResponseContainer.create(HttpStatus.OK, "축제 수정 성공", dto);
     }
 

@@ -5,7 +5,6 @@ import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
-import com.culturefinder.songdodongnae.festival.domain.FestivalImage;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
@@ -15,9 +14,7 @@ import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -33,22 +30,12 @@ public class FestivalService {
     private final UserRepository userRepository;
     private final CreatorRepository creatorRepository;
 
-    public FestivalResDto createFestival(FestivalReqDto festivalReqDto, MultipartFile mainImage, List<MultipartFile> images, Long userId) throws IOException {
-        String imageUrl = null;
-        if (mainImage != null) {
-            imageUrl = s3UploadService.saveFile(mainImage);
-        }
-
-        List<FestivalImage> festivalImages = new ArrayList<>();
-        if (images != null && !images.isEmpty()) {
-            for (MultipartFile image : images) {
-                String savedImage = s3UploadService.saveFile(image);
-                festivalImages.add(new FestivalImage(savedImage));
-            }
-        }
+    public FestivalResDto createFestival(FestivalReqDto festivalReqDto, Long userId){
         Creator findCreator = creatorRepository.findByName(festivalReqDto.getCreatorName())
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
-        Festival festival = FestivalReqDto.toEntity(festivalReqDto ,imageUrl, festivalImages, findCreator);
+        Festival festival = FestivalReqDto.toEntity(festivalReqDto, findCreator);
+        // String imageUrl = s3UploadService.saveFile(festival.getImageUrl())
+        //        .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
         Festival savedFestival = festivalRepository.saveFestival(festival);
 
         User findUser = userRepository.findById(userId)
@@ -112,26 +99,12 @@ public class FestivalService {
     }
 
     @Transactional
-    public FestivalResDto updateFestival(Long id, FestivalReqDto festivalReqDto, MultipartFile mainImage, List<MultipartFile> images, Long userId) throws IOException {
+    public FestivalResDto updateFestival(Long id, FestivalReqDto festivalReqDto, Long userId) {
         Festival findFestival = festivalRepository.findById(id);
-        if (findFestival == null) {
-            throw new CustomException(ENTITY_NOT_FOUND);
-        }
-        String imageUrl = null;
-        if (mainImage != null) {
-            imageUrl = s3UploadService.saveFile(mainImage);
-        }
 
-        List<FestivalImage> festivalImages = new ArrayList<>();
-        if (images != null && !images.isEmpty()) {
-            for (MultipartFile image : images) {
-                String savedImage = s3UploadService.saveFile(image);
-                festivalImages.add(new FestivalImage(savedImage));
-            }
-        }
         Creator findCreator = creatorRepository.findByName(festivalReqDto.getCreatorName())
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
-        findFestival.update(FestivalReqDto.toEntity(festivalReqDto, imageUrl, festivalImages, findCreator));
+        findFestival.update(FestivalReqDto.toEntity(festivalReqDto, findCreator));
         festivalRepository.saveFestival(findFestival);
         festivalRepository.deleteFestival(id);
         User findUser = userRepository.findById(userId)

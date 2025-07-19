@@ -49,7 +49,10 @@ public class FestivalReqDto {
 
     private String onelineDescription;
 
-    public static Festival toEntity(FestivalReqDto festivalReqDto, String imageUrl, List<FestivalImage> festivalImages, Creator creator) {
+    private String mainImage;
+    private List<FestivalImage> images;
+
+    public static Festival toEntity(FestivalReqDto festivalReqDto, Creator creator) {
         return Festival.builder()
                 .title(festivalReqDto.title)
                 .startDate(festivalReqDto.startDate)
@@ -67,8 +70,8 @@ public class FestivalReqDto {
                 .description(festivalReqDto.description)
                 .onelineDescription(festivalReqDto.onelineDescription)
                 .creator(creator)
-                .imageUrl(imageUrl)
-                .festivalImages(festivalImages)
+                .imageUrl(festivalReqDto.mainImage)
+                .festivalImages(festivalReqDto.images)
                 .build();
     }
 }
