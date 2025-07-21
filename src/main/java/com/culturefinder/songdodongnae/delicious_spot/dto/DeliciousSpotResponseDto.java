@@ -1,20 +1,21 @@
 package com.culturefinder.songdodongnae.delicious_spot.dto;
 
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-@Getter
+@Data
 @Builder
 public class DeliciousSpotResponseDto {
 
     private Long id;
 
     private String title;
+
+    boolean isBookmarked;
 
     private double latitude;
 

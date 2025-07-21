@@ -11,6 +11,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,8 +39,15 @@ public class DeliciousSpotController {
     @GetMapping("/{id}")
     public ResponseEntity<ResponseContainer<DeliciousSpotResponseDto>> readDeliciousSpot(
             @PathVariable Long id) {
-        DeliciousSpotResponseDto dto = deliciousSpotService.getDeliciousSpotById(id);
-        return ResponseContainer.create(HttpStatus.OK, "맛집 조회 성공", dto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            DeliciousSpotResponseDto dto = deliciousSpotService.getDeliciousSpotById(id);
+            return ResponseContainer.create(HttpStatus.OK, "맛집 조회 성공", dto);
+        } else {
+            Long userId = Long.parseLong(authentication.getName());
+            DeliciousSpotResponseDto dto = deliciousSpotService.getUserDeliciousSpotById(userId, id);
+            return ResponseContainer.create(HttpStatus.OK, "맛집 조회 성공", dto);
+        }
     }
 
     @Operation(summary = "맛집 수정", description = "특정 ID의 맛집을 수정합니다")
@@ -64,8 +73,15 @@ public class DeliciousSpotController {
     @ApiResponse(responseCode = "200", description = "모든 맛집 조회 성공")
     @GetMapping
     public ResponseEntity<ResponseContainer<List<DeliciousSpotResponseDto>>> getAllDeliciousSpots() {
-        List<DeliciousSpotResponseDto> deliciousSpots = deliciousSpotService.getAllDeliciousSpots();
-        return ResponseContainer.create(HttpStatus.OK, "모든 맛집 조회 성공", deliciousSpots);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            List<DeliciousSpotResponseDto> deliciousSpots = deliciousSpotService.getAllDeliciousSpots();
+            return ResponseContainer.create(HttpStatus.OK, "맛집 조회 성공", deliciousSpots);
+        } else {
+            Long userId = Long.parseLong(authentication.getName());
+            List<DeliciousSpotResponseDto> deliciousSpots = deliciousSpotService.getAllDeliciousSpots(userId);
+            return ResponseContainer.create(HttpStatus.OK, "맛집 조회 성공", deliciousSpots);
+        }
     }
 
 }
