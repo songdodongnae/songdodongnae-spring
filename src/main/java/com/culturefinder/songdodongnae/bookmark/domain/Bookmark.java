@@ -3,6 +3,9 @@ package com.culturefinder.songdodongnae.bookmark.domain;
 import com.culturefinder.songdodongnae.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -25,4 +28,6 @@ public class Bookmark {
 
     private Long targetId;
 
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }

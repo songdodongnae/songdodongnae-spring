@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -55,6 +56,17 @@ public class FestivalRepository {
                         "SELECT f FROM Festival f WHERE f.startDate <= :end AND f.endDate >= :start", Festival.class)
                 .setParameter("start", start)
                 .setParameter("end", end)
+                .getResultList();
+    }
+
+    public List<Festival> findAllById(List<Long> idList) {
+        if (idList == null || idList.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return em.createQuery(
+                        "SELECT f FROM Festival f WHERE f.id IN :idList", Festival.class)
+                .setParameter("idList", idList)
                 .getResultList();
     }
 

@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.bookmark.repository;
 
 import com.culturefinder.songdodongnae.bookmark.domain.Bookmark;
+import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
 import jakarta.persistence.EntityManager;
@@ -40,10 +41,13 @@ public class BookmarkRepository {
         return bookmark;
     }
 
-    public List<Bookmark> findUserBookmarks(Long userId) {
-        return em.createQuery("SELECT b FROM Bookmark b WHERE b.user.id = :userId", Bookmark.class)
-                 .setParameter("userId", userId)
-                 .getResultList();
+    public List<Long> findTargetIdsByUserAndType(Long userId, BookmarkType bookmarkType) {
+        return em.createQuery("SELECT b.targetId FROM Bookmark b " +
+                        "WHERE b.user.id = :userId AND b.bookmarkType = :bookmarkType " +
+                        "ORDER BY b.createdAt DESC", Long.class)
+                .setParameter("userId", userId)
+                .setParameter("bookmarkType", bookmarkType)
+                .getResultList();
     }
 
     public void deleteUserBookmarks(Long userId) {

@@ -44,7 +44,4 @@ public class BookmarkService {
         return bookmarkRepository.deleteBookmark(id);
     }
 
-    public List<Bookmark> findUserBookmarks(Long userId) {
-        return bookmarkRepository.findUserBookmarks(userId);
-    }
 }

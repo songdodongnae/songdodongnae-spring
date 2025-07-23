@@ -39,12 +39,12 @@ public class BookmarkController {
         return ResponseContainer.create(HttpStatus.OK, "북마크 삭제 성공", BookmarkResDto.fromEntity(bookmark));
     }
 
-    @GetMapping
-    @Operation(summary = "유저의 북마크 조회")
-    public ResponseEntity<ResponseContainer<List<BookmarkResDto>>> getUserBookmarks() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = Long.parseLong(authentication.getName());
-        List<BookmarkResDto> dtos = bookmarkService.findUserBookmarks(userId).stream().map(BookmarkResDto::fromEntity).toList();
-        return ResponseContainer.create(HttpStatus.OK, "유저 북마크 조회 성공", dtos);
-    }
+//    @GetMapping
+//    @Operation(summary = "유저의 북마크 조회")
+//    public ResponseEntity<ResponseContainer<List<BookmarkResDto>>> getUserBookmarks() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        Long userId = Long.parseLong(authentication.getName());
+//        List<BookmarkResDto> dtos = bookmarkService.findUserBookmarks(userId).stream().map(BookmarkResDto::fromEntity).toList();
+//        return ResponseContainer.create(HttpStatus.OK, "유저 북마크 조회 성공", dtos);
+//    }
 }

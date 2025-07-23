@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.mypage;
 
+import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
@@ -23,10 +24,10 @@ import java.util.stream.Collectors;
 public class MyPageService {
 
     private final UserRepository userRepository;
-    private final FestivalRepository festivalRepository;
     private final DeliciousSpotRepository deliciousSpotRepository;
     private final CurationRepository curationRepository;
     private final BookmarkRepository bookmarkRepository;
+    private final FestivalRepository festivalRepository;
 
 
     public String updateNickName(NickNameReqDto nickNameReqDto, Long userId) {
@@ -37,21 +38,22 @@ public class MyPageService {
         return nickNameReqDto.getNickName();
     }
 
-    public List<ThumbnailResDto> getPostByType(String type) {
-        return switch (type) {
-            case "FESTIVAL" -> festivalRepository.findAll()
+    public List<ThumbnailResDto> getPostByType(Long userId, BookmarkType bookmarkType, int currentPage, int pageSize) {
+        List<Long> targetIds = bookmarkRepository.findTargetIdsByUserAndType(userId, bookmarkType);
+
+        return switch (bookmarkType) {
+            case BookmarkType.FESTIVAL -> festivalRepository.findAllById(targetIds)
                     .stream()
                     .map(ThumbnailResDto::of)
                     .collect(Collectors.toList());
-            case "DELICIOUS_SPOT" -> deliciousSpotRepository.findAll()
+            case BookmarkType.DELICIOUS_SPOT -> deliciousSpotRepository.findAllById(targetIds)
                     .stream()
                     .map(ThumbnailResDto::of)
                     .collect(Collectors.toList());
-            case "CURATION" -> curationRepository.findAll()
+            case BookmarkType.CURATION -> curationRepository.findAllById(targetIds)
                     .stream()
                     .map(ThumbnailResDto::of)
                     .collect(Collectors.toList());
-            default -> throw new IllegalArgumentException("지원하지 않는 type입니다: " + type);
         };
     }
 
