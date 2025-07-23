@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class DeliciousSpotResponseDto {
+public class DeliciousSpotResDto {
 
     private Long id;
 
@@ -56,8 +56,8 @@ public class DeliciousSpotResponseDto {
 
     private List<String> imageUrls;
 
-    public static DeliciousSpotResponseDto fromEntity(DeliciousSpot deliciousSpot) {
-        return DeliciousSpotResponseDto.builder()
+    public static DeliciousSpotResDto fromEntity(DeliciousSpot deliciousSpot) {
+        return DeliciousSpotResDto.builder()
                 .id(deliciousSpot.getId())
                 .title(deliciousSpot.getTitle())
                 .latitude(deliciousSpot.getLatitude())
