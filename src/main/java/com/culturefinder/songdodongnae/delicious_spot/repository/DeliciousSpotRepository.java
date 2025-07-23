@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.delicious_spot.repository;
 
+import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
@@ -69,6 +70,41 @@ public class DeliciousSpotRepository {
                         "SELECT d FROM DeliciousSpot d WHERE d.id IN :idList", DeliciousSpot.class)
                 .setParameter("idList", idList)
                 .getResultList();
+    }
+
+    public List<DeliciousSpot> findAll(int offset, int pageSize) {
+        return em.createQuery("SELECT d FROM DeliciousSpot d", DeliciousSpot.class)
+                .setFirstResult(offset)
+                .setMaxResults(pageSize)
+                .getResultList();
+    }
+
+    public long countDeliciousSpot() {
+        return em.createQuery(
+                        "SELECT COUNT(d) FROM DeliciousSpot d",
+                        Long.class
+                )
+                .getSingleResult();
+    }
+
+    public List<DeliciousSpot> searchDeliciousSpots(String keyword, int offset, int pageSize) {
+        return em.createQuery(
+                        "SELECT d FROM DeliciousSpot d WHERE d.title LIKE :keyword ORDER BY d.createdAt DESC",
+                        DeliciousSpot.class
+                )
+                .setParameter("keyword", "%" + keyword + "%")
+                .setFirstResult(offset)
+                .setMaxResults(pageSize)
+                .getResultList();
+    }
+
+    public long countSearchDeliciousSpot(String keyword) {
+        return em.createQuery(
+                        "SELECT COUNT(d) FROM DeliciousSpot d WHERE d.title LIKE :keyword",
+                        Long.class
+                )
+                .setParameter("keyword", "%" + keyword + "%")
+                .getSingleResult();
     }
 
 }

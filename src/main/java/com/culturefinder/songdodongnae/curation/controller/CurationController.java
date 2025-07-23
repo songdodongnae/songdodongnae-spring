@@ -3,6 +3,7 @@ package com.culturefinder.songdodongnae.curation.controller;
 import com.culturefinder.songdodongnae.curation.dto.CurationReqDto;
 import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
 import com.culturefinder.songdodongnae.curation.service.CurationService;
+import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,6 +21,17 @@ import org.springframework.web.bind.annotation.*;
 public class CurationController {
 
     private final CurationService curationService;
+
+    @Operation(summary = "큐레이션 모두 조회", description = "큐레이션을 모두 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "큐레이션 모두 조회 성공")
+    @GetMapping
+    public ResponseEntity<ResponseContainer<CustomPage<CurationResDto>>> getCuration(
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        CustomPage<CurationResDto> allCurations = curationService.getAllCuration(currentPage, pageSize);
+        return ResponseContainer.create(HttpStatus.OK, "큐레이션 모두 조회 성공", allCurations);
+    }
 
     @Operation(summary = "큐레이션 조회", description = "큐레이션 하나를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "큐레이션 조회 성공")

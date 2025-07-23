@@ -4,9 +4,12 @@ import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.curation.dto.CurationReqDto;
 import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
 import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
+import com.culturefinder.songdodongnae.utils.CustomPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Transactional
 @RequiredArgsConstructor
@@ -36,5 +39,22 @@ public class CurationService {
     public CurationResDto deleteCuration(Long id) {
         Curation curation = curationRepository.deleteById(id);
         return CurationResDto.fromEntity(curation);
+    }
+
+    public CustomPage<CurationResDto> getAllCuration(int currentPage, int pageSize) {
+        int offset = (currentPage - 1) * pageSize;
+
+        List<Curation> curations = curationRepository.findAll(offset, pageSize);
+        List<CurationResDto> curationsDto = curations.stream()
+                .map(CurationResDto::fromEntity)
+                .toList();
+        long totalElements = curationRepository.countCuration();
+
+        return CustomPage.of(
+                curationsDto,
+                currentPage,
+                pageSize,
+                totalElements
+        );
     }
 }

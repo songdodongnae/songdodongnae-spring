@@ -1,7 +1,6 @@
 package com.culturefinder.songdodongnae.curation.repository;
 
 import com.culturefinder.songdodongnae.curation.domain.Curation;
-import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
 import jakarta.persistence.EntityManager;
@@ -50,4 +49,40 @@ public class CurationRepository {
                 .setParameter("idList", idList)
                 .getResultList();
     }
+
+    public List<Curation> findAll(int offset, int pageSize) {
+        return em.createQuery("SELECT c FROM Curation c", Curation.class)
+                .setFirstResult(offset)
+                .setMaxResults(pageSize)
+                .getResultList();
+    }
+
+    public long countCuration() {
+        return em.createQuery(
+                        "SELECT COUNT(c) FROM Curation c",
+                        Long.class
+                )
+                .getSingleResult();
+    }
+
+    public List<Curation> searchCurations(String keyword, int offset, int pageSize) {
+        return em.createQuery(
+                        "SELECT c FROM Curation c WHERE c.title LIKE :keyword ORDER BY c.createdAt DESC",
+                        Curation.class
+                )
+                .setParameter("keyword", "%" + keyword + "%")
+                .setFirstResult(offset)
+                .setMaxResults(pageSize)
+                .getResultList();
+    }
+
+    public long countSearchCurations(String keyword) {
+        return em.createQuery(
+                        "SELECT COUNT(c) FROM Curation c WHERE c.title LIKE :keyword",
+                        Long.class
+                )
+                .setParameter("keyword", "%" + keyword + "%")
+                .getSingleResult();
+    }
+
 }

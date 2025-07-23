@@ -3,6 +3,7 @@ package com.culturefinder.songdodongnae.delicious_spot.controller;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResponseDto;
 import com.culturefinder.songdodongnae.delicious_spot.service.DeliciousSpotService;
+import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -63,9 +64,12 @@ public class DeliciousSpotController {
     @Operation(summary = "모든 맛집 조회", description = "모든 맛집을 조회합니다")
     @ApiResponse(responseCode = "200", description = "모든 맛집 조회 성공")
     @GetMapping
-    public ResponseEntity<ResponseContainer<List<DeliciousSpotResponseDto>>> getAllDeliciousSpots() {
-        List<DeliciousSpotResponseDto> deliciousSpots = deliciousSpotService.getAllDeliciousSpots();
-        return ResponseContainer.create(HttpStatus.OK, "모든 맛집 조회 성공", deliciousSpots);
+    public ResponseEntity<ResponseContainer<CustomPage<DeliciousSpotResponseDto>>> getAllDeliciousSpots(
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        CustomPage<DeliciousSpotResponseDto> allDeliciousSpots = deliciousSpotService.getAllDeliciousSpots(currentPage, pageSize);
+        return ResponseContainer.create(HttpStatus.OK, "모든 맛집 조회 성공", allDeliciousSpots);
     }
 
 }

@@ -4,6 +4,7 @@ import com.culturefinder.songdodongnae.bookmark.domain.Bookmark;
 import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
+import com.culturefinder.songdodongnae.utils.CustomPage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
@@ -55,5 +56,4 @@ public class BookmarkRepository {
           .setParameter("userId", userId)
           .executeUpdate();
     }
-
 }

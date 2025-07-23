@@ -70,4 +70,32 @@ public class FestivalRepository {
                 .getResultList();
     }
 
+    public List<Festival> searchFestivals(String keyword, int offset, int pageSize) {
+        return em.createQuery(
+                        "SELECT f FROM Festival f WHERE f.title LIKE :keyword ORDER BY f.createdAt DESC",
+                        Festival.class
+                )
+                .setParameter("keyword", "%" + keyword + "%")
+                .setFirstResult(offset)
+                .setMaxResults(pageSize)
+                .getResultList();
+    }
+
+    public long countSearchFestivals(String keyword) {
+        return em.createQuery(
+                        "SELECT COUNT(f) FROM Festival f WHERE f.title LIKE :keyword",
+                        Long.class
+                )
+                .setParameter("keyword", "%" + keyword + "%")
+                .getSingleResult();
+    }
+
+    public long countFestivals() {
+        return em.createQuery(
+                        "SELECT COUNT(f) FROM Festival f",
+                        Long.class
+                )
+                .getSingleResult();
+    }
+
 }
