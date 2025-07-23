@@ -28,7 +28,7 @@ public class ThumbnailResDto {
         return ThumbnailResDto.builder()
                 .id(spot.getId())
                 .title(spot.getTitle())
-                .imageUrl(spot.getImageUrl())
+                .imageUrl(spot.getThumbnailImageUrl())
                 .build();
     }
 

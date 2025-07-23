@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -52,6 +51,9 @@ public class DeliciousSpotRepository {
     public void deleteDeliciousSpot(Long id) {
         DeliciousSpot deliciousSpot = em.find(DeliciousSpot.class, id);
         if (deliciousSpot != null) {
+            em.createQuery("DELETE FROM DeliciousSpotImage dsi WHERE dsi.deliciousSpotId = :deliciousSpotId")
+                    .setParameter("deliciousSpotId", id)
+                    .executeUpdate();
             em.remove(deliciousSpot);
         } else {
             throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);

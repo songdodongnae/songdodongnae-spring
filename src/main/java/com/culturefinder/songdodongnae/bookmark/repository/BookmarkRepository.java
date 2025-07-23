@@ -49,7 +49,6 @@ public class BookmarkRepository {
                 .getResultList();
 
     }
-
     public long countUserBookmarks(Long userId) {
         return em.createQuery(
                         "SELECT COUNT(b) FROM Bookmark b WHERE b.user.id = :userId",
@@ -57,5 +56,10 @@ public class BookmarkRepository {
                 )
                 .setParameter("userId", userId)
                 .getSingleResult();
+    }
+    public void deleteUserBookmarks(Long userId) {
+        em.createQuery("DELETE FROM Bookmark b WHERE b.user.id = :userId")
+          .setParameter("userId", userId)
+          .executeUpdate();
     }
 }

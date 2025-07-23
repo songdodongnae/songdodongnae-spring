@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.mypage;
 
+import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
 import com.culturefinder.songdodongnae.exception.CustomException;
@@ -11,10 +12,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class MyPageService {
     private final FestivalRepository festivalRepository;
     private final DeliciousSpotRepository deliciousSpotRepository;
     private final CurationRepository curationRepository;
+    private final BookmarkRepository bookmarkRepository;
 
 
     public String updateNickName(NickNameReqDto nickNameReqDto, Long userId) {
@@ -51,6 +53,12 @@ public class MyPageService {
                     .collect(Collectors.toList());
             default -> throw new IllegalArgumentException("지원하지 않는 type입니다: " + type);
         };
+    }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        bookmarkRepository.deleteUserBookmarks(userId);
+        userRepository.deleteUser(userId);
     }
 
 }

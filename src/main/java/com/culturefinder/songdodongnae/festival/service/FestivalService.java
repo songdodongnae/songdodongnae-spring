@@ -1,10 +1,12 @@
 package com.culturefinder.songdodongnae.festival.service;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
+import com.culturefinder.songdodongnae.festival.domain.FestivalImage;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import com.culturefinder.songdodongnae.utils.CustomPage;
+import com.culturefinder.songdodongnae.s3.S3UploadService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ import java.util.stream.Collectors;
 public class FestivalService {
 
     private final FestivalRepository festivalRepository;
-
+    private final S3UploadService s3UploadService;
 
     public FestivalResDto createFestival(FestivalReqDto festivalReqDto) {
         Festival festival = festivalReqDto.toEntity();
@@ -64,6 +66,14 @@ public class FestivalService {
         Festival findFestival = festivalRepository.findById(id);
         if (findFestival == null) {
             throw new IllegalArgumentException("Festival not found");
+        }
+        if (findFestival.getImageUrl() != null) {
+            s3UploadService.deleteFile(findFestival.getImageUrl());
+        }
+        if (findFestival.getFestivalImages() != null) {
+            for (FestivalImage festivalImage : findFestival.getFestivalImages()) {
+                s3UploadService.deleteFile(festivalImage.getImageUrl());
+            }
         }
         festivalRepository.deleteFestival(id);
         return FestivalResDto.fromEntity(findFestival);
