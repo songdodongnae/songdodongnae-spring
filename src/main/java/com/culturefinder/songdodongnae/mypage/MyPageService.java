@@ -9,14 +9,20 @@ import com.culturefinder.songdodongnae.exception.ErrorCode;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
+import com.culturefinder.songdodongnae.utils.CustomPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.fasterxml.jackson.databind.type.LogicalType.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -38,23 +44,39 @@ public class MyPageService {
         return nickNameReqDto.getNickName();
     }
 
-    public List<ThumbnailResDto> getPostByType(Long userId, BookmarkType bookmarkType, int currentPage, int pageSize) {
+    public CustomPage<ThumbnailResDto> getPostByType(Long userId, BookmarkType bookmarkType, int currentPage, int pageSize) {
         List<Long> targetIds = bookmarkRepository.findTargetIdsByUserAndType(userId, bookmarkType);
+        int totalElements = targetIds.size();
+        int offset = (currentPage - 1) * pageSize;
+        int end = Math.min(offset + pageSize ,totalElements);
 
-        return switch (bookmarkType) {
-            case BookmarkType.FESTIVAL -> festivalRepository.findAllById(targetIds)
+        if (offset >= totalElements) {
+            return CustomPage.of(Collections.emptyList(), currentPage,pageSize, totalElements);
+        }
+
+        List<Long> pageIds = targetIds.subList(offset, end);
+
+        Map<Long, ThumbnailResDto> dtoMap = switch (bookmarkType) {
+            case BookmarkType.FESTIVAL -> festivalRepository.findAllById(pageIds)
                     .stream()
                     .map(ThumbnailResDto::of)
-                    .collect(Collectors.toList());
-            case BookmarkType.DELICIOUS_SPOT -> deliciousSpotRepository.findAllById(targetIds)
+                    .collect(Collectors.toMap(ThumbnailResDto::getId, dto -> dto));
+            case BookmarkType.DELICIOUS_SPOT -> deliciousSpotRepository.findAllById(pageIds)
                     .stream()
                     .map(ThumbnailResDto::of)
-                    .collect(Collectors.toList());
-            case BookmarkType.CURATION -> curationRepository.findAllById(targetIds)
+                    .collect(Collectors.toMap(ThumbnailResDto::getId, dto -> dto));
+
+            case BookmarkType.CURATION -> curationRepository.findAllById(pageIds)
                     .stream()
                     .map(ThumbnailResDto::of)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toMap(ThumbnailResDto::getId, dto -> dto));
         };
+
+        List<ThumbnailResDto> response = pageIds.stream()
+                .map(dtoMap::get)
+                .toList();
+
+        return CustomPage.of(response, currentPage, pageSize, totalElements);
     }
 
     @Transactional
