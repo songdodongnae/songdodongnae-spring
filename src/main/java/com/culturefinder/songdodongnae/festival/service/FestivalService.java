@@ -37,17 +37,17 @@ public class FestivalService {
                 .collect(Collectors.toList());
     }
 
-    public CustomPage<FestivalResDto> getAllFestival(int page, int size) {
-        int offset = (page - 1) * size;
-        List<FestivalResDto> festivals = festivalRepository.findAll(offset, size).stream()
+    public CustomPage<FestivalResDto> getAllFestival(int currentPage, int pageSize) {
+        int offset = (currentPage - 1) * pageSize;
+        List<FestivalResDto> festivals = festivalRepository.findAll(offset, pageSize).stream()
                 .map(FestivalResDto::fromEntity)
                 .toList();
         Long totalElements = festivalRepository.countFestivals();
 
         return CustomPage.of(
                 festivals,
-                page,
-                size,
+                currentPage,
+                pageSize,
                 totalElements
         );
     }

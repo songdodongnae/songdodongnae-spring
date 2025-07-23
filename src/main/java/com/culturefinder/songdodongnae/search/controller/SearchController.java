@@ -37,10 +37,10 @@ public class SearchController {
     @Operation(summary = "축제 검색", description = "검색어에 맞는 축제를 페이지네이션하여 조회합니다.")
     public ResponseEntity<ResponseContainer<CustomPage<FestivalResDto>>> searchFestivals(
             @RequestParam String keyword,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize
     ) {
-        CustomPage<FestivalResDto> result = searchService.searchFestivals(keyword, page, size);
+        CustomPage<FestivalResDto> result = searchService.searchFestivals(keyword, currentPage, pageSize);
         return ResponseContainer.create(
                 HttpStatus.OK,
                 "축제 검색 성공",
@@ -52,10 +52,10 @@ public class SearchController {
     @Operation(summary = "맛집 검색", description = "검색어에 맞는 맛집을 페이지네이션하여 조회합니다.")
     public ResponseEntity<ResponseContainer<CustomPage<DeliciousSpotResponseDto>>> searchDeliciousSpots(
             @RequestParam String keyword,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize
     ) {
-        CustomPage<DeliciousSpotResponseDto> result = searchService.searchDeliciousSpots(keyword, page, size);
+        CustomPage<DeliciousSpotResponseDto> result = searchService.searchDeliciousSpots(keyword, currentPage, pageSize);
         return ResponseContainer.create(
                 HttpStatus.OK,
                 "맛집 검색 성공",
@@ -67,10 +67,10 @@ public class SearchController {
     @Operation(summary = "큐레이션 검색", description = "검색어에 맞는 큐레이션을 페이지네이션하여 조회합니다.")
     public ResponseEntity<ResponseContainer<CustomPage<CurationResDto>>> searchCurations(
             @RequestParam String keyword,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize
     ) {
-        CustomPage<CurationResDto> result = searchService.searchCuration(keyword, page, size);
+        CustomPage<CurationResDto> result = searchService.searchCuration(keyword, currentPage, pageSize);
         return ResponseContainer.create(
                 HttpStatus.OK,
                 "큐레이션 검색 성공",

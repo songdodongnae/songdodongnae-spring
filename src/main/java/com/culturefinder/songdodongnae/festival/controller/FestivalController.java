@@ -52,10 +52,10 @@ public class FestivalController {
     @ApiResponse(responseCode = "200", description = "모든 축제 조회 성공")
     @GetMapping
     public ResponseEntity<ResponseContainer<CustomPage<FestivalResDto>>> festivalAll(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize) {
 
-        CustomPage<FestivalResDto> dtos = festivalService.getAllFestival(page, size);
+        CustomPage<FestivalResDto> dtos = festivalService.getAllFestival(currentPage, pageSize);
         return ResponseContainer.create(HttpStatus.OK, "모든 축제 조회 성공", dtos);
     }
 
