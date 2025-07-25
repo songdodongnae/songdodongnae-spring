@@ -148,8 +148,14 @@ public class FestivalService {
         Festival findFestival = festivalRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ENTITY_NOT_FOUND));
 
-        s3UploadService.deleteFile(findFestival.getThumbnailImageUrl());
-        findFestival.getImageUrls().forEach(s3UploadService::deleteFile);
+        if (findFestival.getThumbnailImageUrl() != null) {
+            s3UploadService.deleteFile(findFestival.getThumbnailImageUrl());
+        }
+        if (findFestival.getImageUrls() != null) {
+            for (String imageUrl : findFestival.getImageUrls()) {
+                s3UploadService.deleteFile(imageUrl);
+            }
+        }
 
         festivalRepository.deleteFestival(id);
         return FestivalResDto.fromEntity(findFestival, false);
@@ -167,8 +173,14 @@ public class FestivalService {
         Creator findCreator = creatorRepository.findByName(festivalReqDto.getCreatorName())
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
 
-        s3UploadService.deleteFile(findFestival.getThumbnailImageUrl());
-        findFestival.getImageUrls().forEach(s3UploadService::deleteFile);
+        if (findFestival.getThumbnailImageUrl() != null) {
+            s3UploadService.deleteFile(findFestival.getThumbnailImageUrl());
+        }
+        if (findFestival.getImageUrls() != null) {
+            for (String imageUrl : findFestival.getImageUrls()) {
+                s3UploadService.deleteFile(imageUrl);
+            }
+        }
 
         findFestival.update(FestivalReqDto.toEntity(festivalReqDto, findCreator));
         return FestivalResDto.fromEntity(findFestival, false);
