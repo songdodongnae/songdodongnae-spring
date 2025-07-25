@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.delicious_spot.domain;
 
+import com.culturefinder.songdodongnae.creator.domain.Creator;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -54,6 +55,10 @@ public class DeliciousSpot {
     private String instagram;
 
     private String contact;
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    private Creator creator;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

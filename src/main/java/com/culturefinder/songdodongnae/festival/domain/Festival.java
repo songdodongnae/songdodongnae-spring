@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.festival.domain;
 
+import com.culturefinder.songdodongnae.creator.domain.Creator;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -60,6 +61,11 @@ public class Festival {
     private LocalDateTime updatedAt;
 
     private String imageUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    private Creator creator;
+
 
     @OneToMany(mappedBy = "festival", cascade = CascadeType.ALL)
     private List<FestivalImage> festivalImages = new ArrayList<>();

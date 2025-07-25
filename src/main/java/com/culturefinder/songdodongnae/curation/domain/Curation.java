@@ -30,7 +30,8 @@ public class Curation {
     @OneToMany
     private List<Festival> festivals = new ArrayList<>();
 
-    @OneToOne(mappedBy = "curation")
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
     private Creator creator;
 
     @CreationTimestamp

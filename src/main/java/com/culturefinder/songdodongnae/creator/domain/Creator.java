@@ -42,18 +42,14 @@ public class Creator {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany
-    @JoinColumn(name = "creator_id")
+    @OneToMany(mappedBy = "creator")
     private List<Curation> curations = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn(name = "creator_id")
+    @OneToMany(mappedBy = "creator")
     private List<Festival> festivals = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn(name = "creator_id")
+    @OneToMany(mappedBy = "creator")
     private List<DeliciousSpot> deliciousSpots = new ArrayList<>();
-
 
     public void update(Creator entity) {
         this.name = entity.getName();
