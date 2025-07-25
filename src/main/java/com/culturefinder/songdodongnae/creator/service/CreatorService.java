@@ -24,8 +24,7 @@ public class CreatorService {
     private final S3UploadService s3UploadService;
 
     public CreatorResDto createCreator(CreatorReqDto creatorReqDto) {
-        String image = s3UploadService.generatePresignedUrl(creatorReqDto.getImage());
-        Creator creator = creatorReqDto.toEntity(image);
+        Creator creator = creatorReqDto.toEntity();
         Creator savedCreator = creatorRepository.saveCreator(creator);
         return CreatorResDto.fromEntity(savedCreator);
     }
@@ -42,9 +41,7 @@ public class CreatorService {
 
     public CreatorResDto updateCreator(Long id, CreatorReqDto creatorReqDto) {
         Creator findCreator = creatorRepository.findById(id);
-        String image = s3UploadService.generatePresignedUrl(creatorReqDto.getImage());
-
-        findCreator.update(creatorReqDto.toEntity(image));
+        findCreator.update(creatorReqDto.toEntity());
         return CreatorResDto.fromEntity(findCreator);
     }
 

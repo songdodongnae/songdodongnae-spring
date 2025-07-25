@@ -18,7 +18,7 @@ public class CreatorReqDto {
 
     private String image;
 
-    public Creator toEntity(String image) {
+    public Creator toEntity() {
         return Creator.builder()
                 .name(name)
                 .introduction(introduction)

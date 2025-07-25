@@ -43,7 +43,7 @@ public class CurationReqDto {
                                 .toList()
                 )
                 .creator(
-                        this.creator != null ? this.creator.toEntity(creator.getImage()) :null
+                        this.creator != null ? this.creator.toEntity() :null
                 )
                 .title(this.title)
                 .description(this.description)
