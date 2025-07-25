@@ -4,6 +4,7 @@ import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
+import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.s3.S3UploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,17 @@ public class DeliciousSpotService {
         return deliciousSpotRepository.findAll().stream()
                 .map(DeliciousSpotResDto::fromEntity)
                 .toList();
+    }
+
+    public CustomPage<DeliciousSpotResponseDto> getAllDeliciousSpots(int currentPage, int pageSize) {
+        int offset = (currentPage - 1) * pageSize;
+
+        List<DeliciousSpotResponseDto> dtos = deliciousSpotRepository.findAll(offset, pageSize).stream()
+                .map(DeliciousSpotResponseDto::fromEntity)
+                .toList();
+        long totalElements = deliciousSpotRepository.countDeliciousSpot();
+
+        return CustomPage.of(dtos, currentPage, pageSize, totalElements);
     }
 
 }

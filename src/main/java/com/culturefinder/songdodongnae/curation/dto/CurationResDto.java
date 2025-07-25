@@ -5,6 +5,7 @@ import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import lombok.Builder;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +22,7 @@ public class CurationResDto {
     private String title;
     private String description;
     private String imageUrl;
+    private Boolean isBookmarked;
 
     public static CurationResDto fromEntity(Curation curation) {
         List<DeliciousSpotResDto> deliciousSpotDto = curation.getDeliciousSpots().stream()
@@ -44,6 +46,32 @@ public class CurationResDto {
                 .title(curation.getTitle())
                 .description(curation.getDescription())
                 .imageUrl(curation.getImageUrl())
+                .build();
+    }
+
+    public static CurationResDto fromEntity(Curation curation, Boolean isBookmarked) {
+        List<DeliciousSpotResponseDto> deliciousSpotDto = curation.getDeliciousSpots().stream()
+                .map(DeliciousSpotResponseDto::fromEntity)
+                .toList();
+
+        List<FestivalResDto> festivalDto = curation.getFestivals().stream()
+                .map(FestivalResDto::fromEntity)
+                .toList();
+
+        CreatorResDto creatorDto = CreatorResDto.fromEntity(curation.getCreator());
+
+        return CurationResDto.builder()
+                .id(curation.getId())
+                .type(curation.getType())
+                .deliciousSpots(deliciousSpotDto)
+                .festivals(festivalDto)
+                .creator(creatorDto)
+                .createdAt(curation.getCreatedAt())
+                .updatedAt(curation.getUpdatedAt())
+                .title(curation.getTitle())
+                .description(curation.getDescription())
+                .imageUrl(curation.getImageUrl())
+                .isBookmarked(isBookmarked)
                 .build();
     }
 }

@@ -3,6 +3,7 @@ package com.culturefinder.songdodongnae.festival.controller;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.service.FestivalService;
+import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -50,11 +51,11 @@ public class FestivalController {
     @Operation(summary = "모든 축제 조회", description = "등록된 모든 축제 목록을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "모든 축제 조회 성공")
     @GetMapping
-    public ResponseEntity<ResponseContainer<List<FestivalResDto>>> festivalAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<ResponseContainer<CustomPage<FestivalResDto>>> festivalAll(
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize) {
 
-        List<FestivalResDto> dtos = festivalService.getAllFestival(page, size);
+        CustomPage<FestivalResDto> dtos = festivalService.getAllFestival(currentPage, pageSize);
         return ResponseContainer.create(HttpStatus.OK, "모든 축제 조회 성공", dtos);
     }
 
