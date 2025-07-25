@@ -11,7 +11,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Transactional
 @RequiredArgsConstructor
@@ -30,8 +32,7 @@ public class CurationService {
     public CurationResDto getUserCuration(Long userId, Long id) {
         Boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.CURATION, id);
         Curation curationById = curationRepository.findCurationById(id);
-        CurationResDto curationResDto = CurationResDto.fromEntity(curationById);
-        curationResDto.setIsBookmarked(isBookmarked);
+        CurationResDto curationResDto = CurationResDto.fromEntity(curationById, isBookmarked);
         return curationResDto;
     }
 
@@ -58,6 +59,28 @@ public class CurationService {
         List<Curation> curations = curationRepository.findAll(offset, pageSize);
         List<CurationResDto> curationsDto = curations.stream()
                 .map(CurationResDto::fromEntity)
+                .toList();
+        long totalElements = curationRepository.countCuration();
+
+        return CustomPage.of(
+                curationsDto,
+                currentPage,
+                pageSize,
+                totalElements
+        );
+    }
+
+    public CustomPage<CurationResDto> getAllUserCuration(Long userId, int currentPage, int pageSize) {
+        List<Long> targetIdsByUserAndType = bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.CURATION);
+        Set<Long> bookmarkedSet = new HashSet<>(targetIdsByUserAndType);
+
+        int offset = (currentPage - 1) * pageSize;
+
+        List<Curation> curations = curationRepository.findAll(offset, pageSize);
+        List<CurationResDto> curationsDto = curations.stream()
+                .map(curation -> {
+                    return CurationResDto.fromEntity(curation, bookmarkedSet.contains(curation.getId()));
+                })
                 .toList();
         long totalElements = curationRepository.countCuration();
 

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,8 +32,15 @@ public class CurationController {
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
-        CustomPage<CurationResDto> allCurations = curationService.getAllCuration(currentPage, pageSize);
-        return ResponseContainer.create(HttpStatus.OK, "큐레이션 모두 조회 성공", allCurations);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null) {
+            CustomPage<CurationResDto> allCurations = curationService.getAllCuration(currentPage, pageSize);
+            return ResponseContainer.create(HttpStatus.OK, "큐레이션 모두 조회 성공", allCurations);
+        } else {
+            Long userId = Long.parseLong(authentication.getName());
+            curationService.getAllUserCuration(userId, currentPage, pageSize);
+        }
     }
 
     @Operation(summary = "큐레이션 조회", description = "큐레이션 하나를 조회합니다.")
