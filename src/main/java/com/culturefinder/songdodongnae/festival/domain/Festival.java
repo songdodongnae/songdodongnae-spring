@@ -63,11 +63,12 @@ public class Festival {
     @ManyToOne(fetch = FetchType.LAZY)
     private Creator creator;
 
-    private String imageUrl;
+    private String thumbnailImageUrl;
 
-    @OneToMany(mappedBy = "festival", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<FestivalImage> festivalImages = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(name = "delicious_spot_image_urls",
+            joinColumns = @JoinColumn(name = "delicious_spot_id"))
+    private List<String> imageUrls;
 
     public void update(Festival festival) {
         this.title = festival.getTitle();
@@ -87,8 +88,8 @@ public class Festival {
         this.onelineDescription = festival.getOnelineDescription();
         this.createdAt = festival.getCreatedAt();
         this.updatedAt = festival.getUpdatedAt();
-        this.imageUrl = festival.getImageUrl();
-        this.festivalImages = festival.getFestivalImages();
+        this.thumbnailImageUrl = festival.getThumbnailImageUrl();
+        this.imageUrls = festival.getImageUrls();
     }
 
 }

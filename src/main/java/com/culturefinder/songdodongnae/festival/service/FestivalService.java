@@ -20,6 +20,7 @@ import java.util.*;
 
 import static com.culturefinder.songdodongnae.exception.ErrorCode.ENTITY_NOT_FOUND;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class FestivalService {
@@ -33,7 +34,13 @@ public class FestivalService {
     public FestivalResDto createFestival(FestivalReqDto festivalReqDto, Long userId) {
         Creator findCreator = creatorRepository.findByName(festivalReqDto.getCreatorName())
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
-        Festival festival = FestivalReqDto.toEntity(festivalReqDto, findCreator);
+
+        String mainImageUrl = s3UploadService.generatePresignedUrl(festivalReqDto.getMainImage());
+        List<String> imageUrls = festivalReqDto.getImages().stream()
+                .map(s3UploadService::generatePresignedUrl)
+                .toList();
+
+        Festival festival = FestivalReqDto.toEntity(festivalReqDto, findCreator, mainImageUrl, imageUrls);
         Festival savedFestival = festivalRepository.saveFestival(festival);
 
         User findUser = userRepository.findById(userId)
@@ -96,7 +103,6 @@ public class FestivalService {
         return FestivalResDto.fromEntity(findFestival, isBookmarked);
     }
 
-    @Transactional
     public FestivalResDto updateFestival(Long id, FestivalReqDto festivalReqDto, Long userId) {
         Festival findFestival = festivalRepository.findById(id);
         if (findFestival == null) {
@@ -105,7 +111,13 @@ public class FestivalService {
 
         Creator findCreator = creatorRepository.findByName(festivalReqDto.getCreatorName())
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
-        findFestival.update(FestivalReqDto.toEntity(festivalReqDto, findCreator));
+
+        String mainImageUrl = s3UploadService.generatePresignedUrl(festivalReqDto.getMainImage());
+        List<String> imageUrls = festivalReqDto.getImages().stream()
+                .map(s3UploadService::generatePresignedUrl)
+                .toList();
+
+        findFestival.update(FestivalReqDto.toEntity(festivalReqDto, findCreator, mainImageUrl, imageUrls);
         festivalRepository.saveFestival(findFestival);
         festivalRepository.deleteFestival(id);
         User findUser = userRepository.findById(userId)
