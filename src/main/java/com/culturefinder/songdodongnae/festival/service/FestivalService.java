@@ -65,7 +65,7 @@ public class FestivalService {
     public CustomPage<FestivalResDto> getAllFestival(int currentPage, int pageSize) {
         int offset = (currentPage - 1) * pageSize;
         List<FestivalResDto> festivals = festivalRepository.findAll(offset, pageSize).stream()
-                .map(FestivalResDto::fromEntity)
+                .map(festival -> FestivalResDto.fromEntity(festival, false))
                 .toList();
         Long totalElements = festivalRepository.countFestivals();
 

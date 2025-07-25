@@ -42,8 +42,9 @@ public class SearchService {
 
         List<Festival> festivals = festivalRepository.searchFestivals(keyword, offset, pageSize);
         long totalElements = festivalRepository.countSearchFestivals(keyword);
+
         List<FestivalResDto> dtos = festivals.stream()
-                .map(FestivalResDto::fromEntity)
+                .map(festival -> FestivalResDto.fromEntity(festival, false))
                 .toList();
 
         return CustomPage.of(

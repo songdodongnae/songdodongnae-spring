@@ -6,7 +6,6 @@ import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import lombok.Builder;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -56,7 +55,7 @@ public class CurationResDto {
                 .toList();
 
         List<FestivalResDto> festivalDto = curation.getFestivals().stream()
-                .map(FestivalResDto::fromEntity)
+                .map(festival -> FestivalResDto.fromEntity(festival, false))
                 .toList();
 
         CreatorResDto creatorDto = CreatorResDto.fromEntity(curation.getCreator());
