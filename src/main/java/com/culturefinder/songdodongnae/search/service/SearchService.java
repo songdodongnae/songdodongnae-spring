@@ -8,6 +8,8 @@ import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
+import com.culturefinder.songdodongnae.exception.CustomException;
+import com.culturefinder.songdodongnae.exception.ErrorCode;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
@@ -69,6 +71,28 @@ public class SearchService {
         );
     }
 
+    public CustomPage<FestivalResDto> searchUserFestivals(String keyword, int currentPage, int pageSize, Long userId) {
+        if(userId == null) throw new CustomException(ErrorCode.ENTITY_NOT_FOUND);
+
+        int offset = (currentPage - 1) * pageSize;
+
+        List<Festival> festivals = festivalRepository.searchFestivals(keyword, offset, pageSize);
+        long totalElements = festivalRepository.countSearchFestivals(keyword);
+
+        Set<Long> festivalIds = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.FESTIVAL));
+
+        List<FestivalResDto> dtos = festivals.stream()
+                .map(festival -> FestivalResDto.fromEntity(festival, festivalIds.contains(festival.getId())))
+                .toList();
+
+        return CustomPage.of(
+                dtos,
+                currentPage,
+                pageSize,
+                totalElements
+        );
+    }
+
     public CustomPage<DeliciousSpotResDto> searchDeliciousSpots(String keyword, int currentPage, int pageSize) {
         int offset = (currentPage - 1) * pageSize;
 
@@ -86,6 +110,27 @@ public class SearchService {
         );
     }
 
+    public CustomPage<DeliciousSpotResDto> searchUserDeliciousSpots(String keyword, int currentPage, int pageSize, Long userId) {
+        if(userId == null) throw new CustomException(ErrorCode.ENTITY_NOT_FOUND);
+
+        int offset = (currentPage - 1) * pageSize;
+
+        List<DeliciousSpot> deliciousSpotList = deliciousSpotRepository.searchDeliciousSpots(keyword, offset, pageSize);
+        long totalElements = deliciousSpotRepository.countSearchDeliciousSpot(keyword);
+        Set<Long> deliciousSpotIds = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.DELICIOUS_SPOT));
+
+        List<DeliciousSpotResDto> dtos = deliciousSpotList.stream()
+                .map(deliciousSpot -> DeliciousSpotResDto.fromEntity(deliciousSpot, deliciousSpotIds.contains(deliciousSpot.getId())))
+                .toList();
+
+        return CustomPage.of(
+                dtos,
+                currentPage,
+                pageSize,
+                totalElements
+        );
+    }
+
     public CustomPage<CurationResDto> searchCuration(String keyword, int currentPage, int pageSize) {
         int offset = (currentPage - 1) * pageSize;
 
@@ -93,6 +138,27 @@ public class SearchService {
         long totalElements = curationRepository.countSearchCurations(keyword);
         List<CurationResDto> dtos = curations.stream()
                 .map(CurationResDto::fromEntity)
+                .toList();
+
+        return CustomPage.of(
+                dtos,
+                currentPage,
+                pageSize,
+                totalElements
+        );
+    }
+
+    public CustomPage<CurationResDto> searchUserCuration(String keyword, int currentPage, int pageSize, Long userId) {
+        if(userId == null) throw new CustomException(ErrorCode.ENTITY_NOT_FOUND);
+
+        int offset = (currentPage - 1) * pageSize;
+
+        List<Curation> curations  = curationRepository.searchCurations(keyword, offset, pageSize);
+        long totalElements = curationRepository.countSearchCurations(keyword);
+        Set<Long> curationIds = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.CURATION));
+
+        List<CurationResDto> dtos = curations.stream()
+                .map(curation -> CurationResDto.fromEntity(curation, curationIds.contains(curation.getId())))
                 .toList();
 
         return CustomPage.of(

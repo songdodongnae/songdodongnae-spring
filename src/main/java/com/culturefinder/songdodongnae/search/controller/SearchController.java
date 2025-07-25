@@ -49,12 +49,23 @@ public class SearchController {
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
-        CustomPage<FestivalResDto> result = searchService.searchFestivals(keyword, currentPage, pageSize);
-        return ResponseContainer.create(
-                HttpStatus.OK,
-                "축제 검색 성공",
-                result
-        );
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            CustomPage<FestivalResDto> result = searchService.searchFestivals(keyword, currentPage, pageSize);
+            return ResponseContainer.create(
+                    HttpStatus.OK,
+                    "축제 검색 성공",
+                    result
+            );
+        } else {
+            long userId = Long.parseLong(authentication.getName());
+            CustomPage<FestivalResDto> result = searchService.searchUserFestivals(keyword, currentPage, pageSize, userId);
+            return ResponseContainer.create(
+                    HttpStatus.OK,
+                    "축제 검색 성공",
+                    result
+            );
+        }
     }
 
     @GetMapping("/deliciousSpots")
@@ -64,12 +75,23 @@ public class SearchController {
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
-        CustomPage<DeliciousSpotResDto> result = searchService.searchDeliciousSpots(keyword, currentPage, pageSize);
-        return ResponseContainer.create(
-                HttpStatus.OK,
-                "맛집 검색 성공",
-                result
-        );
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            CustomPage<DeliciousSpotResDto> result = searchService.searchDeliciousSpots(keyword, currentPage, pageSize);
+            return ResponseContainer.create(
+                    HttpStatus.OK,
+                    "맛집 검색 성공",
+                    result
+            );
+        } else {
+            Long userId = Long.parseLong(authentication.getName());
+            CustomPage<DeliciousSpotResDto> result = searchService.searchUserDeliciousSpots(keyword, currentPage, pageSize, userId);
+            return ResponseContainer.create(
+                    HttpStatus.OK,
+                    "맛집 검색 성공",
+                    result
+            );
+        }
     }
 
     @GetMapping("/curations")
@@ -79,11 +101,22 @@ public class SearchController {
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
-        CustomPage<CurationResDto> result = searchService.searchCuration(keyword, currentPage, pageSize);
-        return ResponseContainer.create(
-                HttpStatus.OK,
-                "큐레이션 검색 성공",
-                result
-        );
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            CustomPage<CurationResDto> result = searchService.searchCuration(keyword, currentPage, pageSize);
+            return ResponseContainer.create(
+                    HttpStatus.OK,
+                    "큐레이션 검색 성공",
+                    result
+            );
+        } else {
+            Long userId = Long.parseLong(authentication.getName());
+            CustomPage<CurationResDto> result = searchService.searchUserCuration(keyword, currentPage, pageSize, userId);
+            return ResponseContainer.create(
+                    HttpStatus.OK,
+                    "큐레이션 검색 성공",
+                    result
+            );
+        }
     }
 }
