@@ -156,7 +156,7 @@ public class FestivalService {
                 s3UploadService.deleteFile(imageUrl);
             }
         }
-
+        bookmarkRepository.deleteBookmarkByTypeAndTargetId(BookmarkType.FESTIVAL, findFestival.getId());
         festivalRepository.deleteFestival(id);
         return FestivalResDto.fromEntity(findFestival, false);
     }

@@ -86,6 +86,7 @@ public class DeliciousSpotService {
                 s3UploadService.deleteFile(imageUrl);
             }
         }
+        bookmarkRepository.deleteBookmarkByTypeAndTargetId(BookmarkType.DELICIOUS_SPOT, deliciousSpot.getId());
         deliciousSpotRepository.deleteDeliciousSpot(id);
     }
 
