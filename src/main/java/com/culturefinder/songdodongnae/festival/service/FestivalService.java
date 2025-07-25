@@ -9,6 +9,7 @@ import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
+import com.culturefinder.songdodongnae.user.domain.Role;
 import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.s3.S3UploadService;
 import com.culturefinder.songdodongnae.user.domain.User;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static com.culturefinder.songdodongnae.exception.ErrorCode.ENTITY_NOT_FOUND;
+import static com.culturefinder.songdodongnae.exception.ErrorCode.FORBIDDEN;
 
 @Transactional
 @RequiredArgsConstructor
@@ -33,7 +35,12 @@ public class FestivalService {
     private final UserRepository userRepository;
     private final CreatorRepository creatorRepository;
 
-    public FestivalResDto createFestival(FestivalReqDto festivalReqDto) {
+    public FestivalResDto createFestival(FestivalReqDto festivalReqDto, Long userId) {
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ENTITY_NOT_FOUND));
+        if (findUser.getRole() != Role.ROLE_ADMIN)
+            throw new CustomException(FORBIDDEN);
+
         Creator findCreator = creatorRepository.findByName(festivalReqDto.getCreatorName())
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
 
@@ -115,19 +122,15 @@ public class FestivalService {
     }
 
     public FestivalResDto getFestival(Long id) {
-        Festival findFestival = festivalRepository.findById(id);
-        if (findFestival == null) {
-            throw new CustomException(ENTITY_NOT_FOUND);
-        }
+        Festival findFestival = festivalRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ENTITY_NOT_FOUND));
 
         return FestivalResDto.fromEntity(findFestival, false);
     }
 
     public FestivalResDto getUserFestival(Long id, Long userId) {
-        Festival findFestival = festivalRepository.findById(id);
-        if (findFestival == null) {
-            throw new CustomException(ENTITY_NOT_FOUND);
-        }
+        Festival findFestival = festivalRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ENTITY_NOT_FOUND));
 
         userRepository.findById(userId)
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
@@ -137,10 +140,14 @@ public class FestivalService {
     }
 
     public FestivalResDto deleteFestival(Long id, Long userId) {
-        Festival findFestival = festivalRepository.findById(id);
-        if (findFestival == null) {
-            throw new CustomException(ENTITY_NOT_FOUND);
-        }
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ENTITY_NOT_FOUND));
+        if (findUser.getRole() != Role.ROLE_ADMIN)
+            throw new CustomException(FORBIDDEN);
+
+        Festival findFestival = festivalRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ENTITY_NOT_FOUND));
+
         s3UploadService.deleteFile(findFestival.getThumbnailImageUrl());
         findFestival.getImageUrls().forEach(s3UploadService::deleteFile);
 
@@ -148,11 +155,14 @@ public class FestivalService {
         return FestivalResDto.fromEntity(findFestival, false);
     }
 
-    public FestivalResDto updateFestival(Long id, FestivalReqDto festivalReqDto) {
-        Festival findFestival = festivalRepository.findById(id);
-        if (findFestival == null) {
-            throw new CustomException(ENTITY_NOT_FOUND);
-        }
+    public FestivalResDto updateFestival(Long id, FestivalReqDto festivalReqDto, Long userId) {
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ENTITY_NOT_FOUND));
+        if (findUser.getRole() != Role.ROLE_ADMIN)
+            throw new CustomException(FORBIDDEN);
+
+        Festival findFestival = festivalRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ENTITY_NOT_FOUND));
 
         Creator findCreator = creatorRepository.findByName(festivalReqDto.getCreatorName())
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));

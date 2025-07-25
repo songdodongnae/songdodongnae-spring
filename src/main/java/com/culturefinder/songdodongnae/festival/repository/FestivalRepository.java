@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -24,8 +25,9 @@ public class FestivalRepository {
         return festival;
     }
 
-    public Festival findById(Long id) {
-        return em.find(Festival.class, id);
+    public Optional<Festival> findById(Long id) {
+        Festival festival = em.find(Festival.class, id);
+        return Optional.ofNullable(festival);
     }
 
     public void deleteFestival(Long id) {
