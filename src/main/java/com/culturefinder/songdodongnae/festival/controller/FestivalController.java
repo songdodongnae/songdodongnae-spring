@@ -56,7 +56,7 @@ public class FestivalController {
     @Operation(summary = "모든 축제 조회", description = "등록된 모든 축제 목록을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "모든 축제 조회 성공")
     @GetMapping
-    public ResponseEntity<ResponseContainer<CustomPage<FestivalResDto>>> festivalAll(
+    public ResponseEntity<ResponseContainer<CustomPage<FestivalResDto>>> getAllFestivals(
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
