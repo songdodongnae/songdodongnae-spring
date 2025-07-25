@@ -96,6 +96,9 @@ public class FestivalService {
         if (findFestival == null) {
             throw new CustomException(ENTITY_NOT_FOUND);
         }
+        s3UploadService.deleteFile(findFestival.getThumbnailImageUrl());
+        findFestival.getImageUrls().forEach(s3UploadService::deleteFile);
+
         festivalRepository.deleteFestival(id);
         User findUser = userRepository.findById(userId)
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
@@ -112,12 +115,15 @@ public class FestivalService {
         Creator findCreator = creatorRepository.findByName(festivalReqDto.getCreatorName())
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
 
+        s3UploadService.deleteFile(findFestival.getThumbnailImageUrl());
+        findFestival.getImageUrls().forEach(s3UploadService::deleteFile);
+
         String mainImageUrl = s3UploadService.generatePresignedUrl(festivalReqDto.getMainImage());
         List<String> imageUrls = festivalReqDto.getImages().stream()
                 .map(s3UploadService::generatePresignedUrl)
                 .toList();
 
-        findFestival.update(FestivalReqDto.toEntity(festivalReqDto, findCreator, mainImageUrl, imageUrls);
+        findFestival.update(FestivalReqDto.toEntity(festivalReqDto, findCreator, mainImageUrl, imageUrls));
         festivalRepository.saveFestival(findFestival);
         festivalRepository.deleteFestival(id);
         User findUser = userRepository.findById(userId)
