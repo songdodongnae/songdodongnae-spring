@@ -9,6 +9,7 @@ import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 public class CurationResDto {
@@ -49,13 +50,17 @@ public class CurationResDto {
                 .build();
     }
 
-    public static CurationResDto fromEntity(Curation curation, Boolean isBookmarked) {
+    public static CurationResDto fromEntity(Curation curation, Set<Long> bookmarkedDeliciousSpots, Set<Long> bookmarkedFestivals, Boolean isBookmarked) {
         List<DeliciousSpotResDto> deliciousSpotDto = curation.getDeliciousSpots().stream()
-                .map(DeliciousSpotResDto::fromEntity)
+                .map(deliciousSpot -> {
+                    return DeliciousSpotResDto.fromEntity(deliciousSpot, bookmarkedDeliciousSpots.contains(deliciousSpot.getId()));
+                })
                 .toList();
 
         List<FestivalResDto> festivalDto = curation.getFestivals().stream()
-                .map(festival -> FestivalResDto.fromEntity(festival, false))
+                .map(festival -> {
+                    return FestivalResDto.fromEntity(festival, bookmarkedFestivals.contains(festival.getId()));
+                })
                 .toList();
 
         CreatorResDto creatorDto = CreatorResDto.fromEntity(curation.getCreator());

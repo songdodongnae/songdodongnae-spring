@@ -31,8 +31,10 @@ public class CurationService {
 
     public CurationResDto getUserCuration(Long userId, Long id) {
         Boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.CURATION, id);
+        Set<Long> bookmarkedDeliciousSpots = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.DELICIOUS_SPOT));
+        Set<Long> bookmarkedFestivals = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.FESTIVAL));
         Curation curationById = curationRepository.findCurationById(id);
-        CurationResDto curationResDto = CurationResDto.fromEntity(curationById, isBookmarked);
+        CurationResDto curationResDto = CurationResDto.fromEntity(curationById, bookmarkedDeliciousSpots, bookmarkedFestivals, isBookmarked);
         return curationResDto;
     }
 
@@ -73,13 +75,18 @@ public class CurationService {
     public CustomPage<CurationResDto> getAllUserCuration(Long userId, int currentPage, int pageSize) {
         List<Long> targetIdsByUserAndType = bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.CURATION);
         Set<Long> bookmarkedSet = new HashSet<>(targetIdsByUserAndType);
+        Set<Long> bookmarkedDeliciousSpots = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.DELICIOUS_SPOT));
+        Set<Long> bookmarkedFestivals = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.FESTIVAL));
 
         int offset = (currentPage - 1) * pageSize;
 
         List<Curation> curations = curationRepository.findAll(offset, pageSize);
         List<CurationResDto> curationsDto = curations.stream()
                 .map(curation -> {
-                    return CurationResDto.fromEntity(curation, bookmarkedSet.contains(curation.getId()));
+                    return CurationResDto.fromEntity(curation,
+                            bookmarkedDeliciousSpots,
+                            bookmarkedFestivals,
+                            bookmarkedSet.contains(curation.getId()));
                 })
                 .toList();
         long totalElements = curationRepository.countCuration();
