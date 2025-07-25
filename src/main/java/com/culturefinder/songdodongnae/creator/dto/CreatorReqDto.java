@@ -16,11 +16,14 @@ public class CreatorReqDto {
 
     private String description;
 
+    private String image;
+
     public Creator toEntity() {
         return Creator.builder()
                 .name(name)
                 .introduction(introduction)
                 .description(description)
+                .imageUrl(image)
                 .build();
     }
 }
