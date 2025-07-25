@@ -32,6 +32,31 @@ public class CurationResDto {
                 .toList();
 
         List<FestivalResDto> festivalDto = curation.getFestivals().stream()
+                .map((Festival festival) -> FestivalResDto.fromEntity(festival, false))
+                .toList();
+
+        CreatorResDto creatorDto = CreatorResDto.fromEntity(curation.getCreator());
+
+        return CurationResDto.builder()
+                .id(curation.getId())
+                .type(curation.getType())
+                .deliciousSpots(deliciousSpotDto)
+                .festivals(festivalDto)
+                .creator(creatorDto)
+                .createdAt(curation.getCreatedAt())
+                .updatedAt(curation.getUpdatedAt())
+                .title(curation.getTitle())
+                .description(curation.getDescription())
+                .imageUrl(curation.getImageUrl())
+                .build();
+    }
+
+    public static CurationResDto fromEntity(Curation curation, Boolean isBookmarked) {
+        List<DeliciousSpotResDto> deliciousSpotDto = curation.getDeliciousSpots().stream()
+                .map(DeliciousSpotResDto::fromEntity)
+                .toList();
+
+        List<FestivalResDto> festivalDto = curation.getFestivals().stream()
                 .map((Festival festival) -> FestivalResDto.fromEntity(festival, false)) // 수정 필요
                 .toList();
 
@@ -48,6 +73,7 @@ public class CurationResDto {
                 .title(curation.getTitle())
                 .description(curation.getDescription())
                 .imageUrl(curation.getImageUrl())
+                .isBookmarked(isBookmarked)
                 .build();
     }
 

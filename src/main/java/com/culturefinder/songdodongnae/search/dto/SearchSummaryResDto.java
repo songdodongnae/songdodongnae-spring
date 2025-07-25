@@ -9,6 +9,7 @@ import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import lombok.Builder;
 
 import java.util.List;
+import java.util.Set;
 
 @Builder
 public class SearchSummaryResDto {
@@ -25,13 +26,39 @@ public class SearchSummaryResDto {
             List<Curation> curations) {
 
         List<FestivalResDto> festivalDtos = festivals.stream()
-                .map((Festival festival) -> FestivalResDto.fromEntity(festival, false)) // 수정 필요
+                .map((Festival festival) -> FestivalResDto.fromEntity(festival, false))
                 .toList();
         List<DeliciousSpotResDto> deliciousSpotDtos = deliciousSpots.stream()
-                .map(DeliciousSpotResDto::fromEntity)
+                .map(deliciousSpot -> DeliciousSpotResDto.fromEntity(deliciousSpot, false))
                 .toList();
         List<CurationResDto> curationDtos = curations.stream()
-                .map(CurationResDto::fromEntity)
+                .map(curation -> CurationResDto.fromEntity(curation, false))
+                .toList();
+        return SearchSummaryResDto.builder()
+                .query(query)
+                .festivalResDtoList(festivalDtos)
+                .deliciousSpotResDtos(deliciousSpotDtos)
+                .curationResDtos(curationDtos)
+                .build();
+    }
+
+    public static SearchSummaryResDto from(
+            String query,
+            List<Festival> festivals,
+            List<DeliciousSpot> deliciousSpots,
+            List<Curation> curations,
+            Set<Long> deliciousSpotIds,
+            Set<Long> festivalIds,
+            Set<Long> curationIds) {
+
+        List<FestivalResDto> festivalDtos = festivals.stream()
+                .map(festival -> FestivalResDto.fromEntity(festival, festivalIds.contains(festival.getId())))
+                .toList();
+        List<DeliciousSpotResDto> deliciousSpotDtos = deliciousSpots.stream()
+                .map(deliciousSpot -> DeliciousSpotResDto.fromEntity(deliciousSpot, deliciousSpotIds.contains(deliciousSpot.getId())))
+                .toList();
+        List<CurationResDto> curationDtos = curations.stream()
+                .map(curation -> CurationResDto.fromEntity(curation, curationIds.contains(curation.getId())))
                 .toList();
         return SearchSummaryResDto.builder()
                 .query(query)

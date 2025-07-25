@@ -12,6 +12,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,8 +31,15 @@ public class SearchController {
     public ResponseEntity<ResponseContainer<SearchSummaryResDto>> getSearchSummary(
             @RequestParam @NotBlank(message = "검색어를 입력해주세요.") String query
     ) {
-        SearchSummaryResDto searchSummary = searchService.getSearchSummary(query);
-        return ResponseContainer.create(HttpStatus.OK, "요약 검색 성공", searchSummary);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            SearchSummaryResDto searchSummary = searchService.getSearchSummary(null, query);
+            return ResponseContainer.create(HttpStatus.OK, "요약 검색 성공", searchSummary);
+        } else {
+            long userId = Long.parseLong(authentication.getName());
+            SearchSummaryResDto searchSummary = searchService.getSearchSummary(userId, query);
+            return ResponseContainer.create(HttpStatus.OK, "요약 검색 성공", searchSummary);
+        }
     }
 
     @GetMapping("/festivals")
