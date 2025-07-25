@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.festival.service;
 
+import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
@@ -32,19 +33,32 @@ public class FestivalService {
     private final UserRepository userRepository;
     private final CreatorRepository creatorRepository;
 
-    public FestivalResDto createFestival(FestivalReqDto festivalReqDto, Long userId) {
+    public FestivalResDto createFestival(FestivalReqDto festivalReqDto) {
         Creator findCreator = creatorRepository.findByName(festivalReqDto.getCreatorName())
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
+
         Festival festival = FestivalReqDto.toEntity(festivalReqDto, findCreator);
         Festival savedFestival = festivalRepository.saveFestival(festival);
 
-        User findUser = userRepository.findById(userId)
-                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
-        boolean isBookmarked = bookmarkRepository.existsByUserAndFestival(findUser, savedFestival.getId());
-        return FestivalResDto.fromEntity(savedFestival, isBookmarked);
+        return FestivalResDto.fromEntity(savedFestival, false);
     }
 
-    public List<FestivalResDto> getFestivalsByYearAndMonth(int year, int month, Long userId) {
+    public List<FestivalResDto> getFestivalsByYearAndMonth(int year, int month) {
+
+        LocalDate startOfMonth = LocalDate.of(year, month, 1);
+        LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
+
+        List<Festival> findFestivalsByYearAndMonth = festivalRepository.findByYearAndMonth(startOfMonth, endOfMonth);
+
+        return findFestivalsByYearAndMonth.stream()
+                .map(festival -> FestivalResDto.fromEntity(
+                        festival,
+                        false
+                ))
+                .toList();
+    }
+
+    public List<FestivalResDto> getFestivalsUserByYearAndMonth(int year, int month, Long userId) {
 
         LocalDate startOfMonth = LocalDate.of(year, month, 1);
         LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
@@ -78,14 +92,47 @@ public class FestivalService {
 
     }
 
-    public FestivalResDto getFestival(Long id, Long userId) {
+    public CustomPage<FestivalResDto> getAllUserFestival(int currentPage, int pageSize, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
+        Set<Long> bookmarkedFestivalIds = bookmarkRepository.findBookmarkedFestivalIdsByUser(user);
+
+        int offset = (currentPage - 1) * pageSize;
+        List<FestivalResDto> festivals = festivalRepository.findAll(offset, pageSize).stream()
+                .map(festival -> FestivalResDto.fromEntity(festival, bookmarkedFestivalIds.contains(festival.getId())))
+                .toList();
+
+
+        Long totalElements = festivalRepository.countFestivals();
+
+        return CustomPage.of(
+                festivals,
+                currentPage,
+                pageSize,
+                totalElements
+        );
+
+    }
+
+    public FestivalResDto getFestival(Long id) {
         Festival findFestival = festivalRepository.findById(id);
         if (findFestival == null) {
             throw new CustomException(ENTITY_NOT_FOUND);
         }
-        User findUser = userRepository.findById(userId)
+
+        return FestivalResDto.fromEntity(findFestival, false);
+    }
+
+    public FestivalResDto getUserFestival(Long id, Long userId) {
+        Festival findFestival = festivalRepository.findById(id);
+        if (findFestival == null) {
+            throw new CustomException(ENTITY_NOT_FOUND);
+        }
+
+        userRepository.findById(userId)
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
-        boolean isBookmarked = bookmarkRepository.existsByUserAndFestival(findUser, findFestival.getId());
+        boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.FESTIVAL, findFestival.getId());
+
         return FestivalResDto.fromEntity(findFestival, isBookmarked);
     }
 
@@ -98,13 +145,10 @@ public class FestivalService {
         findFestival.getImageUrls().forEach(s3UploadService::deleteFile);
 
         festivalRepository.deleteFestival(id);
-        User findUser = userRepository.findById(userId)
-                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
-        boolean isBookmarked = bookmarkRepository.existsByUserAndFestival(findUser, findFestival.getId());
-        return FestivalResDto.fromEntity(findFestival, isBookmarked);
+        return FestivalResDto.fromEntity(findFestival, false);
     }
 
-    public FestivalResDto updateFestival(Long id, FestivalReqDto festivalReqDto, Long userId) {
+    public FestivalResDto updateFestival(Long id, FestivalReqDto festivalReqDto) {
         Festival findFestival = festivalRepository.findById(id);
         if (findFestival == null) {
             throw new CustomException(ENTITY_NOT_FOUND);
@@ -117,11 +161,6 @@ public class FestivalService {
         findFestival.getImageUrls().forEach(s3UploadService::deleteFile);
 
         findFestival.update(FestivalReqDto.toEntity(festivalReqDto, findCreator));
-        festivalRepository.saveFestival(findFestival);
-        festivalRepository.deleteFestival(id);
-        User findUser = userRepository.findById(userId)
-                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
-        boolean isBookmarked = bookmarkRepository.existsByUserAndFestival(findUser, findFestival.getId());
-        return FestivalResDto.fromEntity(findFestival, isBookmarked);
+        return FestivalResDto.fromEntity(findFestival, false);
     }
 }
