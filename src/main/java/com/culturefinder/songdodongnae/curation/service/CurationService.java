@@ -73,14 +73,19 @@ public class CurationService {
     public CurationResDto deleteCuration(Long userId, Long id) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-        if (user.getRole() != Role.ROLE_ADMIN) new CustomException(ErrorCode.FORBIDDEN);
+        if (user.getRole() != Role.ROLE_ADMIN) throw new CustomException(ErrorCode.FORBIDDEN);
 
-        Curation curation = curationRepository.deleteById(id);
-        if (curation.getImageUrl() != null) {
-            s3UploadService.deleteFile(curation.getImageUrl());
+        Curation curationById = curationRepository.findCurationById(id);
+        if(curationById == null) throw new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        curationRepository.deleteById(id);
+        if (curationById.getImageUrl() != null) {
+            s3UploadService.deleteFile(curationById.getImageUrl());
         }
 
-        return CurationResDto.fromEntity(curation);
+        bookmarkRepository.deleteBookmarkByTypeAndTargetId(BookmarkType.CURATION, id);
+
+        return CurationResDto.fromEntity(curationById);
     }
 
     public CustomPage<CurationResDto> getAllCuration(int currentPage, int pageSize) {

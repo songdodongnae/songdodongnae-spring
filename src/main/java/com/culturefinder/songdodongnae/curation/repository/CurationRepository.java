@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -29,10 +30,9 @@ public class CurationRepository {
         return curation;
     }
 
-    public Curation deleteById(Long id){
+    public void deleteById(Long id){
         Curation curation = findCurationById(id);
         em.remove(curation);
-        return curation;
     }
 
     public List<Curation> findAll() {

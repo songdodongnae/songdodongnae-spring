@@ -86,4 +86,9 @@ public class BookmarkRepository {
                 .executeUpdate();
     }
 
+    public void deleteBookmarkByTypeAndTargetId(BookmarkType bookmarkType, Long targetId) {
+        em.createQuery("DELETE FROM Bookmark b WHERE b.bookmarkType = :bookmarkType AND b.targetId = :targetId")
+                .setParameter("bookmarkType", bookmarkType)
+                .setParameter("targetId", targetId);
+    }
 }
