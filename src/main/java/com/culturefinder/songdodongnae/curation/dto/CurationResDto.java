@@ -5,6 +5,7 @@ import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -78,5 +79,10 @@ public class CurationResDto {
                 .imageUrl(curation.getImageUrl())
                 .isBookmarked(isBookmarked)
                 .build();
+    }
+
+    @JsonProperty("isBookmarked")
+    public boolean getIsBookmarked() {
+        return isBookmarked;
     }
 }
