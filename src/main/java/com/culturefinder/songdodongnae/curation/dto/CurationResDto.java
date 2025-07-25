@@ -50,8 +50,8 @@ public class CurationResDto {
     }
 
     public static CurationResDto fromEntity(Curation curation, Boolean isBookmarked) {
-        List<DeliciousSpotResponseDto> deliciousSpotDto = curation.getDeliciousSpots().stream()
-                .map(DeliciousSpotResponseDto::fromEntity)
+        List<DeliciousSpotResDto> deliciousSpotDto = curation.getDeliciousSpots().stream()
+                .map(DeliciousSpotResDto::fromEntity)
                 .toList();
 
         List<FestivalResDto> festivalDto = curation.getFestivals().stream()

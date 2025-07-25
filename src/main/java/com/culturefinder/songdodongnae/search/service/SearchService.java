@@ -4,7 +4,7 @@ import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
 import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
-import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResponseDto;
+import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
@@ -54,13 +54,13 @@ public class SearchService {
         );
     }
 
-    public CustomPage<DeliciousSpotResponseDto> searchDeliciousSpots(String keyword, int currentPage, int pageSize) {
+    public CustomPage<DeliciousSpotResDto> searchDeliciousSpots(String keyword, int currentPage, int pageSize) {
         int offset = (currentPage - 1) * pageSize;
 
         List<DeliciousSpot> deliciousSpotList = deliciousSpotRepository.searchDeliciousSpots(keyword, offset, pageSize);
         long totalElements = deliciousSpotRepository.countSearchDeliciousSpot(keyword);
-        List<DeliciousSpotResponseDto> dtos = deliciousSpotList.stream()
-                .map(DeliciousSpotResponseDto::fromEntity)
+        List<DeliciousSpotResDto> dtos = deliciousSpotList.stream()
+                .map(DeliciousSpotResDto::fromEntity)
                 .toList();
 
         return CustomPage.of(

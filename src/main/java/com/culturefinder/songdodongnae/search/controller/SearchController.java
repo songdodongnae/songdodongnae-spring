@@ -1,7 +1,7 @@
 package com.culturefinder.songdodongnae.search.controller;
 
 import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
-import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResponseDto;
+import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.search.dto.SearchSummaryResDto;
 import com.culturefinder.songdodongnae.search.service.SearchService;
@@ -50,12 +50,12 @@ public class SearchController {
 
     @GetMapping("/deliciousSpots")
     @Operation(summary = "맛집 검색", description = "검색어에 맞는 맛집을 페이지네이션하여 조회합니다.")
-    public ResponseEntity<ResponseContainer<CustomPage<DeliciousSpotResponseDto>>> searchDeliciousSpots(
+    public ResponseEntity<ResponseContainer<CustomPage<DeliciousSpotResDto>>> searchDeliciousSpots(
             @RequestParam String keyword,
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
-        CustomPage<DeliciousSpotResponseDto> result = searchService.searchDeliciousSpots(keyword, currentPage, pageSize);
+        CustomPage<DeliciousSpotResDto> result = searchService.searchDeliciousSpots(keyword, currentPage, pageSize);
         return ResponseContainer.create(
                 HttpStatus.OK,
                 "맛집 검색 성공",

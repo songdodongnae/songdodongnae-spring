@@ -64,11 +64,11 @@ public class DeliciousSpotController {
     @Operation(summary = "모든 맛집 조회", description = "모든 맛집을 조회합니다")
     @ApiResponse(responseCode = "200", description = "모든 맛집 조회 성공")
     @GetMapping
-    public ResponseEntity<ResponseContainer<CustomPage<DeliciousSpotResponseDto>>> getAllDeliciousSpots(
+    public ResponseEntity<ResponseContainer<CustomPage<DeliciousSpotResDto>>> getAllDeliciousSpots(
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
-        CustomPage<DeliciousSpotResponseDto> allDeliciousSpots = deliciousSpotService.getAllDeliciousSpots(currentPage, pageSize);
+        CustomPage<DeliciousSpotResDto> allDeliciousSpots = deliciousSpotService.getAllDeliciousSpots(currentPage, pageSize);
         return ResponseContainer.create(HttpStatus.OK, "모든 맛집 조회 성공", allDeliciousSpots);
     }
 
