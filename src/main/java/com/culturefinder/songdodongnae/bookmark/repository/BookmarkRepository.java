@@ -67,19 +67,6 @@ public class BookmarkRepository {
      
     }
 
-    public boolean existsByUserAndFestival(User user, Long festivalId) {
-        String jpql = "SELECT COUNT(b) FROM Bookmark b " +
-                "WHERE b.user = :user " +
-                "AND b.bookmarkType = :bookmarkType " +
-                "AND b.targetId = :festivalId";
-        Long count = em.createQuery(jpql, Long.class)
-                .setParameter("user", user)
-                .setParameter("bookmarkType", BookmarkType.FESTIVAL)
-                .setParameter("festivalId", festivalId)
-                .getSingleResult();
-        return count > 0;
-    }
-
     public Set<Long> findBookmarkedFestivalIdsByUser(User user) {
         String jpql = "SELECT b.targetId FROM Bookmark b " +
                 "WHERE b.user = :user " +

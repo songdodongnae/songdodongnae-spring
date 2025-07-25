@@ -31,9 +31,7 @@ public class FestivalController {
     @PostMapping
     public ResponseEntity<ResponseContainer<FestivalResDto>> createFestival(
             @Valid @RequestBody FestivalReqDto festivalReqDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = Long.parseLong(authentication.getName());
-        FestivalResDto dto = festivalService.createFestival(festivalReqDto, userId);
+        FestivalResDto dto = festivalService.createFestival(festivalReqDto);
         return ResponseContainer.create(HttpStatus.CREATED, "축제 생성 성공", dto);
     }
 
@@ -105,9 +103,7 @@ public class FestivalController {
     @PutMapping("/{id}")
     public ResponseEntity<ResponseContainer<FestivalResDto>> updateFestival(
             @PathVariable Long id, @Valid @RequestBody FestivalReqDto festivalReqDto)  {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = Long.parseLong(authentication.getName());
-        FestivalResDto dto = festivalService.updateFestival(id, festivalReqDto, userId);
+        FestivalResDto dto = festivalService.updateFestival(id, festivalReqDto);
         return ResponseContainer.create(HttpStatus.OK, "축제 수정 성공", dto);
     }
 
