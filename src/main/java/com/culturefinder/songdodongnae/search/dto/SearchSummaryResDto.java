@@ -25,7 +25,7 @@ public class SearchSummaryResDto {
             List<Curation> curations) {
 
         List<FestivalResDto> festivalDtos = festivals.stream()
-                .map(FestivalResDto::fromEntity)
+                .map((Festival festival) -> FestivalResDto.fromEntity(festival, false)) // 수정 필요
                 .toList();
         List<DeliciousSpotResDto> deliciousSpotDtos = deliciousSpots.stream()
                 .map(DeliciousSpotResDto::fromEntity)

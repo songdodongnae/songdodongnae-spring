@@ -20,7 +20,7 @@ public class ThumbnailResDto {
         return ThumbnailResDto.builder()
                 .id(festival.getId())
                 .title(festival.getTitle())
-                .imageUrl(festival.getImageUrl())
+                .imageUrl(festival.getThumbnailImageUrl())
                 .build();
     }
 

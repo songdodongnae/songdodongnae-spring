@@ -4,6 +4,7 @@ import com.culturefinder.songdodongnae.bookmark.domain.Bookmark;
 import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
+import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.utils.CustomPage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -11,14 +12,17 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 @Transactional
 @AllArgsConstructor
 public class BookmarkRepository {
 
-    @PersistenceContext private final EntityManager em;
+    @PersistenceContext
+    private final EntityManager em;
 
     public Bookmark createBookmark(Bookmark bookmark) {
         em.persist(bookmark);
@@ -60,11 +64,39 @@ public class BookmarkRepository {
                 .setParameter("targetId", targetId)
                 .getSingleResult();
         return count > 0;
+     
     }
+
+    public boolean existsByUserAndFestival(User user, Long festivalId) {
+        String jpql = "SELECT COUNT(b) FROM Bookmark b " +
+                "WHERE b.user = :user " +
+                "AND b.bookmarkType = :bookmarkType " +
+                "AND b.targetId = :festivalId";
+        Long count = em.createQuery(jpql, Long.class)
+                .setParameter("user", user)
+                .setParameter("bookmarkType", BookmarkType.FESTIVAL)
+                .setParameter("festivalId", festivalId)
+                .getSingleResult();
+        return count > 0;
+    }
+
+    public Set<Long> findBookmarkedFestivalIdsByUser(User user) {
+        String jpql = "SELECT b.targetId FROM Bookmark b " +
+                "WHERE b.user = :user " +
+                "AND b.bookmarkType = :bookmarkType";
+
+        List<Long> ids = em.createQuery(jpql, Long.class)
+                .setParameter("user", user)
+                .setParameter("bookmarkType", BookmarkType.FESTIVAL)
+                .getResultList();
+        return new HashSet<>(ids);
+    }
+
 
     public void deleteUserBookmarks(Long userId) {
         em.createQuery("DELETE FROM Bookmark b WHERE b.user.id = :userId")
-          .setParameter("userId", userId)
-          .executeUpdate();
+                .setParameter("userId", userId)
+                .executeUpdate();
     }
+
 }

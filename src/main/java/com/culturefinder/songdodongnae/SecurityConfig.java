@@ -33,7 +33,7 @@ public class SecurityConfig {
             "/api/curations/**",
             "/api/delicious-spots/**",
             "/api/users/**", // 개발용 코드
-//            "/**", // 개발용 코드
+            "/**" // 개발용 코드
     };
 
     @Bean

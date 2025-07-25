@@ -60,15 +60,15 @@ public class Festival {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    private String imageUrl;
-
-    @ManyToOne
-    @JoinColumn(name = "creator_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Creator creator;
 
+    private String thumbnailImageUrl;
 
-    @OneToMany(mappedBy = "festival", cascade = CascadeType.ALL)
-    private List<FestivalImage> festivalImages = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(name = "delicious_spot_image_urls",
+            joinColumns = @JoinColumn(name = "delicious_spot_id"))
+    private List<String> imageUrls;
 
     public void update(Festival festival) {
         this.title = festival.getTitle();
@@ -88,8 +88,8 @@ public class Festival {
         this.onelineDescription = festival.getOnelineDescription();
         this.createdAt = festival.getCreatedAt();
         this.updatedAt = festival.getUpdatedAt();
-        this.imageUrl = festival.getImageUrl();
-        this.festivalImages = festival.getFestivalImages();
+        this.thumbnailImageUrl = festival.getThumbnailImageUrl();
+        this.imageUrls = festival.getImageUrls();
     }
 
 }
