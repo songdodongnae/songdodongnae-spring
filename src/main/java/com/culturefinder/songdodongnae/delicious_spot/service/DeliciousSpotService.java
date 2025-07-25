@@ -59,6 +59,14 @@ public class DeliciousSpotService {
         if (findUser.getRole() != Role.ROLE_ADMIN) {
             throw new CustomException(FORBIDDEN);
         }
+        if (deliciousSpotReqDto.getThumbnailImageUrl() != null) {
+            s3UploadService.deleteFile(deliciousSpotReqDto.getThumbnailImageUrl());
+        }
+        if (deliciousSpotReqDto.getImageUrls() != null) {
+            for (String imageUrl : deliciousSpotReqDto.getImageUrls()) {
+                s3UploadService.deleteFile(imageUrl);
+            }
+        }
         DeliciousSpot updatedDeliciousSpot = deliciousSpotRepository.updateDeliciousSpot(id, deliciousSpotReqDto.toEntity());
         return DeliciousSpotResDto.fromEntity(updatedDeliciousSpot);
     }
@@ -79,12 +87,6 @@ public class DeliciousSpotService {
             }
         }
         deliciousSpotRepository.deleteDeliciousSpot(id);
-    }
-
-    public List<DeliciousSpotResDto> getAllDeliciousSpots() {
-        return deliciousSpotRepository.findAll().stream()
-                .map(DeliciousSpotResDto::fromEntity)
-                .toList();
     }
 
     public CustomPage<DeliciousSpotResDto> getAllDeliciousSpots(int currentPage, int pageSize) {
