@@ -8,6 +8,7 @@ import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
 import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
+import com.culturefinder.songdodongnae.s3.S3UploadService;
 import com.culturefinder.songdodongnae.user.domain.Role;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
@@ -27,6 +28,7 @@ public class CurationService {
 
     private final BookmarkRepository bookmarkRepository;
     private final UserRepository userRepository;
+    private final S3UploadService s3UploadService;
     private CurationRepository curationRepository;
 
     public CurationResDto getCuration(Long id) {
@@ -47,7 +49,6 @@ public class CurationService {
     public CurationResDto createCuration(Long userId, CurationReqDto curationReqDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-
         if (user.getRole() != Role.ROLE_ADMIN) new CustomException(ErrorCode.FORBIDDEN);
 
         Curation curation = curationReqDto.toEntity();
@@ -58,8 +59,11 @@ public class CurationService {
     public CurationResDto updateCuration(Long userId, Long id, CurationReqDto curationReqDto){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-
         if (user.getRole() != Role.ROLE_ADMIN) new CustomException(ErrorCode.FORBIDDEN);
+
+        if (curationReqDto.getImageUrl() != null) {
+            s3UploadService.deleteFile(curationReqDto.getImageUrl());
+        }
 
         Curation curation = curationRepository.findCurationById(id);
         curation.update(curationReqDto.toEntity());
@@ -69,10 +73,13 @@ public class CurationService {
     public CurationResDto deleteCuration(Long userId, Long id) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-
         if (user.getRole() != Role.ROLE_ADMIN) new CustomException(ErrorCode.FORBIDDEN);
 
         Curation curation = curationRepository.deleteById(id);
+        if (curation.getImageUrl() != null) {
+            s3UploadService.deleteFile(curation.getImageUrl());
+        }
+
         return CurationResDto.fromEntity(curation);
     }
 
