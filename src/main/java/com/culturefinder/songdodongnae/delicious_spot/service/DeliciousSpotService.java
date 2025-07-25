@@ -55,11 +55,11 @@ public class DeliciousSpotService {
                 .toList();
     }
 
-    public CustomPage<DeliciousSpotResponseDto> getAllDeliciousSpots(int currentPage, int pageSize) {
+    public CustomPage<DeliciousSpotResDto> getAllDeliciousSpots(int currentPage, int pageSize) {
         int offset = (currentPage - 1) * pageSize;
 
-        List<DeliciousSpotResponseDto> dtos = deliciousSpotRepository.findAll(offset, pageSize).stream()
-                .map(DeliciousSpotResponseDto::fromEntity)
+        List<DeliciousSpotResDto> dtos = deliciousSpotRepository.findAll(offset, pageSize).stream()
+                .map(DeliciousSpotResDto::fromEntity)
                 .toList();
         long totalElements = deliciousSpotRepository.countDeliciousSpot();
 
