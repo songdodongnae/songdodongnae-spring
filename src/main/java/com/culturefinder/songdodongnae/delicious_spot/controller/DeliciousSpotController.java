@@ -1,7 +1,7 @@
 package com.culturefinder.songdodongnae.delicious_spot.controller;
 
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
-import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResponseDto;
+import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
 import com.culturefinder.songdodongnae.delicious_spot.service.DeliciousSpotService;
 import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
@@ -27,28 +27,28 @@ public class DeliciousSpotController {
     @Operation(summary = "맛집 생성", description = "맛집을 생성합니다")
     @ApiResponse(responseCode = "200", description = "맛집 생성 성공")
     @PostMapping
-    public ResponseEntity<ResponseContainer<DeliciousSpotResponseDto>> createDeliciousSpot(
+    public ResponseEntity<ResponseContainer<DeliciousSpotResDto>> createDeliciousSpot(
             @Valid @RequestBody DeliciousSpotReqDto deliciousSpotReqDto) {
-        DeliciousSpotResponseDto dto = deliciousSpotService.createDeliciousSpot(deliciousSpotReqDto);
+        DeliciousSpotResDto dto = deliciousSpotService.createDeliciousSpot(deliciousSpotReqDto);
         return ResponseContainer.create(HttpStatus.CREATED, "맛집 생성 성공", dto);
     }
 
     @Operation(summary = "맛집 조회", description = "특정 ID의 맛집을 조회합니다")
     @ApiResponse(responseCode = "200", description = "맛집 조회 성공")
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseContainer<DeliciousSpotResponseDto>> readDeliciousSpot(
+    public ResponseEntity<ResponseContainer<DeliciousSpotResDto>> readDeliciousSpot(
             @PathVariable Long id) {
-        DeliciousSpotResponseDto dto = deliciousSpotService.getDeliciousSpotById(id);
+        DeliciousSpotResDto dto = deliciousSpotService.getDeliciousSpotById(id);
         return ResponseContainer.create(HttpStatus.OK, "맛집 조회 성공", dto);
     }
 
     @Operation(summary = "맛집 수정", description = "특정 ID의 맛집을 수정합니다")
     @ApiResponse(responseCode = "200", description = "맛집 수정 성공")
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseContainer<DeliciousSpotResponseDto>> updateDeliciousSpot(
+    public ResponseEntity<ResponseContainer<DeliciousSpotResDto>> updateDeliciousSpot(
             @PathVariable Long id,
             @Valid @RequestBody DeliciousSpotReqDto deliciousSpotReqDto) {
-        DeliciousSpotResponseDto dto = deliciousSpotService.updateDeliciousSpot(id, deliciousSpotReqDto);
+        DeliciousSpotResDto dto = deliciousSpotService.updateDeliciousSpot(id, deliciousSpotReqDto);
         return ResponseContainer.create(HttpStatus.OK, "맛집 수정 성공", dto);
     }
 
