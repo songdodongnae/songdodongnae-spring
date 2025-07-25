@@ -39,7 +39,8 @@ public class CurationController {
             return ResponseContainer.create(HttpStatus.OK, "큐레이션 모두 조회 성공", allCurations);
         } else {
             Long userId = Long.parseLong(authentication.getName());
-            curationService.getAllUserCuration(userId, currentPage, pageSize);
+            CustomPage<CurationResDto> allUserCuration = curationService.getAllUserCuration(userId, currentPage, pageSize);
+            return ResponseContainer.create(HttpStatus.OK, "큐레이션 모두 조회 성공", allUserCuration);
         }
     }
 
