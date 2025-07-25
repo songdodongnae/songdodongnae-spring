@@ -17,6 +17,8 @@ public class DeliciousSpotResDto {
 
     private String title;
 
+    private String creatorName;
+
     private double latitude;
 
     private double longitude;
@@ -68,6 +70,7 @@ public class DeliciousSpotResDto {
         return DeliciousSpotResDto.builder()
                 .id(deliciousSpot.getId())
                 .title(deliciousSpot.getTitle())
+                .creatorName(deliciousSpot.getCreator().getName())
                 .latitude(deliciousSpot.getLatitude())
                 .longitude(deliciousSpot.getLongitude())
                 .address(deliciousSpot.getAddress())

@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.delicious_spot.dto;
 
+import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -13,6 +14,8 @@ public class DeliciousSpotReqDto {
 
     @NotNull
     private String title;
+
+    private String creatorName;
 
     private double latitude;
 
@@ -51,9 +54,10 @@ public class DeliciousSpotReqDto {
 
     private String contact;
 
-    public DeliciousSpot toEntity() {
+    public DeliciousSpot toEntity(Creator creator) {
         return DeliciousSpot.builder()
-                .title(this.title)
+                .title(this.getTitle())
+                .creator(creator)
                 .latitude(this.latitude)
                 .longitude(this.longitude)
                 .address(this.address)

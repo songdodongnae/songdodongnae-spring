@@ -2,6 +2,8 @@ package com.culturefinder.songdodongnae.delicious_spot.service;
 
 import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
+import com.culturefinder.songdodongnae.creator.domain.Creator;
+import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
@@ -30,6 +32,7 @@ public class DeliciousSpotService {
     private final BookmarkRepository bookmarkRepository;
     private final S3UploadService s3UploadService;
     private final UserRepository userRepository;
+    private final CreatorRepository creatorRepository;
 
     public DeliciousSpotResDto createDeliciousSpot(DeliciousSpotReqDto deliciousSpotReqDto, Long userId) {
         User findUser = userRepository.findById(userId)
@@ -37,7 +40,10 @@ public class DeliciousSpotService {
         if (findUser.getRole() != Role.ROLE_ADMIN) {
             throw new CustomException(FORBIDDEN);
         }
-        DeliciousSpot deliciousSpot = deliciousSpotReqDto.toEntity();
+        Creator findCreator = creatorRepository.findByName(deliciousSpotReqDto.getCreatorName())
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
+
+        DeliciousSpot deliciousSpot = deliciousSpotReqDto.toEntity(findCreator);
         DeliciousSpot savedDeliciousSpot = deliciousSpotRepository.saveDeliciousSpot(deliciousSpot);
         return DeliciousSpotResDto.fromEntity(savedDeliciousSpot);
     }
@@ -67,7 +73,11 @@ public class DeliciousSpotService {
                 s3UploadService.deleteFile(imageUrl);
             }
         }
-        DeliciousSpot updatedDeliciousSpot = deliciousSpotRepository.updateDeliciousSpot(id, deliciousSpotReqDto.toEntity());
+
+        Creator findCreator = creatorRepository.findByName(deliciousSpotReqDto.getCreatorName())
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
+
+        DeliciousSpot updatedDeliciousSpot = deliciousSpotRepository.updateDeliciousSpot(id, deliciousSpotReqDto.toEntity(findCreator));
         return DeliciousSpotResDto.fromEntity(updatedDeliciousSpot);
     }
 
