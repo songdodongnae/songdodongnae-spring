@@ -48,6 +48,8 @@ public class DeliciousSpotResDto {
 
     private String contact;
 
+    private boolean isBookmarked;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -76,6 +78,33 @@ public class DeliciousSpotResDto {
                 .onelineDescription(deliciousSpot.getOnelineDescription())
                 .instagram(deliciousSpot.getInstagram())
                 .contact(deliciousSpot.getContact())
+                .createdAt(deliciousSpot.getCreatedAt())
+                .updatedAt(deliciousSpot.getUpdatedAt())
+                .thumbnailImageUrl(deliciousSpot.getThumbnailImageUrl())
+                .build();
+    }
+
+    public static DeliciousSpotResDto fromEntity(DeliciousSpot deliciousSpot, boolean isBookmarked) {
+        return DeliciousSpotResDto.builder()
+                .id(deliciousSpot.getId())
+                .title(deliciousSpot.getTitle())
+                .latitude(deliciousSpot.getLatitude())
+                .longitude(deliciousSpot.getLongitude())
+                .address(deliciousSpot.getAddress())
+                .price(deliciousSpot.getPrice())
+                .naverRating(deliciousSpot.getNaverRating())
+                .kakaoRating(deliciousSpot.getKakaoRating())
+                .startTime(deliciousSpot.getStartTime())
+                .endTime(deliciousSpot.getEndTime())
+                .timeDescription(deliciousSpot.getTimeDescription())
+                .waiting(deliciousSpot.getWaiting())
+                .parking(deliciousSpot.getParking())
+                .suggestionMenu(deliciousSpot.getSuggestionMenu())
+                .description(deliciousSpot.getDescription())
+                .onelineDescription(deliciousSpot.getOnelineDescription())
+                .instagram(deliciousSpot.getInstagram())
+                .contact(deliciousSpot.getContact())
+                .isBookmarked(isBookmarked)
                 .createdAt(deliciousSpot.getCreatedAt())
                 .updatedAt(deliciousSpot.getUpdatedAt())
                 .thumbnailImageUrl(deliciousSpot.getThumbnailImageUrl())
