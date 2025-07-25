@@ -6,6 +6,11 @@ import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.curation.dto.CurationReqDto;
 import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
 import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
+import com.culturefinder.songdodongnae.exception.CustomException;
+import com.culturefinder.songdodongnae.exception.ErrorCode;
+import com.culturefinder.songdodongnae.user.domain.Role;
+import com.culturefinder.songdodongnae.user.domain.User;
+import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import com.culturefinder.songdodongnae.utils.CustomPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +26,7 @@ import java.util.Set;
 public class CurationService {
 
     private final BookmarkRepository bookmarkRepository;
+    private final UserRepository userRepository;
     private CurationRepository curationRepository;
 
     public CurationResDto getCuration(Long id) {
@@ -38,19 +44,34 @@ public class CurationService {
         return curationResDto;
     }
 
-    public CurationResDto createCuration(CurationReqDto curationReqDto) {
+    public CurationResDto createCuration(Long userId, CurationReqDto curationReqDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        if (user.getRole() != Role.ROLE_ADMIN) new CustomException(ErrorCode.FORBIDDEN);
+
         Curation curation = curationReqDto.toEntity();
         Curation savedCuration = curationRepository.saveCuration(curation);
         return CurationResDto.fromEntity(savedCuration);
     }
 
-    public CurationResDto updateCuration(Long id, CurationReqDto curationReqDto){
+    public CurationResDto updateCuration(Long userId, Long id, CurationReqDto curationReqDto){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        if (user.getRole() != Role.ROLE_ADMIN) new CustomException(ErrorCode.FORBIDDEN);
+
         Curation curation = curationRepository.findCurationById(id);
         curation.update(curationReqDto.toEntity());
         return CurationResDto.fromEntity(curation);
     }
 
-    public CurationResDto deleteCuration(Long id) {
+    public CurationResDto deleteCuration(Long userId, Long id) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        if (user.getRole() != Role.ROLE_ADMIN) new CustomException(ErrorCode.FORBIDDEN);
+
         Curation curation = curationRepository.deleteById(id);
         return CurationResDto.fromEntity(curation);
     }
