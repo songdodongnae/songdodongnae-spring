@@ -16,8 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Tag(name = "DeliciousSpot API", description = "맛집 관련 API")
 @RestController
 @RequiredArgsConstructor
@@ -31,7 +29,9 @@ public class DeliciousSpotController {
     @PostMapping
     public ResponseEntity<ResponseContainer<DeliciousSpotResDto>> createDeliciousSpot(
             @Valid @RequestBody DeliciousSpotReqDto deliciousSpotReqDto) {
-        DeliciousSpotResDto dto = deliciousSpotService.createDeliciousSpot(deliciousSpotReqDto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+        DeliciousSpotResDto dto = deliciousSpotService.createDeliciousSpot(deliciousSpotReqDto, userId);
         return ResponseContainer.create(HttpStatus.CREATED, "맛집 생성 성공", dto);
     }
 
@@ -57,7 +57,9 @@ public class DeliciousSpotController {
     public ResponseEntity<ResponseContainer<DeliciousSpotResDto>> updateDeliciousSpot(
             @PathVariable Long id,
             @Valid @RequestBody DeliciousSpotReqDto deliciousSpotReqDto) {
-        DeliciousSpotResDto dto = deliciousSpotService.updateDeliciousSpot(id, deliciousSpotReqDto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+        DeliciousSpotResDto dto = deliciousSpotService.updateDeliciousSpot(id, deliciousSpotReqDto, userId);
         return ResponseContainer.create(HttpStatus.OK, "맛집 수정 성공", dto);
     }
 
@@ -66,7 +68,9 @@ public class DeliciousSpotController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseContainer<Object>> deleteDeliciousSpot(
             @PathVariable Long id) {
-        deliciousSpotService.deleteDeliciousSpot(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+        deliciousSpotService.deleteDeliciousSpot(id, userId);
         return ResponseContainer.create(HttpStatus.OK, "맛집 삭제 성공", null);
     }
 
