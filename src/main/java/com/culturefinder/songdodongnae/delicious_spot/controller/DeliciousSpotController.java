@@ -12,6 +12,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +40,14 @@ public class DeliciousSpotController {
     @GetMapping("/{id}")
     public ResponseEntity<ResponseContainer<DeliciousSpotResDto>> readDeliciousSpot(
             @PathVariable Long id) {
-        DeliciousSpotResDto dto = deliciousSpotService.getDeliciousSpotById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        DeliciousSpotResDto dto = null;
+        if (authentication == null) {
+            dto = deliciousSpotService.getDeliciousSpotById(id);
+        } else {
+            Long userId = Long.parseLong(authentication.getName());
+            dto = deliciousSpotService.getUserDeliciousSpot(userId, id);
+        }
         return ResponseContainer.create(HttpStatus.OK, "맛집 조회 성공", dto);
     }
 
@@ -68,8 +77,15 @@ public class DeliciousSpotController {
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
-        CustomPage<DeliciousSpotResDto> allDeliciousSpots = deliciousSpotService.getAllDeliciousSpots(currentPage, pageSize);
-        return ResponseContainer.create(HttpStatus.OK, "모든 맛집 조회 성공", allDeliciousSpots);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            CustomPage<DeliciousSpotResDto> deliciousSpots = deliciousSpotService.getAllDeliciousSpots(currentPage, pageSize);
+            return ResponseContainer.create(HttpStatus.OK, "모든 맛집 조회 성공", deliciousSpots);
+        } else {
+            Long userId = Long.parseLong(authentication.getName());
+            CustomPage<DeliciousSpotResDto> deliciousSpots = deliciousSpotService.getAllDeliciousSpots(userId, currentPage, pageSize);
+            return ResponseContainer.create(HttpStatus.OK, "사용자 맛집 조회 성공", deliciousSpots);
+        }
     }
 
 }

@@ -1,5 +1,7 @@
 package com.culturefinder.songdodongnae.delicious_spot.service;
 
+import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
+import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
@@ -18,6 +20,7 @@ import java.util.*;
 public class DeliciousSpotService {
 
     private final DeliciousSpotRepository deliciousSpotRepository;
+    private final BookmarkRepository bookmarkRepository;
     private final S3UploadService s3UploadService;
 
     public DeliciousSpotResDto createDeliciousSpot(DeliciousSpotReqDto deliciousSpotReqDto) {
@@ -29,6 +32,12 @@ public class DeliciousSpotService {
     public DeliciousSpotResDto getDeliciousSpotById(Long id) {
         DeliciousSpot deliciousSpot = deliciousSpotRepository.findDeliciousSpotById(id);
         return DeliciousSpotResDto.fromEntity(deliciousSpot);
+    }
+
+    public DeliciousSpotResDto getUserDeliciousSpot(Long userId, Long id) {
+        DeliciousSpot deliciousSpot = deliciousSpotRepository.findDeliciousSpotById(id);
+        boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.DELICIOUS_SPOT, id);
+        return DeliciousSpotResDto.fromEntity(deliciousSpot, isBookmarked);
     }
 
     public DeliciousSpotResDto updateDeliciousSpot(Long id, DeliciousSpotReqDto deliciousSpotReqDto) {
@@ -64,6 +73,27 @@ public class DeliciousSpotService {
         long totalElements = deliciousSpotRepository.countDeliciousSpot();
 
         return CustomPage.of(dtos, currentPage, pageSize, totalElements);
+    }
+
+    public CustomPage<DeliciousSpotResDto> getAllDeliciousSpots(Long userId, int currentPage, int pageSize) {
+        List<Long> deliciousSpotIds = bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.DELICIOUS_SPOT);
+        Set<Long> bookmarkedSet = new HashSet<>(deliciousSpotIds);
+
+        int offset = (currentPage - 1) * pageSize;
+
+        List<DeliciousSpot> deliciousSpots = deliciousSpotRepository.findAll(offset, pageSize);
+        List<DeliciousSpotResDto> deliciousSpotsDto = deliciousSpots.stream()
+                .map(deliciousSpot -> DeliciousSpotResDto.fromEntity(deliciousSpot, bookmarkedSet.contains(deliciousSpot.getId())))
+                .toList();
+        long totalElements = deliciousSpotRepository.countDeliciousSpot();
+
+        return CustomPage.of(
+                deliciousSpotsDto,
+                currentPage,
+                pageSize,
+                totalElements
+        );
+
     }
 
 }

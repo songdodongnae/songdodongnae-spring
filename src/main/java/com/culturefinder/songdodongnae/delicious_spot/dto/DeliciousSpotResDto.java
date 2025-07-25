@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.delicious_spot.dto;
 
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -57,6 +58,11 @@ public class DeliciousSpotResDto {
     private String thumbnailImageUrl;
 
     private List<String> imageUrls;
+
+    @JsonProperty("isBookmarked")
+    public boolean getIsBookmarked() {
+        return isBookmarked;
+    }
 
     public static DeliciousSpotResDto fromEntity(DeliciousSpot deliciousSpot) {
         return DeliciousSpotResDto.builder()
