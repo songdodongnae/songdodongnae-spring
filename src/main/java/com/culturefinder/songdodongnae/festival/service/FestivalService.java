@@ -44,7 +44,22 @@ public class FestivalService {
         return FestivalResDto.fromEntity(savedFestival, isBookmarked);
     }
 
-    public List<FestivalResDto> getFestivalsByYearAndMonth(int year, int month, Long userId) {
+    public List<FestivalResDto> getFestivalsByYearAndMonth(int year, int month) {
+
+        LocalDate startOfMonth = LocalDate.of(year, month, 1);
+        LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
+
+        List<Festival> findFestivalsByYearAndMonth = festivalRepository.findByYearAndMonth(startOfMonth, endOfMonth);
+
+        return findFestivalsByYearAndMonth.stream()
+                .map(festival -> FestivalResDto.fromEntity(
+                        festival,
+                        false
+                ))
+                .toList();
+    }
+
+    public List<FestivalResDto> getFestivalsUserByYearAndMonth(int year, int month, Long userId) {
 
         LocalDate startOfMonth = LocalDate.of(year, month, 1);
         LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
@@ -78,7 +93,38 @@ public class FestivalService {
 
     }
 
-    public FestivalResDto getFestival(Long id, Long userId) {
+    public CustomPage<FestivalResDto> getAllUserFestival(int currentPage, int pageSize, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
+        Set<Long> bookmarkedFestivalIds = bookmarkRepository.findBookmarkedFestivalIdsByUser(user);
+
+        int offset = (currentPage - 1) * pageSize;
+        List<FestivalResDto> festivals = festivalRepository.findAll(offset, pageSize).stream()
+                .map(festival -> FestivalResDto.fromEntity(festival, bookmarkedFestivalIds.contains(festival.getId())))
+                .toList();
+
+
+        Long totalElements = festivalRepository.countFestivals();
+
+        return CustomPage.of(
+                festivals,
+                currentPage,
+                pageSize,
+                totalElements
+        );
+
+    }
+
+    public FestivalResDto getFestival(Long id) {
+        Festival findFestival = festivalRepository.findById(id);
+        if (findFestival == null) {
+            throw new CustomException(ENTITY_NOT_FOUND);
+        }
+
+        return FestivalResDto.fromEntity(findFestival, false);
+    }
+
+    public FestivalResDto getUserFestival(Long id, Long userId) {
         Festival findFestival = festivalRepository.findById(id);
         if (findFestival == null) {
             throw new CustomException(ENTITY_NOT_FOUND);
