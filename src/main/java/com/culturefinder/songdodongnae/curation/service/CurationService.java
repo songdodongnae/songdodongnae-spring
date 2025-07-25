@@ -1,5 +1,7 @@
 package com.culturefinder.songdodongnae.curation.service;
 
+import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
+import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.curation.dto.CurationReqDto;
 import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
@@ -16,11 +18,20 @@ import java.util.List;
 @Service
 public class CurationService {
 
+    private final BookmarkRepository bookmarkRepository;
     private CurationRepository curationRepository;
 
     public CurationResDto getCuration(Long id) {
         Curation curationById = curationRepository.findCurationById(id);
         CurationResDto curationResDto = CurationResDto.fromEntity(curationById);
+        return curationResDto;
+    }
+
+    public CurationResDto getUserCuration(Long userId, Long id) {
+        Boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.CURATION, id);
+        Curation curationById = curationRepository.findCurationById(id);
+        CurationResDto curationResDto = CurationResDto.fromEntity(curationById);
+        curationResDto.setIsBookmarked(isBookmarked);
         return curationResDto;
     }
 

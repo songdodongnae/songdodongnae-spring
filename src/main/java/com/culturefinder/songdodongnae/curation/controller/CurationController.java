@@ -12,6 +12,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "curation API", description = "큐레이션 관련 API")
@@ -37,8 +39,16 @@ public class CurationController {
     @ApiResponse(responseCode = "200", description = "큐레이션 조회 성공")
     @GetMapping("/{id}")
     public ResponseEntity<ResponseContainer<CurationResDto>> getCuration(@PathVariable Long id) {
-        CurationResDto curationResDto = curationService.getCuration(id);
-        return ResponseContainer.create(HttpStatus.OK, "큐레이션 조회 성공", curationResDto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null) {
+            CurationResDto curationResDto = curationService.getCuration(id);
+            return ResponseContainer.create(HttpStatus.OK, "큐레이션 조회 성공", curationResDto);
+        } else {
+            Long userId = Long.parseLong(authentication.getName());
+            CurationResDto userCuration = curationService.getUserCuration(userId, id);
+            return ResponseContainer.create(HttpStatus.OK, "큐레이션 조회 성공", userCuration);
+        }
     }
 
     @Operation(summary = "큐레이션 생성", description = "큐레이션 하나를 생성합니다.")

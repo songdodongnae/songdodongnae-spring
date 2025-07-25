@@ -51,6 +51,17 @@ public class BookmarkRepository {
                 .getResultList();
     }
 
+    public Boolean existsByUserAndTypeAndTargetId(Long userId, BookmarkType bookmarkType, Long targetId) {
+        Long count = em.createQuery("SELECT count(b) FROM Bookmark b " +
+                        "WHERE b.user.id = :userId AND b.bookmarkType = :bookmarkType " +
+                        "AND b.targetId = :targetId", Long.class)
+                .setParameter("userId", userId)
+                .setParameter("bookmarkType", bookmarkType)
+                .setParameter("targetId", targetId)
+                .getSingleResult();
+        return count > 0;
+    }
+
     public void deleteUserBookmarks(Long userId) {
         em.createQuery("DELETE FROM Bookmark b WHERE b.user.id = :userId")
           .setParameter("userId", userId)

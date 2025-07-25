@@ -5,6 +5,7 @@ import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResponseDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import lombok.Builder;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ public class CurationResDto {
     private String title;
     private String description;
     private String imageUrl;
+    @Setter
+    private Boolean isBookmarked;
 
     public static CurationResDto fromEntity(Curation curation) {
         List<DeliciousSpotResponseDto> deliciousSpotDto = curation.getDeliciousSpots().stream()
