@@ -2,8 +2,9 @@ package com.culturefinder.songdodongnae.delicious_spot.service;
 
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
-import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResponseDto;
+import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
+import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.s3.S3UploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,20 +20,20 @@ public class DeliciousSpotService {
     private final DeliciousSpotRepository deliciousSpotRepository;
     private final S3UploadService s3UploadService;
 
-    public DeliciousSpotResponseDto createDeliciousSpot(DeliciousSpotReqDto deliciousSpotReqDto) {
+    public DeliciousSpotResDto createDeliciousSpot(DeliciousSpotReqDto deliciousSpotReqDto) {
         DeliciousSpot deliciousSpot = deliciousSpotReqDto.toEntity();
         DeliciousSpot savedDeliciousSpot = deliciousSpotRepository.saveDeliciousSpot(deliciousSpot);
-        return DeliciousSpotResponseDto.fromEntity(savedDeliciousSpot);
+        return DeliciousSpotResDto.fromEntity(savedDeliciousSpot);
     }
 
-    public DeliciousSpotResponseDto getDeliciousSpotById(Long id) {
+    public DeliciousSpotResDto getDeliciousSpotById(Long id) {
         DeliciousSpot deliciousSpot = deliciousSpotRepository.findDeliciousSpotById(id);
-        return DeliciousSpotResponseDto.fromEntity(deliciousSpot);
+        return DeliciousSpotResDto.fromEntity(deliciousSpot);
     }
 
-    public DeliciousSpotResponseDto updateDeliciousSpot(Long id, DeliciousSpotReqDto deliciousSpotReqDto) {
+    public DeliciousSpotResDto updateDeliciousSpot(Long id, DeliciousSpotReqDto deliciousSpotReqDto) {
         DeliciousSpot updatedDeliciousSpot = deliciousSpotRepository.updateDeliciousSpot(id, deliciousSpotReqDto.toEntity());
-        return DeliciousSpotResponseDto.fromEntity(updatedDeliciousSpot);
+        return DeliciousSpotResDto.fromEntity(updatedDeliciousSpot);
     }
 
     public void deleteDeliciousSpot(Long id) {
@@ -48,10 +49,21 @@ public class DeliciousSpotService {
         deliciousSpotRepository.deleteDeliciousSpot(id);
     }
 
-    public List<DeliciousSpotResponseDto> getAllDeliciousSpots() {
+    public List<DeliciousSpotResDto> getAllDeliciousSpots() {
         return deliciousSpotRepository.findAll().stream()
-                .map(DeliciousSpotResponseDto::fromEntity)
+                .map(DeliciousSpotResDto::fromEntity)
                 .toList();
+    }
+
+    public CustomPage<DeliciousSpotResDto> getAllDeliciousSpots(int currentPage, int pageSize) {
+        int offset = (currentPage - 1) * pageSize;
+
+        List<DeliciousSpotResDto> dtos = deliciousSpotRepository.findAll(offset, pageSize).stream()
+                .map(DeliciousSpotResDto::fromEntity)
+                .toList();
+        long totalElements = deliciousSpotRepository.countDeliciousSpot();
+
+        return CustomPage.of(dtos, currentPage, pageSize, totalElements);
     }
 
 }

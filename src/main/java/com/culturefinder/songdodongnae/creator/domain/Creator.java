@@ -1,6 +1,8 @@
 package com.culturefinder.songdodongnae.creator.domain;
 
 import com.culturefinder.songdodongnae.curation.domain.Curation;
+import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
+import com.culturefinder.songdodongnae.festival.domain.Festival;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,6 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @Getter
@@ -38,16 +42,20 @@ public class Creator {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToOne
-    @JoinColumn(name = "curation_id")
-    private Curation curation;
+    @OneToMany(mappedBy = "creator")
+    private List<Curation> curations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "creator")
+    private List<Festival> festivals = new ArrayList<>();
+
+    @OneToMany(mappedBy = "creator")
+    private List<DeliciousSpot> deliciousSpots = new ArrayList<>();
 
     public void update(Creator entity) {
         this.name = entity.getName();
         this.introduction = entity.getIntroduction();
         this.description = entity.getDescription();
         this.imageUrl = entity.getImageUrl();
-        this.curation = entity.getCuration();
     }
 }
 

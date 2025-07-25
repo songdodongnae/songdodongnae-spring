@@ -5,6 +5,7 @@ import com.culturefinder.songdodongnae.creator.dto.CreatorReqDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorThumbnailResDto;
 import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
+import com.culturefinder.songdodongnae.s3.S3UploadService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,11 +15,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class CreatorService {
 
     private final CreatorRepository creatorRepository;
+    private final S3UploadService s3UploadService;
 
     public CreatorResDto createCreator(CreatorReqDto creatorReqDto) {
         Creator creator = creatorReqDto.toEntity();
@@ -36,7 +39,6 @@ public class CreatorService {
         return CreatorResDto.fromEntity(creatorRepository.findById(id));
     }
 
-    @Transactional
     public CreatorResDto updateCreator(Long id, CreatorReqDto creatorReqDto) {
         Creator findCreator = creatorRepository.findById(id);
         findCreator.update(creatorReqDto.toEntity());
@@ -45,6 +47,7 @@ public class CreatorService {
 
     public CreatorResDto deleteCreator(Long id) {
         Creator findCreator = creatorRepository.findById(id);
+        s3UploadService.deleteFile(findCreator.getImageUrl());
         creatorRepository.deleteById(id);
         return CreatorResDto.fromEntity(findCreator);
     }

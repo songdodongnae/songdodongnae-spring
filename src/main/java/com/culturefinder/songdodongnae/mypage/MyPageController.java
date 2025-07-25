@@ -1,5 +1,7 @@
 package com.culturefinder.songdodongnae.mypage;
 
+import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
+import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,8 +37,14 @@ public class MyPageController {
     @Operation(summary = "북마크 조회", description = "북마크 타입별로 조회합니다.")
     @ApiResponse(responseCode = "200", description = "북마크 조회 성공")
     @GetMapping("/bookmark/{type}")
-    public ResponseEntity<ResponseContainer<List<ThumbnailResDto>>> getPostByType(@PathVariable String type) {
-        List<ThumbnailResDto> dto = myPageService.getPostByType(type.toUpperCase());
+    public ResponseEntity<ResponseContainer<CustomPage<ThumbnailResDto>>> getPostByType(
+            @PathVariable BookmarkType bookmarkType,
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+        CustomPage<ThumbnailResDto> dto = myPageService.getPostByType(userId, bookmarkType, currentPage, pageSize);
         return ResponseContainer.create(HttpStatus.OK, "북마크 조회 성공", dto);
     }
 
