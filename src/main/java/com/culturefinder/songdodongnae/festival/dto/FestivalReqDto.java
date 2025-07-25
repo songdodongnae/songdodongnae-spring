@@ -51,7 +51,7 @@ public class FestivalReqDto {
     private String mainImage;
     private List<String> images;
 
-    public static Festival toEntity(FestivalReqDto festivalReqDto, Creator creator, String mainImageUrl, List<String> imageUrls) {
+    public static Festival toEntity(FestivalReqDto festivalReqDto, Creator creator) {
         return Festival.builder()
                 .title(festivalReqDto.title)
                 .startDate(festivalReqDto.startDate)
@@ -69,8 +69,8 @@ public class FestivalReqDto {
                 .description(festivalReqDto.description)
                 .onelineDescription(festivalReqDto.onelineDescription)
                 .creator(creator)
-                .thumbnailImageUrl(mainImageUrl)
-                .imageUrls(imageUrls)
+                .thumbnailImageUrl(festivalReqDto.mainImage)
+                .imageUrls(festivalReqDto.images)
                 .build();
     }
 }

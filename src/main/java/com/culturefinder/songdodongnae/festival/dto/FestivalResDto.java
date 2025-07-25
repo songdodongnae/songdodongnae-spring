@@ -1,7 +1,6 @@
 package com.culturefinder.songdodongnae.festival.dto;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
-import com.culturefinder.songdodongnae.festival.domain.FestivalImage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
@@ -57,7 +56,7 @@ public class FestivalResDto {
 
     private String imageUrl;
 
-    private List<FestivalImage> festivalImages;
+    private List<String> festivalImages;
 
     @JsonProperty("isBookmarked")
     public boolean getIsBookmarked() {
@@ -86,8 +85,8 @@ public class FestivalResDto {
                 .onelineDescription(festival.getOnelineDescription())
                 .createdAt(festival.getCreatedAt())
                 .updatedAt(festival.getUpdatedAt())
-                .imageUrl(festival.getImageUrl())
-                .festivalImages(festival.getFestivalImages())
+                .imageUrl(festival.getThumbnailImageUrl())
+                .festivalImages(festival.getImageUrls())
                 .build();
     }
 
