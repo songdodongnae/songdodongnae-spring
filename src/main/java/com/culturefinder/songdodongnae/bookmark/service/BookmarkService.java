@@ -8,12 +8,8 @@ import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
-import com.culturefinder.songdodongnae.utils.CustomPage;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service
@@ -23,7 +19,7 @@ public class BookmarkService {
     private final BookmarkRepository bookmarkRepository;
     private final UserRepository userRepository;
 
-    public Bookmark createBookmark(BookmarkReqDto bookmarkReqDto, Long userId) {
+    public BookmarkResDto createBookmark(BookmarkReqDto bookmarkReqDto, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
         if (bookmarkReqDto.getTargetId() == null) {
@@ -36,15 +32,20 @@ public class BookmarkService {
                 .targetId(bookmarkReqDto.getTargetId())
                 .build();
         bookmarkRepository.createBookmark(bookmark);
-        return bookmark;
+        return BookmarkResDto.fromEntity(bookmark);
     }
 
-    public Bookmark findBookmarkById(Long id) {
-        return bookmarkRepository.findBookmarkById(id);
-    }
+    public BookmarkResDto deleteBookmark(Long id, Long userId) {
+        Bookmark bookmarkById = bookmarkRepository.findBookmarkById(id)
+                        .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
 
-    public Bookmark deleteBookmark(Long id) {
-        return bookmarkRepository.deleteBookmark(id);
+        if (!bookmarkById.getUser().getId().equals(userId)) {
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
+
+        bookmarkRepository.deleteBookmark(id);
+
+        return BookmarkResDto.fromEntity(bookmarkById);
     }
 
 }

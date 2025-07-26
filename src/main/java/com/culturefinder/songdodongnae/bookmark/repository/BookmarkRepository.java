@@ -8,12 +8,14 @@ import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.utils.CustomPage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jdk.dynalink.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -29,21 +31,14 @@ public class BookmarkRepository {
         return bookmark;
     }
 
-    public Bookmark findBookmarkById(Long id) {
+    public Optional<Bookmark> findBookmarkById(Long id) {
         Bookmark bookmark = em.find(Bookmark.class, id);
-        if (bookmark == null) {
-            throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
-        }
-        return bookmark;
+        return Optional.ofNullable(bookmark);
     }
 
-    public Bookmark deleteBookmark(Long id) {
+    public void deleteBookmark(Long id) {
         Bookmark bookmark = em.find(Bookmark.class, id);
-        if (bookmark == null) {
-            throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
-        }
         em.remove(bookmark);
-        return bookmark;
     }
 
     public List<Long> findTargetIdsByUserAndType(Long userId, BookmarkType bookmarkType) {
