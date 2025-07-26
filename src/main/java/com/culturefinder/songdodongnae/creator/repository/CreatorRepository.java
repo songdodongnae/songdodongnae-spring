@@ -27,8 +27,9 @@ public class CreatorRepository {
         return em.createQuery("SELECT f from Creator f", Creator.class).getResultList();
     }
 
-    public Creator findById(Long id) {
-        return em.find(Creator.class, id);
+    public Optional<Creator> findById(Long id) {
+        Creator creator = em.find(Creator.class, id);
+        return Optional.ofNullable(creator);
     }
 
     public Optional<Creator> findByName(String name) {
@@ -43,7 +44,7 @@ public class CreatorRepository {
     }
 
     public void deleteById(Long id) {
-        Creator findCreator = findById(id);
+        Creator findCreator = em.find(Creator.class, id);
         if (findCreator != null) em.remove(findCreator);
     }
 }
