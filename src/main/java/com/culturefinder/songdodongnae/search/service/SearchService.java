@@ -4,6 +4,7 @@ import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
+import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
@@ -99,7 +100,7 @@ public class SearchService {
         List<DeliciousSpot> deliciousSpotList = deliciousSpotRepository.searchDeliciousSpots(keyword, offset, pageSize);
         long totalElements = deliciousSpotRepository.countSearchDeliciousSpot(keyword);
         List<DeliciousSpotResDto> dtos = deliciousSpotList.stream()
-                .map(DeliciousSpotResDto::fromEntity)
+                .map(deliciousSpot -> DeliciousSpotResDto.fromEntity(deliciousSpot, false))
                 .toList();
 
         return CustomPage.of(
@@ -131,13 +132,13 @@ public class SearchService {
         );
     }
 
-    public CustomPage<CurationResDto> searchCuration(String keyword, int currentPage, int pageSize) {
+    public CustomPage<CurationThumbnailResDto> searchCuration(String keyword, int currentPage, int pageSize) {
         int offset = (currentPage - 1) * pageSize;
 
         List<Curation> curations  = curationRepository.searchCurations(keyword, offset, pageSize);
         long totalElements = curationRepository.countSearchCurations(keyword);
-        List<CurationResDto> dtos = curations.stream()
-                .map(CurationResDto::fromEntity)
+        List<CurationThumbnailResDto> dtos = curations.stream()
+                .map(curation -> CurationThumbnailResDto.fromEntity(curation, false))
                 .toList();
 
         return CustomPage.of(
@@ -148,7 +149,7 @@ public class SearchService {
         );
     }
 
-    public CustomPage<CurationResDto> searchUserCuration(String keyword, int currentPage, int pageSize, Long userId) {
+    public CustomPage<CurationThumbnailResDto> searchUserCuration(String keyword, int currentPage, int pageSize, Long userId) {
         if(userId == null) throw new CustomException(ErrorCode.ENTITY_NOT_FOUND);
 
         int offset = (currentPage - 1) * pageSize;
@@ -157,8 +158,8 @@ public class SearchService {
         long totalElements = curationRepository.countSearchCurations(keyword);
         Set<Long> curationIds = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.CURATION));
 
-        List<CurationResDto> dtos = curations.stream()
-                .map(curation -> CurationResDto.fromEntity(curation, curationIds.contains(curation.getId())))
+        List<CurationThumbnailResDto> dtos = curations.stream()
+                .map(curation -> CurationThumbnailResDto.fromEntity(curation, curationIds.contains(curation.getId())))
                 .toList();
 
         return CustomPage.of(

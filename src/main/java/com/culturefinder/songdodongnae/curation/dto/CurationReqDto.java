@@ -1,7 +1,9 @@
 package com.culturefinder.songdodongnae.curation.dto;
 
+import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.creator.dto.CreatorReqDto;
 import com.culturefinder.songdodongnae.curation.domain.Curation;
+import com.culturefinder.songdodongnae.curation.domain.CurationType;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
@@ -16,14 +18,14 @@ import java.util.stream.IntStream;
 public class CurationReqDto {
 
     @NotNull
-    private Integer type;
+    private CurationType type;
 
     private List<DeliciousSpotReqDto> deliciousSpots = new ArrayList<>();
 
     private List<FestivalReqDto> festivals = new ArrayList<>();
 
     @NotNull
-    private CreatorReqDto creator;
+    private String creatorName;
 
     @NotNull
     private String title;
@@ -33,7 +35,7 @@ public class CurationReqDto {
 
     private String imageUrl;
 
-    public Curation toEntity() {
+    public Curation toEntity(Creator creator) {
         return Curation.builder()
                 .type(this.type)
                 .deliciousSpots(
@@ -43,12 +45,10 @@ public class CurationReqDto {
                 )
                 .festivals(
                         this.festivals.stream()
-                                .map(festival -> FestivalReqDto.toEntity(festival, null)) // 수정 필요
+                                .map(festival -> FestivalReqDto.toEntity(festival, null))
                                 .toList()
                 )
-                .creator(
-                        this.creator != null ? this.creator.toEntity() :null
-                )
+                .creator(creator)
                 .title(this.title)
                 .description(this.description)
                 .imageUrl(this.imageUrl)

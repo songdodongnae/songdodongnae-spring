@@ -42,13 +42,16 @@ public class Creator {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY,
+            orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Curation> curations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY,
+            orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Festival> festivals = new ArrayList<>();
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY,
+            orphanRemoval = true, cascade = CascadeType.ALL)
     private List<DeliciousSpot> deliciousSpots = new ArrayList<>();
 
     public void update(Creator entity) {

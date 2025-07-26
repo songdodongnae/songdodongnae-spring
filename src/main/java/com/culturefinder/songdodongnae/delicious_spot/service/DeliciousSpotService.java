@@ -45,12 +45,12 @@ public class DeliciousSpotService {
 
         DeliciousSpot deliciousSpot = deliciousSpotReqDto.toEntity(findCreator);
         DeliciousSpot savedDeliciousSpot = deliciousSpotRepository.saveDeliciousSpot(deliciousSpot);
-        return DeliciousSpotResDto.fromEntity(savedDeliciousSpot);
+        return DeliciousSpotResDto.fromEntity(savedDeliciousSpot, false);
     }
 
     public DeliciousSpotResDto getDeliciousSpotById(Long id) {
         DeliciousSpot deliciousSpot = deliciousSpotRepository.findDeliciousSpotById(id);
-        return DeliciousSpotResDto.fromEntity(deliciousSpot);
+        return DeliciousSpotResDto.fromEntity(deliciousSpot, false);
     }
 
     public DeliciousSpotResDto getUserDeliciousSpot(Long userId, Long id) {
@@ -78,7 +78,7 @@ public class DeliciousSpotService {
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
 
         DeliciousSpot updatedDeliciousSpot = deliciousSpotRepository.updateDeliciousSpot(id, deliciousSpotReqDto.toEntity(findCreator));
-        return DeliciousSpotResDto.fromEntity(updatedDeliciousSpot);
+        return DeliciousSpotResDto.fromEntity(updatedDeliciousSpot, false);
     }
 
     public void deleteDeliciousSpot(Long id, Long userId) {
@@ -104,7 +104,7 @@ public class DeliciousSpotService {
         int offset = (currentPage - 1) * pageSize;
 
         List<DeliciousSpotResDto> dtos = deliciousSpotRepository.findAll(offset, pageSize).stream()
-                .map(DeliciousSpotResDto::fromEntity)
+                .map(deleteDeliciousSpot -> DeliciousSpotResDto.fromEntity(deleteDeliciousSpot, false))
                 .toList();
         long totalElements = deliciousSpotRepository.countDeliciousSpot();
 

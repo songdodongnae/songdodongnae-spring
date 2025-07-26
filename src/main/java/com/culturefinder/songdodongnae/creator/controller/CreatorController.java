@@ -4,8 +4,7 @@ import com.culturefinder.songdodongnae.creator.dto.CreatorReqDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorThumbnailResDto;
 import com.culturefinder.songdodongnae.creator.service.CreatorService;
-import com.culturefinder.songdodongnae.exception.CustomException;
-import com.culturefinder.songdodongnae.exception.ErrorCode;
+import com.culturefinder.songdodongnae.user.service.AuthService;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,8 +13,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,14 +24,13 @@ import java.util.List;
 public class CreatorController {
 
     private final CreatorService creatorService;
+    private final AuthService authService;
 
     @Operation(summary = "크리에이터 생성", description = "크리에이터를 생성합니다.")
     @ApiResponse(responseCode = "201", description = "크리에이터 생성 성공")
     @PostMapping
     public ResponseEntity<ResponseContainer<CreatorResDto>> createCreator(@Valid @RequestBody CreatorReqDto creatorReqDto) {
-        Authentication authentication = isAuthenticatedUser();
-
-        Long userId = Long.parseLong(authentication.getName());
+        Long userId = authService.getAuthenticatedUserId();
         CreatorResDto dto = creatorService.createCreator(creatorReqDto, userId);
         return ResponseContainer.create(HttpStatus.OK, "크리에이터 생성 성공", dto);
     }
@@ -59,9 +55,8 @@ public class CreatorController {
     @ApiResponse(responseCode = "200", description = "크리에이터 수정 성공")
     @PutMapping("/{id}")
     public ResponseEntity<ResponseContainer<CreatorResDto>> updateCreator(@PathVariable Long id,@Valid @RequestBody CreatorReqDto creatorReqDto) {
-        Authentication authentication = isAuthenticatedUser();
+        Long userId = authService.getAuthenticatedUserId();
 
-        Long userId = Long.parseLong(authentication.getName());
         CreatorResDto dto = creatorService.updateCreator(id, creatorReqDto, userId);
         return ResponseContainer.create(HttpStatus.OK, "크리에이터 수정 성공", dto);
     }
@@ -70,21 +65,10 @@ public class CreatorController {
     @ApiResponse(responseCode = "200", description = "크리에이터 삭제 성공")
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseContainer<CreatorResDto>> deleteCreator(@PathVariable Long id) {
+        Long userId = authService.getAuthenticatedUserId();
 
-        Authentication authentication = isAuthenticatedUser();
-
-        Long userId = Long.parseLong(authentication.getName());
         CreatorResDto dto = creatorService.deleteCreator(id, userId);
         return ResponseContainer.create(HttpStatus.OK, "크리에이터 삭제 성공", dto);
     }
 
-    private static Authentication isAuthenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAuthenticatedUser = authentication != null &&
-                authentication.isAuthenticated() &&
-                !(authentication.getPrincipal() instanceof String &&
-                        authentication.getPrincipal().equals("anonymousUser"));
-        if(!isAuthenticatedUser) throw new CustomException(ErrorCode.FORBIDDEN);
-        return authentication;
-    }
 }

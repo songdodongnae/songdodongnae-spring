@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.search.controller;
 
 import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
+import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.search.dto.SearchSummaryResDto;
@@ -96,14 +97,14 @@ public class SearchController {
 
     @GetMapping("/curations")
     @Operation(summary = "큐레이션 검색", description = "검색어에 맞는 큐레이션을 페이지네이션하여 조회합니다.")
-    public ResponseEntity<ResponseContainer<CustomPage<CurationResDto>>> searchCurations(
+    public ResponseEntity<ResponseContainer<CustomPage<CurationThumbnailResDto>>> searchCurations(
             @RequestParam String keyword,
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            CustomPage<CurationResDto> result = searchService.searchCuration(keyword, currentPage, pageSize);
+            CustomPage<CurationThumbnailResDto> result = searchService.searchCuration(keyword, currentPage, pageSize);
             return ResponseContainer.create(
                     HttpStatus.OK,
                     "큐레이션 검색 성공",
@@ -111,7 +112,7 @@ public class SearchController {
             );
         } else {
             Long userId = Long.parseLong(authentication.getName());
-            CustomPage<CurationResDto> result = searchService.searchUserCuration(keyword, currentPage, pageSize, userId);
+            CustomPage<CurationThumbnailResDto> result = searchService.searchUserCuration(keyword, currentPage, pageSize, userId);
             return ResponseContainer.create(
                     HttpStatus.OK,
                     "큐레이션 검색 성공",
