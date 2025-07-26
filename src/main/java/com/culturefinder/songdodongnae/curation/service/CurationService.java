@@ -76,14 +76,14 @@ public class CurationService {
         if (user.getRole() != Role.ROLE_ADMIN) throw new CustomException(ErrorCode.FORBIDDEN);
 
         Curation curationById = curationRepository.findCurationById(id);
-        if(curationById == null) throw new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+        if(curationById == null) throw new CustomException(ErrorCode.ENTITY_NOT_FOUND);
+        bookmarkRepository.deleteBookmarkByTypeAndTargetId(BookmarkType.CURATION, id);
+
 
         curationRepository.deleteById(id);
         if (curationById.getImageUrl() != null) {
             s3UploadService.deleteFile(curationById.getImageUrl());
         }
-
-        bookmarkRepository.deleteBookmarkByTypeAndTargetId(BookmarkType.CURATION, id);
 
         return CurationResDto.fromEntity(curationById);
     }
