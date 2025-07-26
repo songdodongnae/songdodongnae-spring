@@ -90,4 +90,14 @@ public class DeliciousSpotRepository {
                 .getSingleResult();
     }
 
+    public List<DeliciousSpot> findTop3DeliciousSpot(String query) {
+        return em.createQuery("SELECT d FROM DeliciousSpot d " +
+                                "WHERE Lower(d.title) LIKE :query " +
+                                "ORDER BY d.createdAt DESC",
+                        DeliciousSpot.class)
+                .setParameter("query", "%" + query.toLowerCase() + "%")
+                .setMaxResults(3)
+                .getResultList();
+    }
+
 }

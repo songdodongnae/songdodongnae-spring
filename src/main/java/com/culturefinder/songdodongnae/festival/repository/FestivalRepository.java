@@ -89,4 +89,14 @@ public class FestivalRepository {
                 .getSingleResult();
     }
 
+    public List<Festival> findTop3Festival(String query) {
+        return em.createQuery("SELECT f FROM Festival f " +
+                                "WHERE Lower(f.title) LIKE :query " +
+                                "ORDER BY f.createdAt DESC",
+                        Festival.class)
+                .setParameter("query", "%" + query.toLowerCase() + "%")
+                .setMaxResults(3)
+                .getResultList();
+    }
+
 }

@@ -78,4 +78,14 @@ public class CurationRepository {
                 .getSingleResult();
     }
 
+    public List<Curation> findTop3Curation(String query) {
+        return em.createQuery("SELECT c FROM Curation c " +
+                                "WHERE Lower(c.title) LIKE :query " +
+                                "ORDER BY c.createdAt DESC",
+                        Curation.class)
+                .setParameter("query", "%" + query.toLowerCase() + "%")
+                .setMaxResults(3)
+                .getResultList();
+    }
+
 }
