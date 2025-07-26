@@ -7,6 +7,7 @@ import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
+import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotThumbnailResDto;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.user.domain.Role;
@@ -35,11 +36,7 @@ public class DeliciousSpotService {
     private final CreatorRepository creatorRepository;
 
     public DeliciousSpotResDto createDeliciousSpot(DeliciousSpotReqDto deliciousSpotReqDto, Long userId) {
-        User findUser = userRepository.findById(userId)
-                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
-        if (findUser.getRole() != Role.ROLE_ADMIN) {
-            throw new CustomException(FORBIDDEN);
-        }
+        isAdmin(userId);
         Creator findCreator = creatorRepository.findByName(deliciousSpotReqDto.getCreatorName())
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
 
@@ -49,45 +46,81 @@ public class DeliciousSpotService {
     }
 
     public DeliciousSpotResDto getDeliciousSpotById(Long id) {
-        DeliciousSpot deliciousSpot = deliciousSpotRepository.findDeliciousSpotById(id);
+        DeliciousSpot deliciousSpot = deliciousSpotRepository.findById(id)
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
         return DeliciousSpotResDto.fromEntity(deliciousSpot, false);
     }
 
     public DeliciousSpotResDto getUserDeliciousSpot(Long userId, Long id) {
-        DeliciousSpot deliciousSpot = deliciousSpotRepository.findDeliciousSpotById(id);
+        DeliciousSpot deliciousSpot = deliciousSpotRepository.findById(id)
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
         boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.DELICIOUS_SPOT, id);
         return DeliciousSpotResDto.fromEntity(deliciousSpot, isBookmarked);
     }
 
+    public CustomPage<DeliciousSpotThumbnailResDto> getAllDeliciousSpots(int currentPage, int pageSize) {
+        int offset = (currentPage - 1) * pageSize;
+        long totalElements = deliciousSpotRepository.countDeliciousSpot();
+
+        List<DeliciousSpotThumbnailResDto> dtos = deliciousSpotRepository.findAll(offset, pageSize).stream()
+                .map(deliciousSpot -> DeliciousSpotThumbnailResDto.fromEntity(deliciousSpot,
+                        deliciousSpot.getCreator().getName(),
+                        false))
+                .toList();
+
+        return CustomPage.of(dtos, currentPage, pageSize, totalElements);
+    }
+
+    public CustomPage<DeliciousSpotThumbnailResDto> getUserAllDeliciousSpots(Long userId, int currentPage, int pageSize) {
+        List<Long> deliciousSpotIds = bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.DELICIOUS_SPOT);
+        Set<Long> bookmarkedSet = new HashSet<>(deliciousSpotIds);
+
+        int offset = (currentPage - 1) * pageSize;
+        long totalElements = deliciousSpotRepository.countDeliciousSpot();
+
+        List<DeliciousSpotThumbnailResDto> deliciousSpotsDto =  deliciousSpotRepository.findAll(offset, pageSize).stream()
+                .map(deliciousSpot -> DeliciousSpotThumbnailResDto.fromEntity(deliciousSpot,
+                        deliciousSpot.getCreator().getName(),
+                        bookmarkedSet.contains(deliciousSpot.getId())))
+                .toList();
+
+        return CustomPage.of(
+                deliciousSpotsDto,
+                currentPage,
+                pageSize,
+                totalElements
+        );
+
+    }
+
     public DeliciousSpotResDto updateDeliciousSpot(Long id, DeliciousSpotReqDto deliciousSpotReqDto, Long userId) {
-        User findUser = userRepository.findById(userId)
+        isAdmin(userId);
+
+        DeliciousSpot findDeliciousSpot = deliciousSpotRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ENTITY_NOT_FOUND));
+        Creator findCreator = creatorRepository.findByName(deliciousSpotReqDto.getCreatorName())
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
-        if (findUser.getRole() != Role.ROLE_ADMIN) {
-            throw new CustomException(FORBIDDEN);
-        }
-        if (deliciousSpotReqDto.getThumbnailImageUrl() != null) {
+
+        if (findDeliciousSpot.getThumbnailImageUrl() != null) {
             s3UploadService.deleteFile(deliciousSpotReqDto.getThumbnailImageUrl());
         }
-        if (deliciousSpotReqDto.getImageUrls() != null) {
+        if (findDeliciousSpot.getImageUrls() != null) {
             for (String imageUrl : deliciousSpotReqDto.getImageUrls()) {
                 s3UploadService.deleteFile(imageUrl);
             }
         }
 
-        Creator findCreator = creatorRepository.findByName(deliciousSpotReqDto.getCreatorName())
-                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
+        findDeliciousSpot.updateDeliciousSpot(deliciousSpotReqDto.toEntity(findCreator));
 
-        DeliciousSpot updatedDeliciousSpot = deliciousSpotRepository.updateDeliciousSpot(id, deliciousSpotReqDto.toEntity(findCreator));
-        return DeliciousSpotResDto.fromEntity(updatedDeliciousSpot, false);
+        return DeliciousSpotResDto.fromEntity(findDeliciousSpot, false);
     }
 
     public void deleteDeliciousSpot(Long id, Long userId) {
-        User findUser = userRepository.findById(userId)
+        isAdmin(userId);
+
+        DeliciousSpot deliciousSpot = deliciousSpotRepository.findById(id)
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
-        if (findUser.getRole() != Role.ROLE_ADMIN) {
-            throw new CustomException(FORBIDDEN);
-        }
-        DeliciousSpot deliciousSpot = deliciousSpotRepository.findDeliciousSpotById(id);
+
         if (deliciousSpot.getThumbnailImageUrl() != null) {
             s3UploadService.deleteFile(deliciousSpot.getThumbnailImageUrl());
         }
@@ -97,39 +130,17 @@ public class DeliciousSpotService {
             }
         }
         bookmarkRepository.deleteBookmarkByTypeAndTargetId(BookmarkType.DELICIOUS_SPOT, deliciousSpot.getId());
+
         deliciousSpotRepository.deleteDeliciousSpot(id);
     }
 
-    public CustomPage<DeliciousSpotResDto> getAllDeliciousSpots(int currentPage, int pageSize) {
-        int offset = (currentPage - 1) * pageSize;
 
-        List<DeliciousSpotResDto> dtos = deliciousSpotRepository.findAll(offset, pageSize).stream()
-                .map(deleteDeliciousSpot -> DeliciousSpotResDto.fromEntity(deleteDeliciousSpot, false))
-                .toList();
-        long totalElements = deliciousSpotRepository.countDeliciousSpot();
-
-        return CustomPage.of(dtos, currentPage, pageSize, totalElements);
-    }
-
-    public CustomPage<DeliciousSpotResDto> getAllDeliciousSpots(Long userId, int currentPage, int pageSize) {
-        List<Long> deliciousSpotIds = bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.DELICIOUS_SPOT);
-        Set<Long> bookmarkedSet = new HashSet<>(deliciousSpotIds);
-
-        int offset = (currentPage - 1) * pageSize;
-
-        List<DeliciousSpot> deliciousSpots = deliciousSpotRepository.findAll(offset, pageSize);
-        List<DeliciousSpotResDto> deliciousSpotsDto = deliciousSpots.stream()
-                .map(deliciousSpot -> DeliciousSpotResDto.fromEntity(deliciousSpot, bookmarkedSet.contains(deliciousSpot.getId())))
-                .toList();
-        long totalElements = deliciousSpotRepository.countDeliciousSpot();
-
-        return CustomPage.of(
-                deliciousSpotsDto,
-                currentPage,
-                pageSize,
-                totalElements
-        );
-
+    private void isAdmin(Long userId) {
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
+        if (findUser.getRole() != Role.ROLE_ADMIN) {
+            throw new CustomException(FORBIDDEN);
+        }
     }
 
 }

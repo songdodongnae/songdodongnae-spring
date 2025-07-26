@@ -73,7 +73,7 @@ public class DeliciousSpot {
             joinColumns = @JoinColumn(name = "delicious_spot_id"))
     private List<String> imageUrls;
 
-    public DeliciousSpot updateDeliciousSpot(DeliciousSpot deliciousSpot) {
+    public void updateDeliciousSpot(DeliciousSpot deliciousSpot) {
         this.title = deliciousSpot.getTitle();
         this.latitude = deliciousSpot.getLatitude();
         this.longitude = deliciousSpot.getLongitude();
@@ -92,7 +92,6 @@ public class DeliciousSpot {
         this.instagram = deliciousSpot.getInstagram();
         this.contact = deliciousSpot.getContact();
         this.thumbnailImageUrl = deliciousSpot.getThumbnailImageUrl();
-        return this;
     }
 
 }
