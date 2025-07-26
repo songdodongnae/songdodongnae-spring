@@ -13,6 +13,7 @@ public enum ErrorCode {
     FORBIDDEN(403, "접근 권한이 없습니다."),
 
     // 404 NOT_FOUND 잘못된 리소스 접근
+    FORBIDDEN(403, "접근 권한이 없습니다."),
     RESOURCE_NOT_FOUND(404, "리소스를 찾을 수 없습니다."),
     ENTITY_NOT_FOUND(404, "엔티티를 찾을 수 없습니다."),
 

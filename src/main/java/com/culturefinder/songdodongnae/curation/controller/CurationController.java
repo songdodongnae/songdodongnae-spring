@@ -3,6 +3,8 @@ package com.culturefinder.songdodongnae.curation.controller;
 import com.culturefinder.songdodongnae.curation.dto.CurationReqDto;
 import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
 import com.culturefinder.songdodongnae.curation.service.CurationService;
+import com.culturefinder.songdodongnae.exception.CustomException;
+import com.culturefinder.songdodongnae.exception.ErrorCode;
 import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.SpringSecurityCoreVersion;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,7 +67,11 @@ public class CurationController {
     @ApiResponse(responseCode = "200", description = "큐레이션 생성 성공")
     @PostMapping
     public ResponseEntity<ResponseContainer<CurationResDto>> createCuration(@Valid @RequestBody CurationReqDto curationReqDto) {
-        CurationResDto curationResDto = curationService.createCuration(curationReqDto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null) throw new CustomException(ErrorCode.ENTITY_NOT_FOUND);
+        long userId = Long.parseLong(authentication.getName());
+
+        CurationResDto curationResDto = curationService.createCuration(userId, curationReqDto);
         return ResponseContainer.create(HttpStatus.CREATED, "큐레이션 생성 성공", curationResDto);
     }
 
@@ -72,7 +79,11 @@ public class CurationController {
     @ApiResponse(responseCode = "200", description = "큐레이션 수정 성공")
     @PutMapping("/{id}")
     public ResponseEntity<ResponseContainer<CurationResDto>> updateCuration(@PathVariable Long id, @Valid @RequestBody CurationReqDto curationReqDto){
-        CurationResDto curationResDto = curationService.updateCuration(id, curationReqDto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null) throw new CustomException(ErrorCode.ENTITY_NOT_FOUND);
+        long userId = Long.parseLong(authentication.getName());
+
+        CurationResDto curationResDto = curationService.updateCuration(userId, id, curationReqDto);
         return ResponseContainer.create(HttpStatus.OK, "큐레이션 수정 성공", curationResDto);
     }
 
@@ -80,7 +91,11 @@ public class CurationController {
     @ApiResponse(responseCode = "200", description = "큐레이션 삭제 성공")
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseContainer<CurationResDto>> deleteCuration(@PathVariable Long id){
-        CurationResDto curationResDto = curationService.deleteCuration(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null) throw new CustomException(ErrorCode.ENTITY_NOT_FOUND);
+        long userId = Long.parseLong(authentication.getName());
+
+        CurationResDto curationResDto = curationService.deleteCuration(userId, id);
         return ResponseContainer.create(HttpStatus.OK, "큐레이션 삭제 성공", curationResDto);
     }
 }
