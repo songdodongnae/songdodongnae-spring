@@ -36,7 +36,7 @@ public class CurationReqDto {
                 .type(this.type)
                 .deliciousSpots(
                         this.deliciousSpots.stream()
-                                .map(DeliciousSpotReqDto::toEntity)
+                                .map(deliciousSpot -> deliciousSpot.toEntity(null))
                                 .toList()
                 )
                 .festivals(

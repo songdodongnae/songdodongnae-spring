@@ -2,10 +2,16 @@ package com.culturefinder.songdodongnae.delicious_spot.service;
 
 import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
+import com.culturefinder.songdodongnae.creator.domain.Creator;
+import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
+import com.culturefinder.songdodongnae.exception.CustomException;
+import com.culturefinder.songdodongnae.user.domain.Role;
+import com.culturefinder.songdodongnae.user.domain.User;
+import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.s3.S3UploadService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+
+import static com.culturefinder.songdodongnae.exception.ErrorCode.ENTITY_NOT_FOUND;
+import static com.culturefinder.songdodongnae.exception.ErrorCode.FORBIDDEN;
 
 @Service
 @Transactional
@@ -22,9 +31,19 @@ public class DeliciousSpotService {
     private final DeliciousSpotRepository deliciousSpotRepository;
     private final BookmarkRepository bookmarkRepository;
     private final S3UploadService s3UploadService;
+    private final UserRepository userRepository;
+    private final CreatorRepository creatorRepository;
 
-    public DeliciousSpotResDto createDeliciousSpot(DeliciousSpotReqDto deliciousSpotReqDto) {
-        DeliciousSpot deliciousSpot = deliciousSpotReqDto.toEntity();
+    public DeliciousSpotResDto createDeliciousSpot(DeliciousSpotReqDto deliciousSpotReqDto, Long userId) {
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
+        if (findUser.getRole() != Role.ROLE_ADMIN) {
+            throw new CustomException(FORBIDDEN);
+        }
+        Creator findCreator = creatorRepository.findByName(deliciousSpotReqDto.getCreatorName())
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
+
+        DeliciousSpot deliciousSpot = deliciousSpotReqDto.toEntity(findCreator);
         DeliciousSpot savedDeliciousSpot = deliciousSpotRepository.saveDeliciousSpot(deliciousSpot);
         return DeliciousSpotResDto.fromEntity(savedDeliciousSpot);
     }
@@ -40,12 +59,34 @@ public class DeliciousSpotService {
         return DeliciousSpotResDto.fromEntity(deliciousSpot, isBookmarked);
     }
 
-    public DeliciousSpotResDto updateDeliciousSpot(Long id, DeliciousSpotReqDto deliciousSpotReqDto) {
-        DeliciousSpot updatedDeliciousSpot = deliciousSpotRepository.updateDeliciousSpot(id, deliciousSpotReqDto.toEntity());
+    public DeliciousSpotResDto updateDeliciousSpot(Long id, DeliciousSpotReqDto deliciousSpotReqDto, Long userId) {
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
+        if (findUser.getRole() != Role.ROLE_ADMIN) {
+            throw new CustomException(FORBIDDEN);
+        }
+        if (deliciousSpotReqDto.getThumbnailImageUrl() != null) {
+            s3UploadService.deleteFile(deliciousSpotReqDto.getThumbnailImageUrl());
+        }
+        if (deliciousSpotReqDto.getImageUrls() != null) {
+            for (String imageUrl : deliciousSpotReqDto.getImageUrls()) {
+                s3UploadService.deleteFile(imageUrl);
+            }
+        }
+
+        Creator findCreator = creatorRepository.findByName(deliciousSpotReqDto.getCreatorName())
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
+
+        DeliciousSpot updatedDeliciousSpot = deliciousSpotRepository.updateDeliciousSpot(id, deliciousSpotReqDto.toEntity(findCreator));
         return DeliciousSpotResDto.fromEntity(updatedDeliciousSpot);
     }
 
-    public void deleteDeliciousSpot(Long id) {
+    public void deleteDeliciousSpot(Long id, Long userId) {
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
+        if (findUser.getRole() != Role.ROLE_ADMIN) {
+            throw new CustomException(FORBIDDEN);
+        }
         DeliciousSpot deliciousSpot = deliciousSpotRepository.findDeliciousSpotById(id);
         if (deliciousSpot.getThumbnailImageUrl() != null) {
             s3UploadService.deleteFile(deliciousSpot.getThumbnailImageUrl());
@@ -55,13 +96,8 @@ public class DeliciousSpotService {
                 s3UploadService.deleteFile(imageUrl);
             }
         }
+        bookmarkRepository.deleteBookmarkByTypeAndTargetId(BookmarkType.DELICIOUS_SPOT, deliciousSpot.getId());
         deliciousSpotRepository.deleteDeliciousSpot(id);
-    }
-
-    public List<DeliciousSpotResDto> getAllDeliciousSpots() {
-        return deliciousSpotRepository.findAll().stream()
-                .map(DeliciousSpotResDto::fromEntity)
-                .toList();
     }
 
     public CustomPage<DeliciousSpotResDto> getAllDeliciousSpots(int currentPage, int pageSize) {
