@@ -2,6 +2,7 @@ package com.culturefinder.songdodongnae.search.dto;
 
 import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
+import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
@@ -17,7 +18,7 @@ public class SearchSummaryResDto {
     String query;
     List<FestivalResDto> festivalResDtoList;
     List<DeliciousSpotResDto> deliciousSpotResDtos;
-    List<CurationResDto> curationResDtos;
+    List<CurationThumbnailResDto> curationResDtos;
 
     public static SearchSummaryResDto from(
             String query,
@@ -31,8 +32,8 @@ public class SearchSummaryResDto {
         List<DeliciousSpotResDto> deliciousSpotDtos = deliciousSpots.stream()
                 .map(deliciousSpot -> DeliciousSpotResDto.fromEntity(deliciousSpot, false))
                 .toList();
-        List<CurationResDto> curationDtos = curations.stream()
-                .map(curation -> CurationResDto.fromEntity(curation, false))
+        List<CurationThumbnailResDto> curationDtos = curations.stream()
+                .map(curation -> CurationThumbnailResDto.fromEntity(curation, false))
                 .toList();
         return SearchSummaryResDto.builder()
                 .query(query)
@@ -57,8 +58,8 @@ public class SearchSummaryResDto {
         List<DeliciousSpotResDto> deliciousSpotDtos = deliciousSpots.stream()
                 .map(deliciousSpot -> DeliciousSpotResDto.fromEntity(deliciousSpot, deliciousSpotIds.contains(deliciousSpot.getId())))
                 .toList();
-        List<CurationResDto> curationDtos = curations.stream()
-                .map(curation -> CurationResDto.fromEntity(curation, curationIds.contains(curation.getId())))
+        List<CurationThumbnailResDto> curationDtos = curations.stream()
+                .map(curation -> CurationThumbnailResDto.fromEntity(curation, curationIds.contains(curation.getId())))
                 .toList();
         return SearchSummaryResDto.builder()
                 .query(query)

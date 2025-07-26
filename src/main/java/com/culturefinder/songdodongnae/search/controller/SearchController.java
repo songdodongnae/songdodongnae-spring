@@ -1,10 +1,11 @@
 package com.culturefinder.songdodongnae.search.controller;
 
-import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
-import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
-import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
+import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
+import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotThumbnailResDto;
+import com.culturefinder.songdodongnae.festival.dto.FestivalThumbnailResDto;
 import com.culturefinder.songdodongnae.search.dto.SearchSummaryResDto;
 import com.culturefinder.songdodongnae.search.service.SearchService;
+import com.culturefinder.songdodongnae.user.service.AuthService;
 import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,8 +13,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,18 +24,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class SearchController {
 
     private final SearchService searchService;
+    private final AuthService authService;
 
     @GetMapping("/summary")
     @Operation(summary = "통합 검색", description = "검색어에 맞는 모든 것을 조회합니다.")
     public ResponseEntity<ResponseContainer<SearchSummaryResDto>> getSearchSummary(
             @RequestParam @NotBlank(message = "검색어를 입력해주세요.") String query
     ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
+        if (!authService.isAuthenticatedUser()) {
             SearchSummaryResDto searchSummary = searchService.getSearchSummary(null, query);
             return ResponseContainer.create(HttpStatus.OK, "요약 검색 성공", searchSummary);
         } else {
-            long userId = Long.parseLong(authentication.getName());
+            Long userId = authService.getAuthenticatedUserId();
             SearchSummaryResDto searchSummary = searchService.getSearchSummary(userId, query);
             return ResponseContainer.create(HttpStatus.OK, "요약 검색 성공", searchSummary);
         }
@@ -44,22 +43,21 @@ public class SearchController {
 
     @GetMapping("/festivals")
     @Operation(summary = "축제 검색", description = "검색어에 맞는 축제를 페이지네이션하여 조회합니다.")
-    public ResponseEntity<ResponseContainer<CustomPage<FestivalResDto>>> searchFestivals(
+    public ResponseEntity<ResponseContainer<CustomPage<FestivalThumbnailResDto>>> searchFestivals(
             @RequestParam String keyword,
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            CustomPage<FestivalResDto> result = searchService.searchFestivals(keyword, currentPage, pageSize);
+        if (!authService.isAuthenticatedUser()) {
+            CustomPage<FestivalThumbnailResDto> result = searchService.searchFestivals(keyword, currentPage, pageSize);
             return ResponseContainer.create(
                     HttpStatus.OK,
                     "축제 검색 성공",
                     result
             );
         } else {
-            long userId = Long.parseLong(authentication.getName());
-            CustomPage<FestivalResDto> result = searchService.searchUserFestivals(keyword, currentPage, pageSize, userId);
+            Long userId = authService.getAuthenticatedUserId();
+            CustomPage<FestivalThumbnailResDto> result = searchService.searchUserFestivals(keyword, currentPage, pageSize, userId);
             return ResponseContainer.create(
                     HttpStatus.OK,
                     "축제 검색 성공",
@@ -70,22 +68,21 @@ public class SearchController {
 
     @GetMapping("/deliciousSpots")
     @Operation(summary = "맛집 검색", description = "검색어에 맞는 맛집을 페이지네이션하여 조회합니다.")
-    public ResponseEntity<ResponseContainer<CustomPage<DeliciousSpotResDto>>> searchDeliciousSpots(
+    public ResponseEntity<ResponseContainer<CustomPage<DeliciousSpotThumbnailResDto>>> searchDeliciousSpots(
             @RequestParam String keyword,
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            CustomPage<DeliciousSpotResDto> result = searchService.searchDeliciousSpots(keyword, currentPage, pageSize);
+        if (!authService.isAuthenticatedUser()) {
+            CustomPage<DeliciousSpotThumbnailResDto> result = searchService.searchDeliciousSpots(keyword, currentPage, pageSize);
             return ResponseContainer.create(
                     HttpStatus.OK,
                     "맛집 검색 성공",
                     result
             );
         } else {
-            Long userId = Long.parseLong(authentication.getName());
-            CustomPage<DeliciousSpotResDto> result = searchService.searchUserDeliciousSpots(keyword, currentPage, pageSize, userId);
+            Long userId = authService.getAuthenticatedUserId();
+            CustomPage<DeliciousSpotThumbnailResDto> result = searchService.searchUserDeliciousSpots(keyword, currentPage, pageSize, userId);
             return ResponseContainer.create(
                     HttpStatus.OK,
                     "맛집 검색 성공",
@@ -96,22 +93,21 @@ public class SearchController {
 
     @GetMapping("/curations")
     @Operation(summary = "큐레이션 검색", description = "검색어에 맞는 큐레이션을 페이지네이션하여 조회합니다.")
-    public ResponseEntity<ResponseContainer<CustomPage<CurationResDto>>> searchCurations(
+    public ResponseEntity<ResponseContainer<CustomPage<CurationThumbnailResDto>>> searchCurations(
             @RequestParam String keyword,
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            CustomPage<CurationResDto> result = searchService.searchCuration(keyword, currentPage, pageSize);
+        if (!authService.isAuthenticatedUser()) {
+            CustomPage<CurationThumbnailResDto> result = searchService.searchCuration(keyword, currentPage, pageSize);
             return ResponseContainer.create(
                     HttpStatus.OK,
                     "큐레이션 검색 성공",
                     result
             );
         } else {
-            Long userId = Long.parseLong(authentication.getName());
-            CustomPage<CurationResDto> result = searchService.searchUserCuration(keyword, currentPage, pageSize, userId);
+            Long userId = authService.getAuthenticatedUserId();
+            CustomPage<CurationThumbnailResDto> result = searchService.searchUserCuration(keyword, currentPage, pageSize, userId);
             return ResponseContainer.create(
                     HttpStatus.OK,
                     "큐레이션 검색 성공",

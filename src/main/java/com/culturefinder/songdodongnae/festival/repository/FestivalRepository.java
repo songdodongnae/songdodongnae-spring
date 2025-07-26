@@ -30,26 +30,10 @@ public class FestivalRepository {
         return Optional.ofNullable(festival);
     }
 
-    public void deleteFestival(Long id) {
-        Festival findFestival = em.find(Festival.class, id);
-        em.remove(findFestival);
-    }
-
     public List<Festival> findAll(int offset, int limit) {
         return em.createQuery("SELECT f from Festival f ORDER BY f.id", Festival.class)
                 .setFirstResult(offset)
                 .setMaxResults(limit)
-                .getResultList();
-    }
-
-    public List<Festival> findAll() {
-        return em.createQuery("SELECT f from Festival f ORDER BY f.id", Festival.class)
-                .getResultList();
-    }
-
-    public List<Festival> findTopByOrderByCreatedTimeDesc() {
-        return em.createQuery("SELECT f FROM Festival f ORDER BY f.createdAt DESC", Festival.class)
-                .setMaxResults(20)
                 .getResultList();
     }
 
@@ -70,6 +54,11 @@ public class FestivalRepository {
                         "SELECT f FROM Festival f WHERE f.id IN :idList", Festival.class)
                 .setParameter("idList", idList)
                 .getResultList();
+    }
+
+    public void deleteFestival(Long id) {
+        Festival findFestival = em.find(Festival.class, id);
+        em.remove(findFestival);
     }
 
     public List<Festival> searchFestivals(String keyword, int offset, int pageSize) {
@@ -98,6 +87,16 @@ public class FestivalRepository {
                         Long.class
                 )
                 .getSingleResult();
+    }
+
+    public List<Festival> findTop3Festival(String query) {
+        return em.createQuery("SELECT f FROM Festival f " +
+                                "WHERE Lower(f.title) LIKE :query " +
+                                "ORDER BY f.createdAt DESC",
+                        Festival.class)
+                .setParameter("query", "%" + query.toLowerCase() + "%")
+                .setMaxResults(3)
+                .getResultList();
     }
 
 }

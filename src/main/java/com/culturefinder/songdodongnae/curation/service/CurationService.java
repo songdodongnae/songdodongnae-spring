@@ -2,9 +2,12 @@ package com.culturefinder.songdodongnae.curation.service;
 
 import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
+import com.culturefinder.songdodongnae.creator.domain.Creator;
+import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
 import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.curation.dto.CurationReqDto;
 import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
+import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
@@ -29,106 +32,115 @@ public class CurationService {
     private final BookmarkRepository bookmarkRepository;
     private final UserRepository userRepository;
     private final S3UploadService s3UploadService;
-    private CurationRepository curationRepository;
+    private final CurationRepository curationRepository;
+    private final CreatorRepository creatorRepository;
+
+    public CurationResDto createCuration(Long userId, CurationReqDto curationReqDto) {
+        isAdmin(userId);
+
+        Creator creator = creatorRepository.findByName(curationReqDto.getCreatorName())
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+        Curation curation = curationReqDto.toEntity(creator);
+        Curation savedCuration = curationRepository.saveCuration(curation);
+        return CurationResDto.fromEntity(savedCuration, creator, false);
+    }
 
     public CurationResDto getCuration(Long id) {
-        Curation curationById = curationRepository.findCurationById(id);
-        CurationResDto curationResDto = CurationResDto.fromEntity(curationById);
-        return curationResDto;
+        Curation curationById = curationRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+        Creator creator = creatorRepository.findByName(curationById.getCreator().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+        return CurationResDto.fromEntity(curationById, creator, false);
     }
 
     public CurationResDto getUserCuration(Long userId, Long id) {
         Boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.CURATION, id);
         Set<Long> bookmarkedDeliciousSpots = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.DELICIOUS_SPOT));
         Set<Long> bookmarkedFestivals = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.FESTIVAL));
-        Curation curationById = curationRepository.findCurationById(id);
-        CurationResDto curationResDto = CurationResDto.fromEntity(curationById, bookmarkedDeliciousSpots, bookmarkedFestivals, isBookmarked);
-        return curationResDto;
+
+        Curation curationById = curationRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+        Creator creator = creatorRepository.findByName(curationById.getCreator().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+        return CurationResDto.fromEntity(curationById, creator, bookmarkedDeliciousSpots, bookmarkedFestivals, isBookmarked);
     }
 
-    public CurationResDto createCuration(Long userId, CurationReqDto curationReqDto) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-        if (user.getRole() != Role.ROLE_ADMIN) new CustomException(ErrorCode.FORBIDDEN);
+    public CustomPage<CurationThumbnailResDto> getAllCuration(int currentPage, int pageSize) {
+        int offset = (currentPage - 1) * pageSize;
+        List<Curation> curations = curationRepository.findAll(offset, pageSize);
+        long totalElements = curationRepository.countCuration();
 
-        Curation curation = curationReqDto.toEntity();
-        Curation savedCuration = curationRepository.saveCuration(curation);
-        return CurationResDto.fromEntity(savedCuration);
+        List<CurationThumbnailResDto> curationsDto = curations.stream()
+                .map(curation -> CurationThumbnailResDto.fromEntity(curation, false))
+                .toList();
+
+        return CustomPage.of(
+                curationsDto,
+                currentPage,
+                pageSize,
+                totalElements
+        );
+    }
+
+    public CustomPage<CurationThumbnailResDto> getAllUserCuration(Long userId, int currentPage, int pageSize) {
+        List<Long> targetIdsByUserAndType = bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.CURATION);
+        Set<Long> bookmarkedSet = new HashSet<>(targetIdsByUserAndType);
+
+        int offset = (currentPage - 1) * pageSize;
+        List<Curation> curations = curationRepository.findAll(offset, pageSize);
+        long totalElements = curationRepository.countCuration();
+
+        List<CurationThumbnailResDto> curationsDto = curations.stream()
+                .map(curation -> {
+                    return CurationThumbnailResDto.fromEntity(curation,
+                            bookmarkedSet.contains(curation.getId()));
+                })
+                .toList();
+
+        return CustomPage.of(
+                curationsDto,
+                currentPage,
+                pageSize,
+                totalElements
+        );
     }
 
     public CurationResDto updateCuration(Long userId, Long id, CurationReqDto curationReqDto){
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-        if (user.getRole() != Role.ROLE_ADMIN) new CustomException(ErrorCode.FORBIDDEN);
+        isAdmin(userId);
 
         if (curationReqDto.getImageUrl() != null) {
             s3UploadService.deleteFile(curationReqDto.getImageUrl());
         }
 
-        Curation curation = curationRepository.findCurationById(id);
-        curation.update(curationReqDto.toEntity());
-        return CurationResDto.fromEntity(curation);
+        Curation curation = curationRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+        Creator findCreator = creatorRepository.findByName(curationReqDto.getCreatorName())
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+        curation.update(curationReqDto.toEntity(findCreator));
+        return CurationResDto.fromEntity(curation, findCreator, false);
     }
 
     public CurationResDto deleteCuration(Long userId, Long id) {
-        User user = userRepository.findById(userId)
+        isAdmin(userId);
+
+        Curation curationById = curationRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-        if (user.getRole() != Role.ROLE_ADMIN) throw new CustomException(ErrorCode.FORBIDDEN);
+        Creator findCreator = creatorRepository.findByName(curationById.getCreator().getName())
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
 
-        Curation curationById = curationRepository.findCurationById(id);
-        if(curationById == null) throw new CustomException(ErrorCode.ENTITY_NOT_FOUND);
         bookmarkRepository.deleteBookmarkByTypeAndTargetId(BookmarkType.CURATION, id);
-
-
-        curationRepository.deleteById(id);
         if (curationById.getImageUrl() != null) {
             s3UploadService.deleteFile(curationById.getImageUrl());
         }
+        curationRepository.deleteById(id);
 
-        return CurationResDto.fromEntity(curationById);
+        return CurationResDto.fromEntity(curationById, findCreator, false);
     }
 
-    public CustomPage<CurationResDto> getAllCuration(int currentPage, int pageSize) {
-        int offset = (currentPage - 1) * pageSize;
-
-        List<Curation> curations = curationRepository.findAll(offset, pageSize);
-        List<CurationResDto> curationsDto = curations.stream()
-                .map(CurationResDto::fromEntity)
-                .toList();
-        long totalElements = curationRepository.countCuration();
-
-        return CustomPage.of(
-                curationsDto,
-                currentPage,
-                pageSize,
-                totalElements
-        );
+    private void isAdmin(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+        if (user.getRole() != Role.ROLE_ADMIN) throw new CustomException(ErrorCode.FORBIDDEN);
     }
 
-    public CustomPage<CurationResDto> getAllUserCuration(Long userId, int currentPage, int pageSize) {
-        List<Long> targetIdsByUserAndType = bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.CURATION);
-        Set<Long> bookmarkedSet = new HashSet<>(targetIdsByUserAndType);
-        Set<Long> bookmarkedDeliciousSpots = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.DELICIOUS_SPOT));
-        Set<Long> bookmarkedFestivals = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.FESTIVAL));
-
-        int offset = (currentPage - 1) * pageSize;
-
-        List<Curation> curations = curationRepository.findAll(offset, pageSize);
-        List<CurationResDto> curationsDto = curations.stream()
-                .map(curation -> {
-                    return CurationResDto.fromEntity(curation,
-                            bookmarkedDeliciousSpots,
-                            bookmarkedFestivals,
-                            bookmarkedSet.contains(curation.getId()));
-                })
-                .toList();
-        long totalElements = curationRepository.countCuration();
-
-        return CustomPage.of(
-                curationsDto,
-                currentPage,
-                pageSize,
-                totalElements
-        );
-    }
 }

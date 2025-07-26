@@ -22,7 +22,7 @@ public class Curation {
     @Column(name = "curation_id")
     private Long id;
 
-    private Integer type;
+    private CurationType type;
 
     @OneToMany
     private List<DeliciousSpot> deliciousSpots = new ArrayList<>();
@@ -30,7 +30,7 @@ public class Curation {
     @OneToMany
     private List<Festival> festivals = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
     private Creator creator;
 

@@ -1,10 +1,8 @@
 package com.culturefinder.songdodongnae.delicious_spot.repository;
 
-import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
-import com.culturefinder.songdodongnae.festival.domain.Festival;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -27,39 +26,11 @@ public class DeliciousSpotRepository {
         return deliciousSpot;
     }
 
-    public DeliciousSpot findDeliciousSpotById(Long id) {
+    public Optional<DeliciousSpot> findById(Long id) {
         DeliciousSpot deliciousSpot = em.find(DeliciousSpot.class, id);
-        if (deliciousSpot == null) {
-            throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
-        }
-        return deliciousSpot;
+        return Optional.ofNullable(deliciousSpot);
     }
 
-    public List<DeliciousSpot> findAll() {
-        return em.createQuery("SELECT d FROM DeliciousSpot d", DeliciousSpot.class).getResultList();
-    }
-
-    public DeliciousSpot updateDeliciousSpot(Long id, DeliciousSpot deliciousSpot) {
-        DeliciousSpot existingDeliciousSpot = em.find(DeliciousSpot.class, id);
-        if (existingDeliciousSpot != null) {
-            existingDeliciousSpot.updateDeliciousSpot(deliciousSpot);
-            return existingDeliciousSpot;
-        } else {
-            throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
-        }
-    }
-
-    public void deleteDeliciousSpot(Long id) {
-        DeliciousSpot deliciousSpot = em.find(DeliciousSpot.class, id);
-        if (deliciousSpot != null) {
-            em.createQuery("DELETE FROM DeliciousSpotImage dsi WHERE dsi.deliciousSpotId = :deliciousSpotId")
-                    .setParameter("deliciousSpotId", id)
-                    .executeUpdate();
-            em.remove(deliciousSpot);
-        } else {
-            throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
-        }
-    }
 
     public List<DeliciousSpot> findAllById(List<Long> idList) {
         if (idList == null || idList.isEmpty()) {
@@ -77,6 +48,18 @@ public class DeliciousSpotRepository {
                 .setFirstResult(offset)
                 .setMaxResults(pageSize)
                 .getResultList();
+    }
+
+    public void deleteDeliciousSpot(Long id) {
+        DeliciousSpot deliciousSpot = em.find(DeliciousSpot.class, id);
+        if (deliciousSpot != null) {
+            em.createQuery("DELETE FROM DeliciousSpotImage dsi WHERE dsi.deliciousSpotId = :deliciousSpotId")
+                    .setParameter("deliciousSpotId", id)
+                    .executeUpdate();
+            em.remove(deliciousSpot);
+        } else {
+            throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
+        }
     }
 
     public long countDeliciousSpot() {
@@ -105,6 +88,16 @@ public class DeliciousSpotRepository {
                 )
                 .setParameter("keyword", "%" + keyword + "%")
                 .getSingleResult();
+    }
+
+    public List<DeliciousSpot> findTop3DeliciousSpot(String query) {
+        return em.createQuery("SELECT d FROM DeliciousSpot d " +
+                                "WHERE Lower(d.title) LIKE :query " +
+                                "ORDER BY d.createdAt DESC",
+                        DeliciousSpot.class)
+                .setParameter("query", "%" + query.toLowerCase() + "%")
+                .setMaxResults(3)
+                .getResultList();
     }
 
 }

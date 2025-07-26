@@ -17,16 +17,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.fasterxml.jackson.databind.type.LogicalType.Map;
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class MyPageService {
 
     private final UserRepository userRepository;
@@ -35,21 +33,12 @@ public class MyPageService {
     private final BookmarkRepository bookmarkRepository;
     private final FestivalRepository festivalRepository;
 
-
-    public String updateNickName(NickNameReqDto nickNameReqDto, Long userId) {
-        User findUser = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
-
-        findUser.updateNickname(nickNameReqDto.getNickName());
-        return nickNameReqDto.getNickName();
-    }
-
     public CustomPage<ThumbnailResDto> getPostByType(Long userId, BookmarkType bookmarkType, int currentPage, int pageSize) {
         List<Long> targetIds = bookmarkRepository.findTargetIdsByUserAndType(userId, bookmarkType);
+
         int totalElements = targetIds.size();
         int offset = (currentPage - 1) * pageSize;
         int end = Math.min(offset + pageSize ,totalElements);
-
         if (offset >= totalElements) {
             return CustomPage.of(Collections.emptyList(), currentPage,pageSize, totalElements);
         }
@@ -59,16 +48,16 @@ public class MyPageService {
         Map<Long, ThumbnailResDto> dtoMap = switch (bookmarkType) {
             case BookmarkType.FESTIVAL -> festivalRepository.findAllById(pageIds)
                     .stream()
-                    .map(ThumbnailResDto::of)
+                    .map(festival -> ThumbnailResDto.of(festival, festival.getCreator().getName()))
                     .collect(Collectors.toMap(ThumbnailResDto::getId, dto -> dto));
             case BookmarkType.DELICIOUS_SPOT -> deliciousSpotRepository.findAllById(pageIds)
                     .stream()
-                    .map(ThumbnailResDto::of)
+                    .map(deliciousSpot -> ThumbnailResDto.of(deliciousSpot, deliciousSpot.getCreator().getName()))
                     .collect(Collectors.toMap(ThumbnailResDto::getId, dto -> dto));
 
             case BookmarkType.CURATION -> curationRepository.findAllById(pageIds)
                     .stream()
-                    .map(ThumbnailResDto::of)
+                    .map(curation -> ThumbnailResDto.of(curation, curation.getCreator().getName()))
                     .collect(Collectors.toMap(ThumbnailResDto::getId, dto -> dto));
         };
 
@@ -79,7 +68,14 @@ public class MyPageService {
         return CustomPage.of(response, currentPage, pageSize, totalElements);
     }
 
-    @Transactional
+    public String updateNickName(NickNameReqDto nickNameReqDto, Long userId) {
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+
+        findUser.updateNickname(nickNameReqDto.getNickName());
+        return nickNameReqDto.getNickName();
+    }
+
     public void deleteUser(Long userId) {
         bookmarkRepository.deleteUserBookmarks(userId);
         userRepository.deleteUser(userId);

@@ -2,7 +2,9 @@ package com.culturefinder.songdodongnae.festival.controller;
 
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
+import com.culturefinder.songdodongnae.festival.dto.FestivalThumbnailResDto;
 import com.culturefinder.songdodongnae.festival.service.FestivalService;
+import com.culturefinder.songdodongnae.user.service.AuthService;
 import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,32 +27,46 @@ import java.util.List;
 public class FestivalController {
 
     private final FestivalService festivalService;
+    private final AuthService authService;
 
     @Operation(summary = "축제 생성", description = "축제를 생성합니다.")
     @ApiResponse(responseCode = "201", description = "축제 생성 성공")
     @PostMapping
     public ResponseEntity<ResponseContainer<FestivalResDto>> createFestival(
             @Valid @RequestBody FestivalReqDto festivalReqDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = Long.parseLong(authentication.getName());
+        Long userId = authService.getAuthenticatedUserId();
         FestivalResDto dto = festivalService.createFestival(festivalReqDto, userId);
         return ResponseContainer.create(HttpStatus.CREATED, "축제 생성 성공", dto);
     }
 
+    @Operation(summary = "축제 조회", description = "특정 ID의 축제 정보를 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "축제 조회 성공")
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseContainer<FestivalResDto>> getFestival(@PathVariable Long id) {
+        if (!authService.isAuthenticatedUser()) {
+            FestivalResDto dto = festivalService.getFestival(id);
+            return ResponseContainer.create(HttpStatus.OK, "축제 조회 성공", dto);
+        }
+        else {
+            Long userId = authService.getAuthenticatedUserId();
+            FestivalResDto dto = festivalService.getUserFestival(id, userId);
+            return ResponseContainer.create(HttpStatus.OK, "축제 조회 성공", dto);
+        }
+    }
+
+
     @Operation(summary = "해당 년/월 축제 조회", description = "해당 년/월에 개최되는 모든 축제 목록을 조회합니다")
     @ApiResponse(responseCode = "200", description = "해당 월 축제 조회 성공")
     @GetMapping("/day")
-    public ResponseEntity<ResponseContainer<List<FestivalResDto>>> getFestivalsByYearAndMonth(
+    public ResponseEntity<ResponseContainer<List<FestivalThumbnailResDto>>> getFestivalsByYearAndMonth(
             @RequestParam int year,
             @RequestParam int month) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null) {
-            List<FestivalResDto> dtos =  festivalService.getFestivalsByYearAndMonth(year, month);
+        if (!authService.isAuthenticatedUser()) {
+            List<FestivalThumbnailResDto> dtos =  festivalService.getFestivalsByYearAndMonth(year, month);
             return ResponseContainer.create(HttpStatus.OK, "년/월 해당 축제 조회 성공", dtos);
         } else {
-            Long userId = Long.parseLong(authentication.getName());
-            List<FestivalResDto> dtos =  festivalService.getFestivalsUserByYearAndMonth(year, month, userId);
+            Long userId = authService.getAuthenticatedUserId();
+            List<FestivalThumbnailResDto> dtos =  festivalService.getFestivalsUserByYearAndMonth(year, month, userId);
             return ResponseContainer.create(HttpStatus.OK, "년/월 해당 축제 조회 성공", dtos);
         }
     }
@@ -58,44 +74,25 @@ public class FestivalController {
     @Operation(summary = "모든 축제 조회", description = "등록된 모든 축제 목록을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "모든 축제 조회 성공")
     @GetMapping
-    public ResponseEntity<ResponseContainer<CustomPage<FestivalResDto>>> getAllFestivals(
+    public ResponseEntity<ResponseContainer<CustomPage<FestivalThumbnailResDto>>> getAllFestivals(
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null) {
-            CustomPage<FestivalResDto> dtos = festivalService.getAllFestival(currentPage, pageSize);
+        if (!authService.isAuthenticatedUser()) {
+            CustomPage<FestivalThumbnailResDto> dtos = festivalService.getAllFestival(currentPage, pageSize);
             return ResponseContainer.create(HttpStatus.OK, "모든 축제 조회 성공", dtos);
         }else {
-            Long userId = Long.parseLong(authentication.getName());
-            CustomPage<FestivalResDto> dtos = festivalService.getAllUserFestival(currentPage, pageSize, userId);
+            Long userId = authService.getAuthenticatedUserId();
+            CustomPage<FestivalThumbnailResDto> dtos = festivalService.getAllUserFestival(currentPage, pageSize, userId);
             return ResponseContainer.create(HttpStatus.OK, "모든 축제 조회 성공", dtos);
         }
 
-    }
-
-    @Operation(summary = "축제 조회", description = "특정 ID의 축제 정보를 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "축제 조회 성공")
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseContainer<FestivalResDto>> getFestival(@PathVariable Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            FestivalResDto dto = festivalService.getFestival(id);
-            return ResponseContainer.create(HttpStatus.OK, "축제 조회 성공", dto);
-        }
-        else {
-            Long userId = Long.parseLong(authentication.getName());
-            FestivalResDto dto = festivalService.getUserFestival(id, userId);
-            return ResponseContainer.create(HttpStatus.OK, "축제 조회 성공", dto);
-        }
     }
 
     @Operation(summary = "축제 삭제", description = "특정 ID의 축제 정보를 삭제합니다.")
     @ApiResponse(responseCode = "200", description = "축제 삭제 성공")
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseContainer<FestivalResDto>> deleteFestival(@PathVariable Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = Long.parseLong(authentication.getName());
+        Long userId = authService.getAuthenticatedUserId();
         FestivalResDto dto = festivalService.deleteFestival(id, userId);
         return ResponseContainer.create(HttpStatus.OK, "축제 삭제 성공", dto);
     }
@@ -105,11 +102,9 @@ public class FestivalController {
     @PutMapping("/{id}")
     public ResponseEntity<ResponseContainer<FestivalResDto>> updateFestival(
             @PathVariable Long id, @Valid @RequestBody FestivalReqDto festivalReqDto)  {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = Long.parseLong(authentication.getName());
+        Long userId = authService.getAuthenticatedUserId();
         FestivalResDto dto = festivalService.updateFestival(id, festivalReqDto, userId);
         return ResponseContainer.create(HttpStatus.OK, "축제 수정 성공", dto);
     }
-
 
 }
