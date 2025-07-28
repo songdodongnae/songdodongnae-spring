@@ -4,8 +4,9 @@ import com.culturefinder.songdodongnae.bookmark.domain.Bookmark;
 import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import lombok.*;
 
-@Data
-@NoArgsConstructor
+@Builder
+@Getter
+@AllArgsConstructor
 public class BookmarkResDto {
 
     private Long bookmarkId;
@@ -15,11 +16,10 @@ public class BookmarkResDto {
     private Long targetId;
 
     public static BookmarkResDto fromEntity(Bookmark bookmark) {
-        BookmarkResDto dto = new BookmarkResDto();
-        dto.setBookmarkId(bookmark.getId());
-        dto.setBookmarkType(bookmark.getBookmarkType());
-        dto.setTargetId(bookmark.getTargetId());
-        return dto;
+        return BookmarkResDto.builder()
+                .bookmarkId(bookmark.getId())
+                .bookmarkType(bookmark.getBookmarkType())
+                .targetId(bookmark.getTargetId())
+                .build();
     }
-
 }

@@ -4,7 +4,7 @@ import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class BookmarkReqDto {
 

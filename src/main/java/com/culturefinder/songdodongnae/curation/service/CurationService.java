@@ -40,7 +40,7 @@ public class CurationService {
 
         Creator creator = creatorRepository.findByName(curationReqDto.getCreatorName())
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-        Curation curation = curationReqDto.toEntity(creator);
+        Curation curation = CurationReqDto.toEntity(curationReqDto, creator);
         Curation savedCuration = curationRepository.saveCuration(curation);
         return CurationResDto.fromEntity(savedCuration, creator, false);
     }
@@ -116,7 +116,7 @@ public class CurationService {
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
         Creator findCreator = creatorRepository.findByName(curationReqDto.getCreatorName())
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-        curation.update(curationReqDto.toEntity(findCreator));
+        curation.update(CurationReqDto.toEntity(curationReqDto, findCreator));
         return CurationResDto.fromEntity(curation, findCreator, false);
     }
 

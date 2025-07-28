@@ -8,7 +8,8 @@ import lombok.*;
 import java.time.LocalTime;
 import java.util.*;
 
-@Data
+@Builder
+@Getter
 @AllArgsConstructor
 public class DeliciousSpotReqDto {
 
@@ -54,28 +55,28 @@ public class DeliciousSpotReqDto {
 
     private String contact;
 
-    public DeliciousSpot toEntity(Creator creator) {
+    public static DeliciousSpot toEntity(DeliciousSpotReqDto dto, Creator creator) {
         return DeliciousSpot.builder()
-                .title(this.getTitle())
+                .title(dto.getTitle())
                 .creator(creator)
-                .latitude(this.latitude)
-                .longitude(this.longitude)
-                .address(this.address)
-                .price(this.price)
-                .naverRating(this.naverRating)
-                .kakaoRating(this.kakaoRating)
-                .startTime(this.startTime)
-                .endTime(this.endTime)
-                .timeDescription(this.timeDescription)
-                .waiting(this.waiting)
-                .parking(this.parking)
-                .suggestionMenu(this.suggestionMenu)
-                .description(this.description)
-                .thumbnailImageUrl(this.thumbnailImageUrl)
-                .onelineDescription(this.onelineDescription)
-                .instagram(this.instagram)
-                .contact(this.contact)
-                .imageUrls(this.imageUrls)
+                .latitude(dto.getLatitude())
+                .longitude(dto.getLongitude())
+                .address(dto.getAddress())
+                .price(dto.getPrice())
+                .naverRating(dto.getNaverRating())
+                .kakaoRating(dto.getKakaoRating())
+                .startTime(dto.getStartTime())
+                .endTime(dto.getEndTime())
+                .timeDescription(dto.getTimeDescription())
+                .waiting(dto.getWaiting())
+                .parking(dto.getParking())
+                .suggestionMenu(dto.getSuggestionMenu())
+                .description(dto.getDescription())
+                .thumbnailImageUrl(dto.getThumbnailImageUrl())
+                .imageUrls(dto.getImageUrls())
+                .onelineDescription(dto.getOnelineDescription())
+                .instagram(dto.getInstagram())
+                .contact(dto.getContact())
                 .build();
     }
 

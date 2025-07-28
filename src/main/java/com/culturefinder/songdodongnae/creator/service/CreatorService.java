@@ -32,7 +32,7 @@ public class CreatorService {
     public CreatorResDto createCreator(CreatorReqDto creatorReqDto, Long userId) {
         isAdmin(userId);
 
-        Creator creator = creatorReqDto.toEntity();
+        Creator creator = CreatorReqDto.toEntity(creatorReqDto);
         Creator savedCreator = creatorRepository.saveCreator(creator);
         return CreatorResDto.fromEntity(savedCreator);
     }
@@ -58,7 +58,7 @@ public class CreatorService {
             s3UploadService.deleteFile(findCreator.getImageUrl());
         }
 
-        findCreator.update(creatorReqDto.toEntity());
+        findCreator.update(CreatorReqDto.toEntity(creatorReqDto));
         return CreatorResDto.fromEntity(findCreator);
     }
 
