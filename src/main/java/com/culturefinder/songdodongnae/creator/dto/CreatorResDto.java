@@ -18,10 +18,6 @@ public class CreatorResDto {
 
     private String description;
 
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
     private String imageUrl;
 
     public static CreatorResDto fromEntity(Creator creator) {
@@ -30,8 +26,6 @@ public class CreatorResDto {
                 .name(creator.getName())
                 .introduction(creator.getIntroduction())
                 .description(creator.getDescription())
-                .createdAt(creator.getCreatedAt())
-                .updatedAt(creator.getUpdatedAt())
                 .imageUrl(creator.getImageUrl())
                 .build();
     }
