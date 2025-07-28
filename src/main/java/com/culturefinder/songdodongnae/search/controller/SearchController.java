@@ -44,12 +44,12 @@ public class SearchController {
     @GetMapping("/festivals")
     @Operation(summary = "축제 검색", description = "검색어에 맞는 축제를 페이지네이션하여 조회합니다.")
     public ResponseEntity<ResponseContainer<CustomPage<FestivalThumbnailResDto>>> searchFestivals(
-            @RequestParam String keyword,
+            @RequestParam String query,
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
         if (!authService.isAuthenticatedUser()) {
-            CustomPage<FestivalThumbnailResDto> result = searchService.searchFestivals(keyword, currentPage, pageSize);
+            CustomPage<FestivalThumbnailResDto> result = searchService.searchFestivals(query, currentPage, pageSize);
             return ResponseContainer.create(
                     HttpStatus.OK,
                     "축제 검색 성공",
@@ -57,7 +57,7 @@ public class SearchController {
             );
         } else {
             Long userId = authService.getAuthenticatedUserId();
-            CustomPage<FestivalThumbnailResDto> result = searchService.searchUserFestivals(keyword, currentPage, pageSize, userId);
+            CustomPage<FestivalThumbnailResDto> result = searchService.searchUserFestivals(query, currentPage, pageSize, userId);
             return ResponseContainer.create(
                     HttpStatus.OK,
                     "축제 검색 성공",
@@ -69,12 +69,12 @@ public class SearchController {
     @GetMapping("/deliciousSpots")
     @Operation(summary = "맛집 검색", description = "검색어에 맞는 맛집을 페이지네이션하여 조회합니다.")
     public ResponseEntity<ResponseContainer<CustomPage<DeliciousSpotThumbnailResDto>>> searchDeliciousSpots(
-            @RequestParam String keyword,
+            @RequestParam String query,
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
         if (!authService.isAuthenticatedUser()) {
-            CustomPage<DeliciousSpotThumbnailResDto> result = searchService.searchDeliciousSpots(keyword, currentPage, pageSize);
+            CustomPage<DeliciousSpotThumbnailResDto> result = searchService.searchDeliciousSpots(query, currentPage, pageSize);
             return ResponseContainer.create(
                     HttpStatus.OK,
                     "맛집 검색 성공",
@@ -82,7 +82,7 @@ public class SearchController {
             );
         } else {
             Long userId = authService.getAuthenticatedUserId();
-            CustomPage<DeliciousSpotThumbnailResDto> result = searchService.searchUserDeliciousSpots(keyword, currentPage, pageSize, userId);
+            CustomPage<DeliciousSpotThumbnailResDto> result = searchService.searchUserDeliciousSpots(query, currentPage, pageSize, userId);
             return ResponseContainer.create(
                     HttpStatus.OK,
                     "맛집 검색 성공",
@@ -94,12 +94,12 @@ public class SearchController {
     @GetMapping("/curations")
     @Operation(summary = "큐레이션 검색", description = "검색어에 맞는 큐레이션을 페이지네이션하여 조회합니다.")
     public ResponseEntity<ResponseContainer<CustomPage<CurationThumbnailResDto>>> searchCurations(
-            @RequestParam String keyword,
+            @RequestParam String query,
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
         if (!authService.isAuthenticatedUser()) {
-            CustomPage<CurationThumbnailResDto> result = searchService.searchCuration(keyword, currentPage, pageSize);
+            CustomPage<CurationThumbnailResDto> result = searchService.searchCuration(query, currentPage, pageSize);
             return ResponseContainer.create(
                     HttpStatus.OK,
                     "큐레이션 검색 성공",
@@ -107,7 +107,7 @@ public class SearchController {
             );
         } else {
             Long userId = authService.getAuthenticatedUserId();
-            CustomPage<CurationThumbnailResDto> result = searchService.searchUserCuration(keyword, currentPage, pageSize, userId);
+            CustomPage<CurationThumbnailResDto> result = searchService.searchUserCuration(query, currentPage, pageSize, userId);
             return ResponseContainer.create(
                     HttpStatus.OK,
                     "큐레이션 검색 성공",
