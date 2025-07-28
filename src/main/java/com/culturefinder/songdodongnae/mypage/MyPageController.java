@@ -25,12 +25,12 @@ public class MyPageController {
     @ApiResponse(responseCode = "200", description = "북마크 조회 성공")
     @GetMapping("/bookmark/{type}")
     public ResponseEntity<ResponseContainer<CustomPage<ThumbnailResDto>>> getPostByType(
-            @PathVariable BookmarkType bookmarkType,
+            @PathVariable BookmarkType type,
             @RequestParam(defaultValue = "1") int currentPage,
             @RequestParam(defaultValue = "10") int pageSize) {
 
         Long userId = authService.getAuthenticatedUserId();
-        CustomPage<ThumbnailResDto> dto = myPageService.getPostByType(userId, bookmarkType, currentPage, pageSize);
+        CustomPage<ThumbnailResDto> dto = myPageService.getPostByType(userId, type, currentPage, pageSize);
         return ResponseContainer.create(HttpStatus.OK, "북마크 조회 성공", dto);
     }
 
