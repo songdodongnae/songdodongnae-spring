@@ -66,8 +66,8 @@ public class Festival {
     private String thumbnailImageUrl;
 
     @ElementCollection
-    @CollectionTable(name = "delicious_spot_image_urls",
-            joinColumns = @JoinColumn(name = "delicious_spot_id"))
+    @CollectionTable(name = "festival_image_urls",
+            joinColumns = @JoinColumn(name = "festival_id"))
     private List<String> imageUrls;
 
     public void update(Festival festival) {
