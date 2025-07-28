@@ -16,6 +16,7 @@ import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.s3.S3UploadService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ import java.util.*;
 import static com.culturefinder.songdodongnae.exception.ErrorCode.ENTITY_NOT_FOUND;
 import static com.culturefinder.songdodongnae.exception.ErrorCode.FORBIDDEN;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -101,6 +103,8 @@ public class DeliciousSpotService {
         Creator findCreator = creatorRepository.findByName(deliciousSpotReqDto.getCreatorName())
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
 
+        log.info("findCreator = {} ", findCreator.getName());
+
         if (findDeliciousSpot.getThumbnailImageUrl() != null) {
             s3UploadService.deleteFile(deliciousSpotReqDto.getThumbnailImageUrl());
         }
@@ -109,6 +113,7 @@ public class DeliciousSpotService {
                 s3UploadService.deleteFile(imageUrl);
             }
         }
+        log.info("findCreator = {} ", findCreator.getName());
 
         findDeliciousSpot.updateDeliciousSpot(DeliciousSpotReqDto.toEntity(deliciousSpotReqDto, findCreator));
 

@@ -1,5 +1,8 @@
 package com.culturefinder.songdodongnae.delicious_spot.dto;
 
+import com.culturefinder.songdodongnae.creator.domain.Creator;
+import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
+import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -16,8 +19,6 @@ public class DeliciousSpotResDto {
     private Long id;
 
     private String title;
-
-    private String creatorName;
 
     private double latitude;
 
@@ -61,6 +62,8 @@ public class DeliciousSpotResDto {
 
     private List<String> imageUrls;
 
+    private CreatorResDto creatorResDto;
+
     @JsonProperty("isBookmarked")
     public boolean getIsBookmarked() {
         return isBookmarked;
@@ -90,6 +93,7 @@ public class DeliciousSpotResDto {
                 .createdAt(deliciousSpot.getCreatedAt())
                 .updatedAt(deliciousSpot.getUpdatedAt())
                 .thumbnailImageUrl(deliciousSpot.getThumbnailImageUrl())
+                .creatorResDto(CreatorResDto.fromEntity(deliciousSpot.getCreator()))
                 .build();
     }
 }

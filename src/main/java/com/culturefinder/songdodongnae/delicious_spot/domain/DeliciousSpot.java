@@ -92,6 +92,7 @@ public class DeliciousSpot {
         this.instagram = deliciousSpot.getInstagram();
         this.contact = deliciousSpot.getContact();
         this.thumbnailImageUrl = deliciousSpot.getThumbnailImageUrl();
+        this.creator = deliciousSpot.getCreator();
     }
 
 }
