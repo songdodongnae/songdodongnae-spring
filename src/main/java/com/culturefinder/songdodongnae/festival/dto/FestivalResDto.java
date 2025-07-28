@@ -51,8 +51,6 @@ public class FestivalResDto {
 
     private LocalDateTime createdAt;
 
-    private LocalDateTime updatedAt;
-
     private String imageUrl;
 
     private List<String> festivalImages;
@@ -85,7 +83,6 @@ public class FestivalResDto {
                 .description(festival.getDescription())
                 .onelineDescription(festival.getOnelineDescription())
                 .createdAt(festival.getCreatedAt())
-                .updatedAt(festival.getUpdatedAt())
                 .imageUrl(festival.getThumbnailImageUrl())
                 .festivalImages(festival.getImageUrls())
                 .build();
