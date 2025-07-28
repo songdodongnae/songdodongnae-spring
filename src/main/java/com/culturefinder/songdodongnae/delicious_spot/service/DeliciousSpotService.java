@@ -53,7 +53,7 @@ public class DeliciousSpotService {
         return DeliciousSpotResDto.fromEntity(deliciousSpot, false);
     }
 
-    public DeliciousSpotResDto getUserDeliciousSpot(Long userId, Long id) {
+    public DeliciousSpotResDto getUserDeliciousSpot(Long id, Long userId) {
         DeliciousSpot deliciousSpot = deliciousSpotRepository.findById(id)
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
         boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.DELICIOUS_SPOT, id);
