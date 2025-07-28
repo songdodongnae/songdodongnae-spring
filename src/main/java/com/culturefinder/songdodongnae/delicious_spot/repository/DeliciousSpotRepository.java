@@ -52,14 +52,7 @@ public class DeliciousSpotRepository {
 
     public void deleteDeliciousSpot(Long id) {
         DeliciousSpot deliciousSpot = em.find(DeliciousSpot.class, id);
-        if (deliciousSpot != null) {
-            em.createQuery("DELETE FROM DeliciousSpotImage dsi WHERE dsi.deliciousSpotId = :deliciousSpotId")
-                    .setParameter("deliciousSpotId", id)
-                    .executeUpdate();
-            em.remove(deliciousSpot);
-        } else {
-            throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND);
-        }
+        em.remove(deliciousSpot);
     }
 
     public long countDeliciousSpot() {
