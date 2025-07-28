@@ -90,6 +90,7 @@ public class Festival {
         this.updatedAt = festival.getUpdatedAt();
         this.thumbnailImageUrl = festival.getThumbnailImageUrl();
         this.imageUrls = festival.getImageUrls();
+        this.creator = festival.getCreator();
     }
 
 }
