@@ -4,9 +4,11 @@ import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.creator.dto.CreatorReqDto;
 import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.curation.domain.CurationType;
+import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
+import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
@@ -35,23 +37,29 @@ public class CurationReqDto {
 
     private String imageUrl;
 
-    public Curation toEntity(Creator creator) {
+    public static Curation toEntity(CurationReqDto dto, Creator creator) {
+        List<DeliciousSpot> deliciousSpots = List.of();
+        List<Festival> festivals = List.of();
+
+        if (dto.getType() == CurationType.DELICIOUS_SPOT) {
+            deliciousSpots = dto.getDeliciousSpots().stream()
+                    .map(deliciousSpotDto -> DeliciousSpotReqDto.toEntity(deliciousSpotDto, null))
+                    .toList();
+        }
+        if (dto.getType() == CurationType.FESTIVAL) {
+            festivals = dto.getFestivals().stream()
+                    .map(festivalDto -> FestivalReqDto.toEntity(festivalDto, null))
+                    .toList();
+        }
+
         return Curation.builder()
-                .type(this.type)
-                .deliciousSpots(
-                        this.deliciousSpots.stream()
-                                .map(deliciousSpot -> deliciousSpot.toEntity(null))
-                                .toList()
-                )
-                .festivals(
-                        this.festivals.stream()
-                                .map(festival -> FestivalReqDto.toEntity(festival, null))
-                                .toList()
-                )
+                .type(dto.getType())
+                .deliciousSpots(deliciousSpots)
+                .festivals(festivals)
                 .creator(creator)
-                .title(this.title)
-                .description(this.description)
-                .imageUrl(this.imageUrl)
+                .title(dto.getTitle())
+                .description(dto.getDescription())
+                .imageUrl(dto.getImageUrl())
                 .build();
     }
 }

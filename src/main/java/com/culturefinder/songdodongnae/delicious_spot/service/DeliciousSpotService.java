@@ -40,7 +40,7 @@ public class DeliciousSpotService {
         Creator findCreator = creatorRepository.findByName(deliciousSpotReqDto.getCreatorName())
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
 
-        DeliciousSpot deliciousSpot = deliciousSpotReqDto.toEntity(findCreator);
+        DeliciousSpot deliciousSpot = DeliciousSpotReqDto.toEntity(deliciousSpotReqDto, findCreator);
         DeliciousSpot savedDeliciousSpot = deliciousSpotRepository.saveDeliciousSpot(deliciousSpot);
         return DeliciousSpotResDto.fromEntity(savedDeliciousSpot, false);
     }
@@ -110,7 +110,7 @@ public class DeliciousSpotService {
             }
         }
 
-        findDeliciousSpot.updateDeliciousSpot(deliciousSpotReqDto.toEntity(findCreator));
+        findDeliciousSpot.updateDeliciousSpot(DeliciousSpotReqDto.toEntity(deliciousSpotReqDto, findCreator));
 
         return DeliciousSpotResDto.fromEntity(findDeliciousSpot, false);
     }

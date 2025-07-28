@@ -18,12 +18,12 @@ public class CreatorReqDto {
 
     private String image;
 
-    public Creator toEntity() {
+    public static Creator toEntity(CreatorReqDto creatorReqDto) {
         return Creator.builder()
-                .name(name)
-                .introduction(introduction)
-                .description(description)
-                .imageUrl(image)
+                .name(creatorReqDto.getName())
+                .introduction(creatorReqDto.getIntroduction())
+                .description(creatorReqDto.getDescription())
+                .imageUrl(creatorReqDto.getImage())
                 .build();
     }
 }
