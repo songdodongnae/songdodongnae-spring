@@ -4,6 +4,8 @@ import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
+import com.culturefinder.songdodongnae.curation.repository.CurationDeliciousSpotRepository;
+import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
@@ -36,6 +38,7 @@ public class DeliciousSpotService {
     private final S3UploadService s3UploadService;
     private final UserRepository userRepository;
     private final CreatorRepository creatorRepository;
+    private final CurationDeliciousSpotRepository curationDeliciousSpotRepository;
 
     public DeliciousSpotResDto createDeliciousSpot(DeliciousSpotReqDto deliciousSpotReqDto, Long userId) {
         isAdmin(userId);
@@ -135,7 +138,7 @@ public class DeliciousSpotService {
             }
         }
         bookmarkRepository.deleteBookmarkByTypeAndTargetId(BookmarkType.DELICIOUS_SPOT, deliciousSpot.getId());
-
+        curationDeliciousSpotRepository.deleteByDeliciousSpotId(deliciousSpot.getId());
         deliciousSpotRepository.deleteDeliciousSpot(id);
     }
 

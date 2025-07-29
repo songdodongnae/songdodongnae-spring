@@ -4,6 +4,7 @@ import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
+import com.culturefinder.songdodongnae.curation.repository.CurationFestivalRepository;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
@@ -34,6 +35,7 @@ public class FestivalService {
     private final BookmarkRepository bookmarkRepository;
     private final UserRepository userRepository;
     private final CreatorRepository creatorRepository;
+    private final CurationFestivalRepository curationFestivalRepository;
 
     public FestivalResDto createFestival(FestivalReqDto festivalReqDto, Long userId) {
         isAdmin(userId);
@@ -173,7 +175,7 @@ public class FestivalService {
             }
         }
         bookmarkRepository.deleteBookmarkByTypeAndTargetId(BookmarkType.FESTIVAL, findFestival.getId());
-        
+        curationFestivalRepository.deleteByFestivalId(findFestival.getId());
         festivalRepository.deleteFestival(id);
         return FestivalResDto.fromEntity(findFestival, false);
     }
