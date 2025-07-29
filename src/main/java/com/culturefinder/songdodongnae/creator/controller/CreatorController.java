@@ -47,8 +47,14 @@ public class CreatorController {
     @ApiResponse(responseCode = "200", description = "크리에이터 상세 조회 성공")
     @GetMapping("/{id}")
     public ResponseEntity<ResponseContainer<CreatorResDto>> getCreator(@PathVariable Long id) {
-        CreatorResDto dto = creatorService.getCreator(id);
-        return ResponseContainer.create(HttpStatus.OK, "크리에이터 상세 조회 성공", dto);
+        if (!authService.isAuthenticatedUser()) {
+            CreatorResDto dto = creatorService.getCreator(id);
+            return ResponseContainer.create(HttpStatus.OK, "크리에이터 상세 조회 성공", dto);
+        } else {
+            Long userId = authService.getAuthenticatedUserId();
+            CreatorResDto dto = creatorService.getCreator(id, userId);
+            return ResponseContainer.create(HttpStatus.OK, "크리에이터 상세 조회 성공", dto);
+        }
     }
 
     @Operation(summary = "크리에이터 수정", description = "크리에이터 수정합니다.")
