@@ -4,16 +4,17 @@ import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
 import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.curation.domain.CurationType;
-import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+@Getter
 @Builder
 public class CurationResDto {
     private Long id;
@@ -30,12 +31,13 @@ public class CurationResDto {
     private Boolean isBookmarked;
 
     public static CurationResDto fromEntity(Curation curation, Creator creator, Boolean isBookmarked) {
-        List<DeliciousSpotResDto> deliciousSpotDto = curation.getDeliciousSpots().stream()
-                .map(deliciousSpot -> DeliciousSpotResDto.fromEntity(deliciousSpot, false))
+
+        List<DeliciousSpotResDto> deliciousSpotDto = curation.getCurationDeliciousSpots().stream()
+                .map(link -> DeliciousSpotResDto.fromEntity(link.getDeliciousSpot(), false))
                 .toList();
 
-        List<FestivalResDto> festivalDto = curation.getFestivals().stream()
-                .map((Festival festival) -> FestivalResDto.fromEntity(festival, false))
+        List<FestivalResDto> festivalDto = curation.getCurationFestivals().stream()
+                .map(link -> FestivalResDto.fromEntity(link.getFestival(), false))
                 .toList();
 
         CreatorResDto creatorDto = CreatorResDto.fromEntity(creator);
@@ -56,16 +58,13 @@ public class CurationResDto {
     }
 
     public static CurationResDto fromEntity(Curation curation, Creator creator, Set<Long> bookmarkedDeliciousSpots, Set<Long> bookmarkedFestivals, Boolean isBookmarked) {
-        List<DeliciousSpotResDto> deliciousSpotDto = curation.getDeliciousSpots().stream()
-                .map(deliciousSpot -> {
-                    return DeliciousSpotResDto.fromEntity(deliciousSpot, bookmarkedDeliciousSpots.contains(deliciousSpot.getId()));
-                })
+
+        List<DeliciousSpotResDto> deliciousSpotDto = curation.getCurationDeliciousSpots().stream()
+                .map(link -> DeliciousSpotResDto.fromEntity(link.getDeliciousSpot(), bookmarkedDeliciousSpots.contains(link.getId())))
                 .toList();
 
-        List<FestivalResDto> festivalDto = curation.getFestivals().stream()
-                .map(festival -> {
-                    return FestivalResDto.fromEntity(festival, bookmarkedFestivals.contains(festival.getId()));
-                })
+        List<FestivalResDto> festivalDto = curation.getCurationFestivals().stream()
+                .map(link -> FestivalResDto.fromEntity(link.getFestival(), bookmarkedFestivals.contains(link.getId())))
                 .toList();
 
         CreatorResDto creatorDto = CreatorResDto.fromEntity(creator);

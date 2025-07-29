@@ -24,11 +24,13 @@ public class Curation {
 
     private CurationType type;
 
-    @OneToMany
-    private List<DeliciousSpot> deliciousSpots = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "curation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CurationDeliciousSpot> curationDeliciousSpots = new ArrayList<>();
 
-    @OneToMany
-    private List<Festival> festivals = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "curation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CurationFestival> curationFestivals = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
@@ -46,13 +48,28 @@ public class Curation {
 
     private String imageUrl;
 
-    public void update(Curation curation) {
-        this.type = curation.type;
-        this.deliciousSpots = curation.deliciousSpots;
-        this.festivals = curation.festivals;
-        this.creator = curation.creator;
-        this.title = curation.title;
-        this.description = curation.description;
-        this.imageUrl = curation.imageUrl;
+
+    public void addDeliciousSpot(DeliciousSpot deliciousSpot) {
+        CurationDeliciousSpot curationDeliciousSpot = new CurationDeliciousSpot(this, deliciousSpot);
+        curationDeliciousSpots.add(curationDeliciousSpot);
+    }
+
+    public void addFestival(Festival festival) {
+        CurationFestival curationFestival = new CurationFestival(this, festival);
+        curationFestivals.add(curationFestival);
+    }
+
+    public void update(String title, String description, CurationType type, String imageUrl, Creator creator, List<Festival> festivals, List<DeliciousSpot> deliciousSpots) {
+        this.type = type;
+        this.title = title;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.creator = creator;
+
+        this.curationFestivals.clear();
+        this.curationDeliciousSpots.clear();
+
+        festivals.forEach(this::addFestival);
+        deliciousSpots.forEach(this::addDeliciousSpot);
     }
 }
