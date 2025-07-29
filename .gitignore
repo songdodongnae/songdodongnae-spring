@@ -46,4 +46,4 @@ src/main/resources
 ### Mac OS ###
 .DS_Store
 
-readme.md
+*.md
