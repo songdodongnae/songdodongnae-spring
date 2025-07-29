@@ -122,6 +122,45 @@ public class CurationService {
         );
     }
 
+    public CustomPage<CurationThumbnailResDto> getAllCurationByType(int currentPage, int pageSize, CurationType type) {
+        int offset = (currentPage - 1) * pageSize;
+        List<Curation> curations = curationRepository.findAll(offset, pageSize);
+        long totalElements = curationRepository.countCuration();
+
+        List<CurationThumbnailResDto> curationsDto = curations.stream()
+                    .filter(curation -> curation.getType() == type)
+                    .map(curation -> CurationThumbnailResDto.fromEntity(curation, false))
+                    .toList();
+
+        return CustomPage.of(
+                curationsDto,
+                currentPage,
+                pageSize,
+                totalElements
+        );
+    }
+
+    public CustomPage<CurationThumbnailResDto> getAllUserCurationByType(Long userId, int currentPage, int pageSize, CurationType type) {
+        List<Long> targetIdsByUserAndType = bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.CURATION);
+        Set<Long> bookmarkedSet = new HashSet<>(targetIdsByUserAndType);
+
+        int offset = (currentPage - 1) * pageSize;
+        List<Curation> curations = curationRepository.findAll(offset, pageSize);
+        long totalElements = curationRepository.countCuration();
+
+        List<CurationThumbnailResDto> curationsDto = curations.stream()
+                .filter(curation -> curation.getType() == type)
+                .map(curation -> CurationThumbnailResDto.fromEntity(curation, bookmarkedSet.contains(curation.getId())))
+                .toList();
+
+        return CustomPage.of(
+                curationsDto,
+                currentPage,
+                pageSize,
+                totalElements
+        );
+    }
+
     public CurationResDto updateCuration(Long userId, Long id, CurationReqDto curationReqDto){
         isAdmin(userId);
 
