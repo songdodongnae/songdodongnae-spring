@@ -1,8 +1,6 @@
 package com.culturefinder.songdodongnae.curation.domain;
 
 import com.culturefinder.songdodongnae.creator.domain.Creator;
-import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
-import com.culturefinder.songdodongnae.festival.domain.Festival;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -24,11 +22,11 @@ public class Curation {
 
     private CurationType type;
 
-    @OneToMany
-    private List<DeliciousSpot> deliciousSpots = new ArrayList<>();
+    @OneToMany(mappedBy = "curation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CurationDeliciousSpot> curationDeliciousSpots = new ArrayList<>();
 
-    @OneToMany
-    private List<Festival> festivals = new ArrayList<>();
+    @OneToMany(mappedBy = "curation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CurationFestival> curationFestivals = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
@@ -48,8 +46,8 @@ public class Curation {
 
     public void update(Curation curation) {
         this.type = curation.type;
-        this.deliciousSpots = curation.deliciousSpots;
-        this.festivals = curation.festivals;
+        this.curationDeliciousSpots = curation.curationDeliciousSpots;
+        this.curationFestivals = curation.curationFestivals;
         this.creator = curation.creator;
         this.title = curation.title;
         this.description = curation.description;
