@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Festival {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "festival_id")
     private Long id;
 

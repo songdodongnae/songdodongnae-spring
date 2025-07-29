@@ -5,12 +5,17 @@ import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
 import com.culturefinder.songdodongnae.curation.domain.Curation;
+import com.culturefinder.songdodongnae.curation.domain.CurationType;
 import com.culturefinder.songdodongnae.curation.dto.CurationReqDto;
 import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
 import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
+import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
+import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.exception.ErrorCode;
+import com.culturefinder.songdodongnae.festival.domain.Festival;
+import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
 import com.culturefinder.songdodongnae.s3.S3UploadService;
 import com.culturefinder.songdodongnae.user.domain.Role;
 import com.culturefinder.songdodongnae.user.domain.User;
@@ -20,6 +25,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,13 +40,24 @@ public class CurationService {
     private final S3UploadService s3UploadService;
     private final CurationRepository curationRepository;
     private final CreatorRepository creatorRepository;
+    private final DeliciousSpotRepository deliciousSpotRepository;
+    private final FestivalRepository festivalRepository;
 
     public CurationResDto createCuration(Long userId, CurationReqDto curationReqDto) {
         isAdmin(userId);
 
         Creator creator = creatorRepository.findByName(curationReqDto.getCreatorName())
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-        Curation curation = CurationReqDto.toEntity(curationReqDto, creator);
+
+        List<DeliciousSpot> deliciousSpots = new ArrayList<>();
+        List<Festival> festivals = new ArrayList<>();
+
+        if (curationReqDto.getType() == CurationType.DELICIOUS_SPOT)
+            deliciousSpots = deliciousSpotRepository.findAllById(curationReqDto.getIds());
+        else if (curationReqDto.getType() == CurationType.FESTIVAL)
+            festivals = festivalRepository.findAllById(curationReqDto.getIds());
+
+        Curation curation = CurationReqDto.toEntity(curationReqDto, creator, deliciousSpots, festivals);
         Curation savedCuration = curationRepository.saveCuration(curation);
         return CurationResDto.fromEntity(savedCuration, creator, false);
     }
@@ -116,7 +133,17 @@ public class CurationService {
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
         Creator findCreator = creatorRepository.findByName(curationReqDto.getCreatorName())
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-        curation.update(CurationReqDto.toEntity(curationReqDto, findCreator));
+
+        List<DeliciousSpot> deliciousSpots = new ArrayList<>();
+        List<Festival> festivals = new ArrayList<>();
+
+        if (curationReqDto.getType() == CurationType.DELICIOUS_SPOT)
+            deliciousSpots = deliciousSpotRepository.findAllById(curationReqDto.getIds());
+        else if (curationReqDto.getType() == CurationType.FESTIVAL)
+            festivals = festivalRepository.findAllById(curationReqDto.getIds());
+
+
+        curation.update(CurationReqDto.toEntity(curationReqDto, findCreator, deliciousSpots, festivals));
         return CurationResDto.fromEntity(curation, findCreator, false);
     }
 

@@ -1,6 +1,8 @@
 package com.culturefinder.songdodongnae.curation.domain;
 
 import com.culturefinder.songdodongnae.creator.domain.Creator;
+import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
+import com.culturefinder.songdodongnae.festival.domain.Festival;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -16,15 +18,17 @@ import java.util.*;
 @AllArgsConstructor
 public class Curation {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "curation_id")
     private Long id;
 
     private CurationType type;
 
+    @Builder.Default
     @OneToMany(mappedBy = "curation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CurationDeliciousSpot> curationDeliciousSpots = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "curation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CurationFestival> curationFestivals = new ArrayList<>();
 
@@ -43,6 +47,17 @@ public class Curation {
     private String description;
 
     private String imageUrl;
+
+
+    public void addDeliciousSpot(DeliciousSpot deliciousSpot) {
+        CurationDeliciousSpot curationDeliciousSpot = new CurationDeliciousSpot(this, deliciousSpot);
+        curationDeliciousSpots.add(curationDeliciousSpot);
+    }
+
+    public void addFestival(Festival festival) {
+        CurationFestival curationFestival = new CurationFestival(this, festival);
+        curationFestivals.add(curationFestival);
+    }
 
     public void update(Curation curation) {
         this.type = curation.type;

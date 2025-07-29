@@ -4,10 +4,11 @@ import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.curation.domain.CurationType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-
+@Getter
 @Builder
 public class CurationThumbnailResDto {
 

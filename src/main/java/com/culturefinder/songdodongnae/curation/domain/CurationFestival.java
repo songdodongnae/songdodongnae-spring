@@ -2,8 +2,11 @@ package com.culturefinder.songdodongnae.curation.domain;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
+@Getter
 @NoArgsConstructor
 @Entity
 public class CurationFestival {

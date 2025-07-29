@@ -20,7 +20,7 @@ import java.util.List;
 @Entity
 public class Creator {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "creator_id")
     private Long id;
 

@@ -2,9 +2,11 @@ package com.culturefinder.songdodongnae.curation.domain;
 
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
+@Getter
 @NoArgsConstructor
 @Entity
 public class CurationDeliciousSpot {
