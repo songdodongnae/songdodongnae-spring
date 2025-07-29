@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class DeliciousSpot {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "delicious_spot_id")
     private Long id;
 

@@ -18,7 +18,7 @@ import java.util.*;
 @AllArgsConstructor
 public class Curation {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "curation_id")
     private Long id;
 
