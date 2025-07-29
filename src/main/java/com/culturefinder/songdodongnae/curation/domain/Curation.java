@@ -59,13 +59,17 @@ public class Curation {
         curationFestivals.add(curationFestival);
     }
 
-    public void update(Curation curation) {
-        this.type = curation.type;
-        this.curationDeliciousSpots = curation.curationDeliciousSpots;
-        this.curationFestivals = curation.curationFestivals;
-        this.creator = curation.creator;
-        this.title = curation.title;
-        this.description = curation.description;
-        this.imageUrl = curation.imageUrl;
+    public void update(String title, String description, CurationType type, String imageUrl, Creator creator, List<Festival> festivals, List<DeliciousSpot> deliciousSpots) {
+        this.type = type;
+        this.title = title;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.creator = creator;
+
+        this.curationFestivals.clear();
+        this.curationDeliciousSpots.clear();
+
+        festivals.forEach(this::addFestival);
+        deliciousSpots.forEach(this::addDeliciousSpot);
     }
 }

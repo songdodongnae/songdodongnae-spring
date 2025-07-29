@@ -142,8 +142,15 @@ public class CurationService {
         else if (curationReqDto.getType() == CurationType.FESTIVAL)
             festivals = festivalRepository.findAllById(curationReqDto.getIds());
 
-
-        curation.update(CurationReqDto.toEntity(curationReqDto, findCreator, deliciousSpots, festivals));
+        curation.update(
+                curationReqDto.getTitle(),
+                curationReqDto.getDescription(),
+                curationReqDto.getType(),
+                curationReqDto.getImageUrl(),
+                findCreator,
+                festivals,
+                deliciousSpots
+        );
         return CurationResDto.fromEntity(curation, findCreator, false);
     }
 
