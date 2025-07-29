@@ -50,12 +50,12 @@ public class Curation {
 
 
     public void addDeliciousSpot(DeliciousSpot deliciousSpot) {
-        CurationDeliciousSpot curationDeliciousSpot = new CurationDeliciousSpot(this, deliciousSpot);
+        CurationDeliciousSpot curationDeliciousSpot = CurationDeliciousSpot.of(this, deliciousSpot);
         curationDeliciousSpots.add(curationDeliciousSpot);
     }
 
     public void addFestival(Festival festival) {
-        CurationFestival curationFestival = new CurationFestival(this, festival);
+        CurationFestival curationFestival = CurationFestival.of(this, festival);
         curationFestivals.add(curationFestival);
     }
 

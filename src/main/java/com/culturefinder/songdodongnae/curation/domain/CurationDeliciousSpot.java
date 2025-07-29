@@ -22,9 +22,11 @@ public class CurationDeliciousSpot {
     @JoinColumn(name = "delicious_spot_id")
     private DeliciousSpot deliciousSpot;
 
-    public CurationDeliciousSpot(Curation curation, DeliciousSpot deliciousSpot) {
-        this.curation = curation;
-        this.deliciousSpot = deliciousSpot;
+    public static CurationDeliciousSpot of(Curation curation, DeliciousSpot deliciousSpot) {
+        CurationDeliciousSpot curationDeliciousSpot = new CurationDeliciousSpot();
+        curationDeliciousSpot.curation = curation;
+        curationDeliciousSpot.deliciousSpot = deliciousSpot;
+        return curationDeliciousSpot;
     }
 }
 

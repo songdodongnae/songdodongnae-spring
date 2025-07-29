@@ -22,9 +22,11 @@ public class CurationFestival {
     @JoinColumn(name = "festival_id")
     private Festival festival;
 
-    public CurationFestival(Curation curation, Festival festival) {
-        this.curation = curation;
-        this.festival = festival;
+    public static CurationFestival of(Curation curation, Festival festival) {
+        CurationFestival curationFestival = new CurationFestival();
+        curationFestival.curation = curation;
+        curationFestival.festival = festival;
+        return curationFestival;
     }
 
 }
