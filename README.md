@@ -76,5 +76,9 @@ src/main/java
 
 </br>
 
+## 👉 아키텍처
+<img width="921" height="321" alt="아키텍처" src="https://github.com/user-attachments/assets/1a33f6ed-0fdb-4285-91b4-fde5519d66ce" />
+
+
 ## 🗂️ Database 설계
 <img width="2868" height="1834" alt="image" src="https://github.com/user-attachments/assets/c3494fcf-defc-4115-a2e0-ee41747eea3f" />
