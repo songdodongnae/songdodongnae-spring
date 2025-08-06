@@ -46,16 +46,16 @@ public class MyPageService {
         List<Long> pageIds = targetIds.subList(offset, end);
 
         Map<Long, ThumbnailResDto> dtoMap = switch (bookmarkType) {
-            case BookmarkType.FESTIVAL -> festivalRepository.findAllById(pageIds)
+            case FESTIVAL -> festivalRepository.findAllById(pageIds)
                     .stream()
                     .map(festival -> ThumbnailResDto.of(festival, festival.getCreator().getName()))
                     .collect(Collectors.toMap(ThumbnailResDto::getId, dto -> dto));
-            case BookmarkType.DELICIOUS_SPOT -> deliciousSpotRepository.findAllById(pageIds)
+            case DELICIOUS_SPOT -> deliciousSpotRepository.findAllById(pageIds)
                     .stream()
                     .map(deliciousSpot -> ThumbnailResDto.of(deliciousSpot, deliciousSpot.getCreator().getName()))
                     .collect(Collectors.toMap(ThumbnailResDto::getId, dto -> dto));
 
-            case BookmarkType.CURATION -> curationRepository.findAllById(pageIds)
+            case CURATION -> curationRepository.findAllById(pageIds)
                     .stream()
                     .map(curation -> ThumbnailResDto.of(curation, curation.getCreator().getName()))
                     .collect(Collectors.toMap(ThumbnailResDto::getId, dto -> dto));
