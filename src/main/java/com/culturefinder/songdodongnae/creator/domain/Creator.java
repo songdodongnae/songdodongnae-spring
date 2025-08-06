@@ -42,14 +42,17 @@ public class Creator {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @Builder.Default
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY,
             orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Curation> curations = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY,
             orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Festival> festivals = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY,
             orphanRemoval = true, cascade = CascadeType.ALL)
     private List<DeliciousSpot> deliciousSpots = new ArrayList<>();

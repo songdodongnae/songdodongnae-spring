@@ -61,6 +61,7 @@ public class Festival {
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator_id")
     private Creator creator;
 
     private String thumbnailImageUrl;
