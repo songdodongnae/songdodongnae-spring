@@ -5,6 +5,7 @@ import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
 import com.culturefinder.songdodongnae.creator.dto.CreatorThumbnailResDto;
 import com.culturefinder.songdodongnae.creator.service.CreatorService;
 import com.culturefinder.songdodongnae.user.service.AuthService;
+import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -38,8 +39,11 @@ public class CreatorController {
     @Operation(summary = "크리에이터 모두 조회", description = "크리에이터 썸네일 목록 조회합니다.")
     @ApiResponse(responseCode = "200", description = "크리에이터 썸네일 목록 조회 성공")
     @GetMapping
-    public ResponseEntity<ResponseContainer<List<CreatorThumbnailResDto>>> getAllCreator() {
-        List<CreatorThumbnailResDto> dtos = creatorService.getAllCreator();
+    public ResponseEntity<ResponseContainer<CustomPage<CreatorThumbnailResDto>>> getAllCreator(
+            @RequestParam(defaultValue = "1") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        CustomPage<CreatorThumbnailResDto> dtos = creatorService.getAllCreator(currentPage, pageSize);
         return ResponseContainer.create(HttpStatus.OK, "크리에이터 썸네일 목록 조회 성공", dtos);
     }
 

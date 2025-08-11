@@ -47,4 +47,12 @@ public class CreatorRepository {
         Creator findCreator = em.find(Creator.class, id);
         if (findCreator != null) em.remove(findCreator);
     }
+
+    public long countCreator() {
+        return em.createQuery(
+                        "SELECT COUNT(c) FROM Creator c",
+                        Long.class
+                )
+                .getSingleResult();
+    }
 }

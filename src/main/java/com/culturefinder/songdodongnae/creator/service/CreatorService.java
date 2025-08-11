@@ -16,6 +16,7 @@ import com.culturefinder.songdodongnae.s3.S3UploadService;
 import com.culturefinder.songdodongnae.user.domain.Role;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
+import com.culturefinder.songdodongnae.utils.CustomPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,10 +46,15 @@ public class CreatorService {
         return CreatorResDto.fromEntity(savedCreator);
     }
 
-    public List<CreatorThumbnailResDto> getAllCreator() {
-        return creatorRepository.findAll().stream()
+    public CustomPage<CreatorThumbnailResDto> getAllCreator(int currentPage, int pageSize) {
+        int offset = (currentPage - 1) * pageSize;
+        long totalElements = creatorRepository.countCreator();
+
+        List<CreatorThumbnailResDto> dtos = creatorRepository.findAll().stream()
                 .map(CreatorThumbnailResDto::fromThumbEntity)
                 .collect(Collectors.toList());
+
+        return CustomPage.of(dtos, currentPage, pageSize, totalElements);
     }
 
     public CreatorResDto getCreator(Long id) {
