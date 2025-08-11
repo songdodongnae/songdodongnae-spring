@@ -50,7 +50,7 @@ public class CreatorService {
         int offset = (currentPage - 1) * pageSize;
         long totalElements = creatorRepository.countCreator();
 
-        List<CreatorThumbnailResDto> dtos = creatorRepository.findAll().stream()
+        List<CreatorThumbnailResDto> dtos = creatorRepository.findAll(offset, pageSize).stream()
                 .map(CreatorThumbnailResDto::fromThumbEntity)
                 .collect(Collectors.toList());
 

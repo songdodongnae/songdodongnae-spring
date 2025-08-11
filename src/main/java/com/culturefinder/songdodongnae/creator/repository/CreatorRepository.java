@@ -23,8 +23,11 @@ public class CreatorRepository {
         return creator;
     }
 
-    public List<Creator> findAll() {
-        return em.createQuery("SELECT f from Creator f", Creator.class).getResultList();
+    public List<Creator> findAll(int offset, int pageSize) {
+        return em.createQuery("SELECT f from Creator f", Creator.class)
+                .setFirstResult(offset)
+                .setMaxResults(pageSize)
+                .getResultList();
     }
 
     public Optional<Creator> findById(Long id) {
