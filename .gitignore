@@ -48,3 +48,4 @@ src/main/resources
 
 *.md
 .env
+docker-compose.yml
