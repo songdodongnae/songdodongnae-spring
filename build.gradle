@@ -2,7 +2,6 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.0'
 	id 'io.spring.dependency-management' version '1.1.6'
-	id 'war'
 }
 
 group = 'com.culturefinder'
@@ -56,4 +55,10 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-bootWar.enabled = true
+bootJar {
+	enabled = true
+}
+
+jar {
+	enabled = false
+}
