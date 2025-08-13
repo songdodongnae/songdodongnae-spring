@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -68,10 +69,11 @@ public class DeliciousSpot {
 
     private String thumbnailImageUrl;
 
+    @Builder.Default
     @ElementCollection
     @CollectionTable(name = "delicious_spot_image_urls",
             joinColumns = @JoinColumn(name = "delicious_spot_id"))
-    private List<String> imageUrls;
+    private List<String> imageUrls = new ArrayList<>();
 
     public void updateDeliciousSpot(DeliciousSpot deliciousSpot) {
         this.title = deliciousSpot.getTitle();

@@ -20,7 +20,7 @@ public class DeliciousSpotReqDto {
     private String title;
 
     @NotBlank(message = "크리에이터 이름은 필수입니다")
-    @Schema(description = "크리에이터 이름", example = "송도맛집탐험가")
+    @Schema(description = "크리에이터 이름", example = "송이")
     private String creatorName;
 
     @Schema(description = "위도", example = "37.3855")
