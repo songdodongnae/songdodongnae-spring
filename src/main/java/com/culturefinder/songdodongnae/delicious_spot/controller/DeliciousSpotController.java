@@ -4,11 +4,14 @@ import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotThumbnailResDto;
 import com.culturefinder.songdodongnae.delicious_spot.service.DeliciousSpotService;
+import com.culturefinder.songdodongnae.exception.ErrorDto;
 import com.culturefinder.songdodongnae.user.service.AuthService;
 import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,10 +33,10 @@ public class DeliciousSpotController {
 
     @Operation(summary = "맛집 생성")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "맛집 생성 성공"),
-            @ApiResponse(responseCode = "400", description = "필수 필드 누락 또는 잘못된 요청 데이터"),
-            @ApiResponse(responseCode = "403", description = "접근 권한이 없음 (ADMIN 권한 필요)"),
-            @ApiResponse(responseCode = "404", description = "크리에이터를 찾을 수 없음")
+            @ApiResponse(responseCode = "201", description = "맛집 생성 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class))),
+            @ApiResponse(responseCode = "400", description = "필수 필드 누락 또는 잘못된 요청 데이터", content = @Content(schema = @Schema(implementation = ErrorDto.class))),
+            @ApiResponse(responseCode = "403", description = "접근 권한이 없음 (ADMIN 권한 필요)", content = @Content(schema = @Schema(implementation = ErrorDto.class))),
+            @ApiResponse(responseCode = "404", description = "크리에이터를 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
     @PostMapping
     public ResponseEntity<ResponseContainer<DeliciousSpotResDto>> createDeliciousSpot(
@@ -45,8 +48,8 @@ public class DeliciousSpotController {
 
     @Operation(summary = "맛집 조회")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "맛집 조회 성공"),
-            @ApiResponse(responseCode = "404", description = "맛집을 찾을 수 없음")
+            @ApiResponse(responseCode = "200", description = "맛집 조회 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class))),
+            @ApiResponse(responseCode = "404", description = "맛집을 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
     @GetMapping("/{id}")
     public ResponseEntity<ResponseContainer<DeliciousSpotResDto>> readDeliciousSpot(
@@ -65,7 +68,7 @@ public class DeliciousSpotController {
     }
 
     @Operation(summary = "모든 맛집 조회")
-    @ApiResponse(responseCode = "200", description = "모든 맛집 조회 성공")
+    @ApiResponse(responseCode = "200", description = "모든 맛집 조회 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class)))
     @GetMapping
     public ResponseEntity<ResponseContainer<CustomPage<DeliciousSpotThumbnailResDto>>> getAllDeliciousSpots(
             @Parameter(description = "현재 페이지 번호", example = "1") @RequestParam(defaultValue = "1") int currentPage,
@@ -83,10 +86,10 @@ public class DeliciousSpotController {
 
     @Operation(summary = "맛집 수정")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "맛집 수정 성공"),
-            @ApiResponse(responseCode = "400", description = "필수 필드 누락 또는 잘못된 요청 데이터"),
-            @ApiResponse(responseCode = "403", description = "접근 권한이 없음 (ADMIN 권한 필요)"),
-            @ApiResponse(responseCode = "404", description = "맛집 또는 크리에이터를 찾을 수 없음")
+            @ApiResponse(responseCode = "200", description = "맛집 수정 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class))),
+            @ApiResponse(responseCode = "400", description = "필수 필드 누락 또는 잘못된 요청 데이터", content = @Content(schema = @Schema(implementation = ErrorDto.class))),
+            @ApiResponse(responseCode = "403", description = "접근 권한이 없음 (ADMIN 권한 필요)", content = @Content(schema = @Schema(implementation = ErrorDto.class))),
+            @ApiResponse(responseCode = "404", description = "맛집 또는 크리에이터를 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
     @PutMapping("/{id}")
     public ResponseEntity<ResponseContainer<DeliciousSpotResDto>> updateDeliciousSpot(
@@ -99,9 +102,9 @@ public class DeliciousSpotController {
 
     @Operation(summary = "맛집 삭제")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "맛집 삭제 성공"),
-            @ApiResponse(responseCode = "403", description = "접근 권한이 없음 (ADMIN 권한 필요)"),
-            @ApiResponse(responseCode = "404", description = "맛집을 찾을 수 없음")
+            @ApiResponse(responseCode = "200", description = "맛집 삭제 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class))),
+            @ApiResponse(responseCode = "403", description = "접근 권한이 없음 (ADMIN 권한 필요)", content = @Content(schema = @Schema(implementation = ErrorDto.class))),
+            @ApiResponse(responseCode = "404", description = "맛집을 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseContainer<Object>> deleteDeliciousSpot(

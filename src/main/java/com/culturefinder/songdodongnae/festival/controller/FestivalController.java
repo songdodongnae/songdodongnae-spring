@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.festival.controller;
 
+import com.culturefinder.songdodongnae.exception.ErrorDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalReqDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalResDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalThumbnailResDto;
@@ -9,6 +10,8 @@ import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,10 +35,10 @@ public class FestivalController {
 
     @Operation(summary = "축제 생성")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "축제 생성 성공"),
-            @ApiResponse(responseCode = "400", description = "필수 필드 누락 또는 잘못된 요청 데이터"),
-            @ApiResponse(responseCode = "403", description = "접근 권한이 없음 (ADMIN 권한 필요)"),
-            @ApiResponse(responseCode = "404", description = "크리에이터를 찾을 수 없음")
+            @ApiResponse(responseCode = "201", description = "축제 생성 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class))),
+            @ApiResponse(responseCode = "400", description = "필수 필드 누락 또는 잘못된 요청 데이터", content = @Content(schema = @Schema(implementation = ErrorDto.class))),
+            @ApiResponse(responseCode = "403", description = "접근 권한이 없음 (ADMIN 권한 필요)", content = @Content(schema = @Schema(implementation = ErrorDto.class))),
+            @ApiResponse(responseCode = "404", description = "크리에이터를 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
     @PostMapping
     public ResponseEntity<ResponseContainer<FestivalResDto>> createFestival(
@@ -47,8 +50,8 @@ public class FestivalController {
 
     @Operation(summary = "축제 조회")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "축제 조회 성공"),
-            @ApiResponse(responseCode = "404", description = "축제를 찾을 수 없음")
+            @ApiResponse(responseCode = "200", description = "축제 조회 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class))),
+            @ApiResponse(responseCode = "404", description = "축제를 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorDto.class))),
     })
     @GetMapping("/{id}")
     public ResponseEntity<ResponseContainer<FestivalResDto>> getFestival(
@@ -66,7 +69,7 @@ public class FestivalController {
 
 
     @Operation(summary = "해당 년/월 축제 조회")
-    @ApiResponse(responseCode = "200", description = "해당 월 축제 조회 성공")
+    @ApiResponse(responseCode = "200", description = "해당 월 축제 조회 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class)))
     @GetMapping("/day")
     public ResponseEntity<ResponseContainer<List<FestivalThumbnailResDto>>> getFestivalsByYearAndMonth(
             @Parameter(description = "연도", required = true, example = "2024") @RequestParam int year,
@@ -82,7 +85,7 @@ public class FestivalController {
     }
 
     @Operation(summary = "모든 축제 조회")
-    @ApiResponse(responseCode = "200", description = "모든 축제 조회 성공")
+    @ApiResponse(responseCode = "200", description = "모든 축제 조회 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class)))
     @GetMapping
     public ResponseEntity<ResponseContainer<CustomPage<FestivalThumbnailResDto>>> getAllFestivals(
             @Parameter(description = "현재 페이지 번호", example = "1") @RequestParam(defaultValue = "1") int currentPage,
@@ -100,10 +103,10 @@ public class FestivalController {
 
     @Operation(summary = "축제 수정")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "축제 수정 성공"),
-            @ApiResponse(responseCode = "400", description = "필수 필드 누락 또는 잘못된 요청 데이터"),
-            @ApiResponse(responseCode = "403", description = "접근 권한이 없음 (ADMIN 권한 필요)"),
-            @ApiResponse(responseCode = "404", description = "축제 또는 크리에이터를 찾을 수 없음")
+            @ApiResponse(responseCode = "200", description = "축제 수정 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class))),
+            @ApiResponse(responseCode = "400", description = "필수 필드 누락 또는 잘못된 요청 데이터", content = @Content(schema = @Schema(implementation = ErrorDto.class))),
+            @ApiResponse(responseCode = "403", description = "접근 권한이 없음 (ADMIN 권한 필요)", content = @Content(schema = @Schema(implementation = ErrorDto.class))),
+            @ApiResponse(responseCode = "404", description = "축제 또는 크리에이터를 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
     @PutMapping("/{id}")
     public ResponseEntity<ResponseContainer<FestivalResDto>> updateFestival(
@@ -116,9 +119,9 @@ public class FestivalController {
 
     @Operation(summary = "축제 삭제")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "축제 삭제 성공"),
-            @ApiResponse(responseCode = "403", description = "접근 권한이 없음 (ADMIN 권한 필요)"),
-            @ApiResponse(responseCode = "404", description = "축제를 찾을 수 없음")
+            @ApiResponse(responseCode = "200", description = "축제 삭제 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class))),
+            @ApiResponse(responseCode = "403", description = "접근 권한이 없음 (ADMIN 권한 필요)", content = @Content(schema = @Schema(implementation = ErrorDto.class))),
+            @ApiResponse(responseCode = "404", description = "축제를 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseContainer<FestivalResDto>> deleteFestival(

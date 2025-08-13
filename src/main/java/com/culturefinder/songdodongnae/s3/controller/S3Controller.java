@@ -4,6 +4,8 @@ import com.culturefinder.songdodongnae.s3.S3UploadService;
 import com.culturefinder.songdodongnae.s3.dto.PresignedUrlResponseDto;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -25,7 +27,7 @@ public class S3Controller {
     private final S3UploadService s3UploadService;
 
     @Operation(summary = "Presigned URL, Image URL 생성")
-    @ApiResponse(responseCode = "200", description = "Presigned URL 생성 성공")
+    @ApiResponse(responseCode = "200", description = "Presigned URL 생성 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class)))
     @GetMapping("/presigned-url")
     public ResponseEntity<ResponseContainer<PresignedUrlResponseDto>> getPresignedUrl() {
         UUID uuid = UUID.randomUUID();

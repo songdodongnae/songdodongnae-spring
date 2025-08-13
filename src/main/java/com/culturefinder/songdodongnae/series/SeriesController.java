@@ -12,6 +12,8 @@ import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +34,7 @@ public class SeriesController {
     private final CurationService curationService;
 
     @Operation(summary = "모든 맛집 조회")
-    @ApiResponse(responseCode = "200", description = "모든 맛집 조회 성공")
+    @ApiResponse(responseCode = "200", description = "모든 맛집 조회 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class)))
     @GetMapping("/delicious-spot")
     public ResponseEntity<ResponseContainer<CustomPage<DeliciousSpotThumbnailResDto>>> getAllDeliciousSpots(
             @Parameter(description = "현재 페이지 번호", example = "1") @RequestParam(defaultValue = "1") int currentPage,
@@ -49,7 +51,7 @@ public class SeriesController {
     }
 
     @Operation(summary = "모든 축제 조회")
-    @ApiResponse(responseCode = "200", description = "모든 축제 조회 성공")
+    @ApiResponse(responseCode = "200", description = "모든 축제 조회 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class)))
     @GetMapping("/festival")
     public ResponseEntity<ResponseContainer<CustomPage<FestivalThumbnailResDto>>> getAllFestivals(
             @Parameter(description = "현재 페이지 번호", example = "1") @RequestParam(defaultValue = "1") int currentPage,
@@ -65,7 +67,7 @@ public class SeriesController {
     }
 
     @Operation(summary = "타입별로 모든 큐레이션 조회")
-    @ApiResponse(responseCode = "200", description = "타입별로 모든 큐레이션 조회 성공")
+    @ApiResponse(responseCode = "200", description = "타입별로 모든 큐레이션 조회 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class)))
     @GetMapping("/curation/{type}")
     public ResponseEntity<ResponseContainer<CustomPage<CurationThumbnailResDto>>> getAllCurationFestival(
             @Parameter(description = "큐래이션 타입", required = true) @PathVariable CurationType type,

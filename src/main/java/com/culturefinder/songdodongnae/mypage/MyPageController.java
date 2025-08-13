@@ -6,6 +6,8 @@ import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -26,7 +28,7 @@ public class MyPageController {
 
 
     @Operation(summary = "북마크 조회")
-    @ApiResponse(responseCode = "200", description = "북마크 조회 성공")
+    @ApiResponse(responseCode = "200", description = "북마크 조회 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class)))
     @GetMapping("/bookmark/{type}")
     public ResponseEntity<ResponseContainer<CustomPage<ThumbnailResDto>>> getPostByType(
             @Parameter(description = "북마크 타입", required = true) @PathVariable BookmarkType type,
@@ -39,7 +41,7 @@ public class MyPageController {
     }
 
     @Operation(summary = "닉네임 변경")
-    @ApiResponse(responseCode = "200", description = "닉네임 변경 성공")
+    @ApiResponse(responseCode = "200", description = "닉네임 변경 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class)))
     @PutMapping("/nickname")
     public ResponseEntity<ResponseContainer<String>> updateNickName(
             @Valid @RequestBody NickNameReqDto nickNameReqDto) {
@@ -49,7 +51,7 @@ public class MyPageController {
     }
 
     @Operation(summary = "회원 탈퇴")
-    @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공")
+    @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class)))
     @DeleteMapping("/delete")
     public ResponseEntity<ResponseContainer<String>> deleteUser() {
         Long userId = authService.getAuthenticatedUserId();
