@@ -12,11 +12,11 @@ import lombok.Getter;
 @Getter
 public class CreatorReqDto {
 
-    @Schema(description = "크리에이터 이름", example = "송도맛집탐험가")
+    @Schema(description = "크리에이터 이름", example = "송이")
     @NotNull
     private String name;
 
-    @Schema(description = "크리에이터 소개", example = "송도지역 맛집을 전문적으로 소개하는 크리에이터")
+    @Schema(description = "크리에이터 소개", example = "매콤한 음식을 좋아하는 크리에이터")
     private String introduction;
 
     @Schema(description = "크리에이터 상세 설명")

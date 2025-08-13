@@ -76,7 +76,7 @@ public class CurationService {
         Set<Long> bookmarkedFestivals = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.FESTIVAL));
 
         Curation curationById = curationRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
         Creator creator = creatorRepository.findByName(curationById.getCreator().getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
         return CurationResDto.fromEntity(curationById, creator, bookmarkedDeliciousSpots, bookmarkedFestivals, isBookmarked);
