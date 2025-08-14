@@ -4,7 +4,10 @@ import com.culturefinder.songdodongnae.s3.S3UploadService;
 import com.culturefinder.songdodongnae.s3.dto.PresignedUrlResponseDto;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
+
+@Tag(name = "S3 API", description = "파일 업로드 관련 API")
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/s3")
@@ -21,8 +26,8 @@ public class S3Controller {
 
     private final S3UploadService s3UploadService;
 
-    @Operation(summary = "Presigned URL, Image URL 생성", description = "Presigned URL과 이미지 URL을 생성합니다. Presigned URL로 이미지를 업로드한 이후, 이미지 URL을 활용해서 요청하면 됩니다.")
-    @ApiResponse(responseCode = "200", description = "Presigned URL 생성 성공")
+    @Operation(summary = "Presigned URL, Image URL 생성")
+    @ApiResponse(responseCode = "200", description = "Presigned URL 생성 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class)))
     @GetMapping("/presigned-url")
     public ResponseEntity<ResponseContainer<PresignedUrlResponseDto>> getPresignedUrl() {
         UUID uuid = UUID.randomUUID();

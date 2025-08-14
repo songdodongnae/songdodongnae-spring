@@ -66,10 +66,11 @@ public class Festival {
 
     private String thumbnailImageUrl;
 
+    @Builder.Default
     @ElementCollection
     @CollectionTable(name = "festival_image_urls",
             joinColumns = @JoinColumn(name = "festival_id"))
-    private List<String> imageUrls;
+    private List<String> imageUrls = new ArrayList<>();
 
     public void update(Festival festival) {
         this.title = festival.getTitle();
