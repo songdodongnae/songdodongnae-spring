@@ -7,6 +7,7 @@ import com.culturefinder.songdodongnae.creator.service.CreatorService;
 import com.culturefinder.songdodongnae.exception.ErrorDto;
 import com.culturefinder.songdodongnae.user.service.AuthService;
 import com.culturefinder.songdodongnae.utils.CustomPage;
+import com.culturefinder.songdodongnae.utils.CursorPage;
 import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -50,6 +51,24 @@ public class CreatorController {
     ) {
         CustomPage<CreatorThumbnailResDto> dtos = creatorService.getAllCreator(currentPage, pageSize);
         return ResponseContainer.create(HttpStatus.OK, "크리에이터 썸네일 목록 조회 성공", dtos);
+    }
+
+    @GetMapping("/v2")
+    public ResponseEntity<ResponseContainer<CustomPage<CreatorThumbnailResDto>>> getAllCreatorV2(
+            @Parameter(description = "현재 페이지 번호", example = "1") @RequestParam(defaultValue = "1") int currentPage,
+            @Parameter(description = "페이지 크기", example = "10") @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        CustomPage<CreatorThumbnailResDto> dtos = creatorService.getAllCreatorV2(currentPage, pageSize);
+        return ResponseContainer.create(HttpStatus.OK, "크리에이터 썸네일 목록 V2 페이지네이션 조회 성공", dtos);
+    }
+
+    @GetMapping("/cursor")
+    public ResponseEntity<ResponseContainer<CursorPage<CreatorThumbnailResDto>>> getAllCreatorsByCursor(
+            @Parameter(description = "커서 (이전 페이지의 마지막 ID)", example = "20") @RequestParam(required = false) Long cursor,
+            @Parameter(description = "페이지 크기", example = "10") @RequestParam(defaultValue = "10") int size
+    ) {
+        CursorPage<CreatorThumbnailResDto> dtos = creatorService.getAllCreatorsByCursor(cursor, size);
+        return ResponseContainer.create(HttpStatus.OK, "크리에이터 썸네일 목록 커서 기반 조회 성공", dtos);
     }
 
     @Operation(summary = "크리에이터 상세 조회")

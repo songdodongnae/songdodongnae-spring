@@ -17,10 +17,12 @@ import com.culturefinder.songdodongnae.user.domain.Role;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import com.culturefinder.songdodongnae.utils.CustomPage;
-import jakarta.transaction.Transactional;
+import com.culturefinder.songdodongnae.utils.CursorPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -55,6 +57,40 @@ public class CreatorService {
                 .collect(Collectors.toList());
 
         return CustomPage.of(dtos, currentPage, pageSize, totalElements);
+    }
+
+    public CustomPage<CreatorThumbnailResDto> getAllCreatorV2(int currentPage, int pageSize) {
+        int offset = (currentPage - 1) * pageSize;
+        long totalElements = getCreatorCount();
+
+        List<CreatorThumbnailResDto> dtos = creatorRepository.findAllV2(offset, pageSize);
+
+        return CustomPage.of(dtos, currentPage, pageSize, totalElements);
+    }
+
+    @Cacheable(value = "creators:count", sync = true)
+    @Transactional(readOnly = true)
+    public long getCreatorCount() {
+        long count = creatorRepository.countCreator();
+        return count;
+    }
+
+    public CursorPage<CreatorThumbnailResDto> getAllCreatorsByCursor(Long cursor, int size) {
+        
+        List<CreatorThumbnailResDto> results =
+                cursor == null ?
+                        creatorRepository.findFirstPage(size) :
+                        creatorRepository.findAllByCursor(cursor, size);
+
+        boolean hasNext = results.size() > size;
+        if (hasNext) {
+            results = results.subList(0, size);
+        }
+
+        String nextCursor = hasNext && !results.isEmpty() ? 
+            String.valueOf(results.get(results.size() - 1).getId()) : null;
+
+        return CursorPage.of(results, nextCursor, hasNext);
     }
 
     public CreatorResDto getCreator(Long id) {
