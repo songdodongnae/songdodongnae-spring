@@ -12,6 +12,7 @@ import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotThumbnailResDto;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
 import com.culturefinder.songdodongnae.exception.CustomException;
+import com.culturefinder.songdodongnae.exception.ErrorCode;
 import com.culturefinder.songdodongnae.user.domain.Role;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
@@ -57,6 +58,8 @@ public class DeliciousSpotService {
     }
 
     public DeliciousSpotResDto getUserDeliciousSpot(Long id, Long userId) {
+        validUserId(userId);
+
         DeliciousSpot deliciousSpot = deliciousSpotRepository.findById(id)
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
         boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.DELICIOUS_SPOT, id);
@@ -77,6 +80,8 @@ public class DeliciousSpotService {
     }
 
     public CustomPage<DeliciousSpotThumbnailResDto> getUserAllDeliciousSpots(Long userId, int currentPage, int pageSize) {
+        validUserId(userId);
+
         List<Long> deliciousSpotIds = bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.DELICIOUS_SPOT);
         Set<Long> bookmarkedSet = new HashSet<>(deliciousSpotIds);
 
@@ -149,6 +154,11 @@ public class DeliciousSpotService {
         if (findUser.getRole() != Role.ROLE_ADMIN) {
             throw new CustomException(FORBIDDEN);
         }
+    }
+
+    private void validUserId(Long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
     }
 
 }
