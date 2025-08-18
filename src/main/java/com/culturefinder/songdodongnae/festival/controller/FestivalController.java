@@ -67,6 +67,21 @@ public class FestivalController {
         }
     }
 
+    @GetMapping("/{id}/v2")
+    public ResponseEntity<ResponseContainer<FestivalResDto>> getFestivalV2(
+            @Parameter(description = "축제 ID", required = true) @PathVariable Long id) {
+        if (!authService.isAuthenticatedUser()) {
+            FestivalResDto dto = festivalService.getFestivalV2(id);
+            return ResponseContainer.create(HttpStatus.OK, "축제 조회 성공", dto);
+        }
+        else {
+            Long userId = authService.getAuthenticatedUserId();
+            FestivalResDto dto = festivalService.getUserFestivalV2(id, userId);
+            return ResponseContainer.create(HttpStatus.OK, "축제 조회 성공", dto);
+        }
+    }
+
+
 
     @Operation(summary = "해당 년/월 축제 조회")
     @ApiResponse(responseCode = "200", description = "해당 월 축제 조회 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class)))

@@ -5,7 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@Transactional
 @RequiredArgsConstructor
 public class FestivalRepository {
 
@@ -27,6 +26,14 @@ public class FestivalRepository {
 
     public Optional<Festival> findById(Long id) {
         Festival festival = em.find(Festival.class, id);
+        return Optional.ofNullable(festival);
+    }
+
+    public Optional<Festival> findByIdWithCreator(Long id) {
+        Festival festival = em.createQuery(
+                "SELECT f FROM Festival f JOIN FETCH f.creator WHERE f.id = :id", Festival.class)
+                .setParameter("id", id)
+                .getSingleResult();
         return Optional.ofNullable(festival);
     }
 

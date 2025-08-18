@@ -19,6 +19,7 @@ import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -66,6 +67,27 @@ public class FestivalService {
 
         return FestivalResDto.fromEntity(findFestival, isBookmarked);
     }
+
+    @Cacheable(value = "festival", key = "#festivalId")
+    public FestivalResDto getFestivalV2(Long id) {
+        Festival findFestival = festivalRepository.findByIdWithCreator(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        return FestivalResDto.fromEntity(findFestival, false);
+    }
+
+    @Cacheable(value = "festivalWithUser", key = "#userId + '_' + #festivalId")
+    public FestivalResDto getUserFestivalV2(Long id, Long userId) {
+        validUserId(userId);
+
+        Festival findFestival = festivalRepository.findByIdWithCreator(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.FESTIVAL, findFestival.getId());
+
+        return FestivalResDto.fromEntity(findFestival, isBookmarked);
+    }
+
 
     public List<FestivalThumbnailResDto> getFestivalsByYearAndMonth(int year, int month) {
         LocalDate startOfMonth = LocalDate.of(year, month, 1);
