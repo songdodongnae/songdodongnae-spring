@@ -21,7 +21,7 @@ SwaggerConfig {
                         .version("v2.0"))
                 .servers(List.of(
                         new Server().url("http://localhost:8080").description("로컬 개발 서버"),
-                        new Server().url("").description("운영 서버")
+                        new Server().url("http://ec2-43-202-55-250.ap-northeast-2.compute.amazonaws.com:8080").description("운영 서버")
                 ));
     }
 }
