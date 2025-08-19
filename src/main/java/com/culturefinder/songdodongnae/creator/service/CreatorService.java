@@ -48,13 +48,12 @@ public class CreatorService {
 
     public CustomPage<CreatorThumbnailResDto> getAllCreator(int currentPage, int pageSize) {
         int offset = (currentPage - 1) * pageSize;
-        long totalElements = creatorRepository.countCreator();
-
-        List<CreatorThumbnailResDto> dtos = creatorRepository.findAll(offset, pageSize).stream()
+        long totalCreatorSize = creatorRepository.countCreator();
+        List<CreatorThumbnailResDto> dtos = creatorRepository.findAll(offset, pageSize)
+                .stream()
                 .map(CreatorThumbnailResDto::fromThumbEntity)
                 .collect(Collectors.toList());
-
-        return CustomPage.of(dtos, currentPage, pageSize, totalElements);
+        return CustomPage.of(dtos, currentPage, pageSize, totalCreatorSize);
     }
 
     public CreatorResDto getCreator(Long id) {
