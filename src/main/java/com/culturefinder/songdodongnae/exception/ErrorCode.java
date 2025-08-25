@@ -10,8 +10,13 @@ public enum ErrorCode {
     INVALID_PARAMETER(400, "파라미터 값을 확인해주세요."),
     EMPTY_FILE(400, "파일을 등록해주세요"),
 
-    // 404 NOT_FOUND 잘못된 리소스 접근
+    // 401 UNAUTHORIZED 인증 실패
+    UNAUTHORIZED(401, "유효한 인증 정보가 없습니다."),
+
+    // 403 FORBIDDEN 권한 없음
     FORBIDDEN(403, "접근 권한이 없습니다."),
+
+    // 404 NOT_FOUND 잘못된 리소스 접근
     RESOURCE_NOT_FOUND(404, "리소스를 찾을 수 없습니다."),
     ENTITY_NOT_FOUND(404, "엔티티를 찾을 수 없습니다."),
 

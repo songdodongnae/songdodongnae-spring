@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import static com.culturefinder.songdodongnae.exception.ErrorCode.RESOURCE_NOT_FOUND;
+import static com.culturefinder.songdodongnae.exception.ErrorCode.UNAUTHORIZED;
 
 @Slf4j
 @Getter
@@ -99,8 +100,7 @@ public class JwtService {
                     .getClaim(ID_CLAIM)
                     .asLong());
         } catch (Exception e) {
-            log.error("액세스 토큰이 유효하지 않습니다");
-            return Optional.empty();
+            throw new CustomException(UNAUTHORIZED);
         }
     }
 
@@ -110,7 +110,6 @@ public class JwtService {
 
         user.setRefreshToken(refreshToken);
         userRepository.saveUser(user);
-        log.info("유저 refreshToken 저장 = {}", user);
     }
 
     public boolean isTokenValid(String token) {
@@ -120,8 +119,8 @@ public class JwtService {
                     .verify(token);
             return true;
         } catch (Exception e){
-            log.error("유효하지 않은 토큰입니다");
-            return false;
+            throw new CustomException(UNAUTHORIZED);
         }
     }
+
 }
