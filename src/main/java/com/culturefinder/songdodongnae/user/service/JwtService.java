@@ -5,6 +5,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.culturefinder.songdodongnae.exception.CustomException;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
+
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
@@ -18,10 +20,10 @@ import java.util.Optional;
 
 import static com.culturefinder.songdodongnae.exception.ErrorCode.RESOURCE_NOT_FOUND;
 
+@Slf4j
 @Getter
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class JwtService {
 
     @Value("${jwt.secretKey}")
@@ -42,8 +44,13 @@ public class JwtService {
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
     private static final String ID_CLAIM = "id";
-
+    private static Algorithm ALGORITHM;
     private final UserRepository userRepository;
+
+    @PostConstruct
+    public void init() {
+        ALGORITHM = Algorithm.HMAC512(secretKey);
+    }
 
     public String createAccessToken(Long id) {
         Date now = new Date();
@@ -52,7 +59,7 @@ public class JwtService {
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(expirationDate)
                 .withClaim(ID_CLAIM, id)
-                .sign(Algorithm.HMAC512(secretKey));
+                .sign(ALGORITHM);
     }
 
     public String createRefreshToken() {
@@ -61,7 +68,7 @@ public class JwtService {
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
                 .withExpiresAt(expirationDate)
-                .sign(Algorithm.HMAC512(secretKey));
+                .sign(ALGORITHM);
     }
 
     public void sendAccessAndRefreshToken(HttpServletResponse response,
@@ -86,12 +93,12 @@ public class JwtService {
 
     public Optional<Long> extractId(String accessToken) {
         try {
-            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
+            return Optional.ofNullable(JWT.require(ALGORITHM)
                     .build()
                     .verify(accessToken)
                     .getClaim(ID_CLAIM)
                     .asLong());
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("액세스 토큰이 유효하지 않습니다");
             return Optional.empty();
         }
@@ -108,7 +115,7 @@ public class JwtService {
 
     public boolean isTokenValid(String token) {
         try {
-            JWT.require(Algorithm.HMAC512(secretKey))
+            JWT.require(ALGORITHM)
                     .build()
                     .verify(token);
             return true;
