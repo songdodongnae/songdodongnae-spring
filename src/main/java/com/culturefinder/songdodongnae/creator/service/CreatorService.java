@@ -57,6 +57,12 @@ public class CreatorService {
         return CustomPage.of(dtos, currentPage, pageSize, totalElements);
     }
 
+    public CreatorResDto getCreatorV2(Long id) {
+        
+
+        return null;
+    }
+
     public CreatorResDto getCreator(Long id) {
         Creator findCreator = creatorRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));

@@ -19,6 +19,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -59,15 +61,23 @@ public class CreatorController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<ResponseContainer<CreatorResDto>> getCreator(
-            @Parameter(description = "크리에이터 ID", required = true) @PathVariable Long id) {
-        if (!authService.isAuthenticatedUser()) {
-            CreatorResDto dto = creatorService.getCreator(id);
-            return ResponseContainer.create(HttpStatus.OK, "크리에이터 상세 조회 성공", dto);
-        } else {
-            Long userId = authService.getAuthenticatedUserId();
-            CreatorResDto dto = creatorService.getCreator(id, userId);
-            return ResponseContainer.create(HttpStatus.OK, "크리에이터 상세 조회 성공", dto);
-        }
+            @Parameter(description = "크리에이터 ID", required = true) @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        CreatorResDto dto = creatorService.getCreatorV2(id);
+
+        System.out.println("userDetails = " + userDetails.getUsername());
+
+        return ResponseContainer.create(HttpStatus.OK, "크리에이터 상세 조회 성공", dto);
+
+        // if (!authService.isAuthenticatedUser()) {
+        //     CreatorResDto dto = creatorService.getCreator(id);
+        //     return ResponseContainer.create(HttpStatus.OK, "크리에이터 상세 조회 성공", dto);
+        // } else {
+        //     Long userId = authService.getAuthenticatedUserId();
+        //     CreatorResDto dto = creatorService.getCreator(id, userId);
+        //     return ResponseContainer.create(HttpStatus.OK, "크리에이터 상세 조회 성공", dto);
+        // }
     }
 
     @Operation(summary = "크리에이터 수정")
