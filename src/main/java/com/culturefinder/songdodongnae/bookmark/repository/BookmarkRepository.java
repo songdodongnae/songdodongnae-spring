@@ -2,6 +2,7 @@ package com.culturefinder.songdodongnae.bookmark.repository;
 
 import com.culturefinder.songdodongnae.bookmark.domain.Bookmark;
 import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
+import com.culturefinder.songdodongnae.bookmark.dto.BookmarkDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
@@ -65,5 +66,14 @@ public class BookmarkRepository {
         em.createQuery("DELETE FROM Bookmark b WHERE b.bookmarkType = :bookmarkType AND b.targetId = :targetId")
                 .setParameter("bookmarkType", bookmarkType)
                 .setParameter("targetId", targetId);
+    }
+
+    public List<BookmarkDto> findAllBookmarksByUser(Long userId) {
+        return em.createQuery(
+                "SELECT b.bookmarkType, b.targetId FROM Bookmark b " +
+                "WHERE b.user.id = :userId " +
+                "ORDER BY b.createdAt DESC", BookmarkDto.class)
+                .setParameter("userId", userId)
+                .getResultList();
     }
 }
