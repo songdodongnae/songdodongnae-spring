@@ -17,7 +17,7 @@ import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.s3.S3UploadService;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,6 @@ import java.time.LocalDate;
 import java.util.*;
 
 
-@Transactional
 @RequiredArgsConstructor
 @Service
 public class FestivalService {
@@ -37,6 +36,7 @@ public class FestivalService {
     private final CreatorRepository creatorRepository;
     private final CurationFestivalRepository curationFestivalRepository;
 
+    @Transactional
     public FestivalResDto createFestival(FestivalReqDto festivalReqDto, Long userId) {
         isAdmin(userId);
 
@@ -49,6 +49,7 @@ public class FestivalService {
         return FestivalResDto.fromEntity(savedFestival, false);
     }
 
+    @Transactional(readOnly = true)
     public FestivalResDto getFestival(Long id) {
         Festival findFestival = festivalRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
@@ -56,6 +57,7 @@ public class FestivalService {
         return FestivalResDto.fromEntity(findFestival, false);
     }
 
+    @Transactional(readOnly = true)
     public FestivalResDto getUserFestival(Long id, Long userId) {
         validUserId(userId);
 
@@ -67,6 +69,7 @@ public class FestivalService {
         return FestivalResDto.fromEntity(findFestival, isBookmarked);
     }
 
+    @Transactional(readOnly = true)
     public List<FestivalThumbnailResDto> getFestivalsByYearAndMonth(int year, int month) {
         LocalDate startOfMonth = LocalDate.of(year, month, 1);
         LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
@@ -80,6 +83,7 @@ public class FestivalService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<FestivalThumbnailResDto> getFestivalsUserByYearAndMonth(int year, int month, Long userId) {
         validUserId(userId);
 
@@ -99,9 +103,10 @@ public class FestivalService {
     }
 
 
+    @Transactional(readOnly = true)
     public CustomPage<FestivalThumbnailResDto> getAllFestival(int currentPage, int pageSize) {
         int offset = (currentPage - 1) * pageSize;
-        Long totalElements = festivalRepository.countFestivals();
+        long totalElements = festivalRepository.countFestivals();
 
         List<FestivalThumbnailResDto> festivals = festivalRepository.findAll(offset, pageSize).stream()
                 .map(festival -> FestivalThumbnailResDto.fromEntity(festival, festival.getCreator().getName(), false))
@@ -116,13 +121,15 @@ public class FestivalService {
 
     }
 
+    @Transactional(readOnly = true)
     public CustomPage<FestivalThumbnailResDto> getAllUserFestival(int currentPage, int pageSize, Long userId) {
         validUserId(userId);
 
         Set<Long> bookmarkedFestivalIds = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.FESTIVAL));
 
         int offset = (currentPage - 1) * pageSize;
-        Long totalElements = festivalRepository.countFestivals();
+        long totalElements = festivalRepository.countFestivals();
+
         List<FestivalThumbnailResDto> festivals = festivalRepository.findAll(offset, pageSize).stream()
                 .map(festival -> FestivalThumbnailResDto.fromEntity(festival,
                         festival.getCreator().getName(),
@@ -138,6 +145,47 @@ public class FestivalService {
 
     }
 
+    @Transactional(readOnly = true)
+    public CustomPage<FestivalThumbnailResDto> getAllFestivalV2(int currentPage, int pageSize) {
+        int offset = (currentPage - 1) * pageSize;
+        long totalElements = festivalRepository.countFestivals();
+
+        List<FestivalThumbnailResDto> festivals = festivalRepository.findAllWithCreator(offset, pageSize).stream()
+                .map(festival -> FestivalThumbnailResDto.fromEntity(festival, festival.getCreator().getName(), false))
+                .toList();
+
+        return CustomPage.of(
+                festivals,
+                currentPage,
+                pageSize,
+                totalElements
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public CustomPage<FestivalThumbnailResDto> getAllUserFestivalV2(int currentPage, int pageSize, Long userId) {
+        validUserId(userId);
+
+        int offset = (currentPage - 1) * pageSize;
+        long totalElements = festivalRepository.countFestivals();
+
+        List<FestivalThumbnailResDto> festivals = festivalRepository.findAllWithCreatorAndBookmarkStatus(offset, pageSize, userId)
+                .stream()
+                .map(result -> FestivalThumbnailResDto.fromEntity(
+                        result.getFestival(),
+                        result.getFestival().getCreator().getName(),
+                        result.getIsBookmarked()))
+                .toList();
+
+        return CustomPage.of(
+                festivals,
+                currentPage,
+                pageSize,
+                totalElements
+        );
+    }
+
+    @Transactional
     public FestivalResDto updateFestival(Long id, FestivalReqDto festivalReqDto, Long userId) {
         isAdmin(userId);
 
@@ -160,6 +208,7 @@ public class FestivalService {
         return FestivalResDto.fromEntity(findFestival, false);
     }
 
+    @Transactional
     public FestivalResDto deleteFestival(Long id, Long userId) {
         isAdmin(userId);
 
