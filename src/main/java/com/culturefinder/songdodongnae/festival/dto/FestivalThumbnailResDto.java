@@ -2,6 +2,7 @@ package com.culturefinder.songdodongnae.festival.dto;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@AllArgsConstructor
 public class FestivalThumbnailResDto {
     private Long id;
 
@@ -38,6 +40,10 @@ public class FestivalThumbnailResDto {
                 .createdAt(festival.getCreatedAt())
                 .imageUrl(festival.getThumbnailImageUrl())
                 .build();
+    }
+
+    public FestivalThumbnailResDto withLiked(boolean liked) {
+        return new FestivalThumbnailResDto(id, creatorName, liked, title, createdAt, imageUrl);
     }
 
 }

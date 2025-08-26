@@ -101,6 +101,23 @@ public class FestivalController {
 
     }
 
+    @Operation(summary = "모든 축제 조회")
+    @ApiResponse(responseCode = "200", description = "모든 축제 조회 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class)))
+    @GetMapping("/v2")
+    public ResponseEntity<ResponseContainer<CustomPage<FestivalThumbnailResDto>>> getAllFestivalsV2(
+            @Parameter(description = "현재 페이지 번호", example = "1") @RequestParam(defaultValue = "1") int currentPage,
+            @Parameter(description = "페이지 크기", example = "10") @RequestParam(defaultValue = "10") int pageSize) {
+        if (!authService.isAuthenticatedUser()) {
+            CustomPage<FestivalThumbnailResDto> dtos = festivalService.getAllFestivalV2(currentPage, pageSize);
+            return ResponseContainer.create(HttpStatus.OK, "모든 축제 조회 성공", dtos);
+        }else {
+            Long userId = authService.getAuthenticatedUserId();
+            CustomPage<FestivalThumbnailResDto> dtos = festivalService.getAllUserFestivalV2(currentPage, pageSize, userId);
+            return ResponseContainer.create(HttpStatus.OK, "모든 축제 조회 성공", dtos);
+        }
+
+    }
+
     @Operation(summary = "축제 수정")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "축제 수정 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class))),
