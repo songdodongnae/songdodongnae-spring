@@ -80,7 +80,7 @@ public class FestivalService {
     @Transactional(readOnly = true)
     public FestivalResDto getUserFestivalV2(Long id, Long userId) {
         validUserId(userId);
-
+      
         Festival findFestival = festivalRepository.findByIdWithCreator(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
 
@@ -125,7 +125,7 @@ public class FestivalService {
     @Transactional(readOnly = true)
     public CustomPage<FestivalThumbnailResDto> getAllFestival(int currentPage, int pageSize) {
         int offset = (currentPage - 1) * pageSize;
-        Long totalElements = festivalRepository.countFestivals();
+        long totalElements = festivalRepository.countFestivals();
 
         List<FestivalThumbnailResDto> festivals = festivalRepository.findAll(offset, pageSize).stream()
                 .map(festival -> FestivalThumbnailResDto.fromEntity(festival, festival.getCreator().getName(), false))
@@ -147,7 +147,8 @@ public class FestivalService {
         Set<Long> bookmarkedFestivalIds = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.FESTIVAL));
 
         int offset = (currentPage - 1) * pageSize;
-        Long totalElements = festivalRepository.countFestivals();
+        long totalElements = festivalRepository.countFestivals();
+
         List<FestivalThumbnailResDto> festivals = festivalRepository.findAll(offset, pageSize).stream()
                 .map(festival -> FestivalThumbnailResDto.fromEntity(festival,
                         festival.getCreator().getName(),
@@ -163,36 +164,13 @@ public class FestivalService {
 
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public CustomPage<FestivalThumbnailResDto> getAllFestivalV2(int currentPage, int pageSize) {
         int offset = (currentPage - 1) * pageSize;
-        Long totalElements = festivalRepository.countFestivals();
-
-        List<FestivalThumbnailResDto> festivals = festivalRepository.findAllWithCreator(offset, pageSize);
-
-        return CustomPage.of(
-                festivals,
-                currentPage,
-                pageSize,
-                totalElements
-        );
-
-    }
-
-    @Transactional(readOnly=true)
-    public CustomPage<FestivalThumbnailResDto> getAllUserFestivalV2(int currentPage, int pageSize, Long userId) {
-        validUserId(userId);
-
-        Set<Long> bookmarkedFestivalIds = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.FESTIVAL));
-
-        int offset = (currentPage - 1) * pageSize;
-        Long totalElements = festivalRepository.countFestivals();
+        long totalElements = festivalRepository.countFestivals();
 
         List<FestivalThumbnailResDto> festivals = festivalRepository.findAllWithCreator(offset, pageSize).stream()
-                .map(dto -> {
-                    boolean liked = bookmarkedFestivalIds.contains(dto.getId());
-                    return dto.withLiked(liked);
-                })
+                .map(festival -> FestivalThumbnailResDto.fromEntity(festival, festival.getCreator().getName(), false))
                 .toList();
 
         return CustomPage.of(
@@ -201,7 +179,29 @@ public class FestivalService {
                 pageSize,
                 totalElements
         );
+    }
 
+    @Transactional(readOnly = true)
+    public CustomPage<FestivalThumbnailResDto> getAllUserFestivalV2(int currentPage, int pageSize, Long userId) {
+        validUserId(userId);
+
+        int offset = (currentPage - 1) * pageSize;
+        long totalElements = festivalRepository.countFestivals();
+
+        List<FestivalThumbnailResDto> festivals = festivalRepository.findAllWithCreatorAndBookmarkStatus(offset, pageSize, userId)
+                .stream()
+                .map(result -> FestivalThumbnailResDto.fromEntity(
+                        result.getFestival(),
+                        result.getFestival().getCreator().getName(),
+                        result.getIsBookmarked()))
+                .toList();
+
+        return CustomPage.of(
+                festivals,
+                currentPage,
+                pageSize,
+                totalElements
+        );
     }
 
     @Transactional

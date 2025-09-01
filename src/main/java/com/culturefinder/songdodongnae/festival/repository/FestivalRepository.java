@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.festival.repository;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
+import com.culturefinder.songdodongnae.festival.dto.FestivalWithBookmarkDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalThumbnailResDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -49,15 +50,21 @@ public class FestivalRepository {
                 .getResultList();
     }
 
-    public List<FestivalThumbnailResDto> findAllWithCreator(int offset, int limit) {
-        return em.createQuery("""
-            SELECT new com.culturefinder.songdodongnae.festival.dto.FestivalThumbnailResDto(
-            f.id, c.name, false, f.title, f.createdAt, f.thumbnailImageUrl
-        )
-        FROM Festival f
-        JOIN f.creator c
-        ORDER BY f.createdAt
-        """, FestivalThumbnailResDto.class)
+    public List<Festival> findAllWithCreator(int offset, int limit) {
+        return em.createQuery("SELECT f FROM Festival f JOIN FETCH f.creator ORDER BY f.createdAt", Festival.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+    public List<FestivalWithBookmarkDto> findAllWithCreatorAndBookmarkStatus(int offset, int limit, Long userId) {
+        return em.createQuery(
+                "SELECT f, " +
+                "CASE WHEN b.id IS NOT NULL THEN true ELSE false END as isBookmarked FROM Festival f " +
+                "JOIN FETCH f.creator " +
+                "LEFT JOIN Bookmark b ON b.targetId = f.id AND b.bookmarkType = 'FESTIVAL' AND b.user.id = :userId " +
+                "ORDER BY f.createdAt", FestivalWithBookmarkDto.class)
+                .setParameter("userId", userId)
                 .setFirstResult(offset)
                 .setMaxResults(limit)
                 .getResultList();

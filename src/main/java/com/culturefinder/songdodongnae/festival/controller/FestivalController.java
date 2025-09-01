@@ -120,8 +120,6 @@ public class FestivalController {
 
     }
 
-    @Operation(summary = "모든 축제 조회")
-    @ApiResponse(responseCode = "200", description = "모든 축제 조회 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class)))
     @GetMapping("/v2")
     public ResponseEntity<ResponseContainer<CustomPage<FestivalThumbnailResDto>>> getAllFestivalsV2(
             @Parameter(description = "현재 페이지 번호", example = "1") @RequestParam(defaultValue = "1") int currentPage,
