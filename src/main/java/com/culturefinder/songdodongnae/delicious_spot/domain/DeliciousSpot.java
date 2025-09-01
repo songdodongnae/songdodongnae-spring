@@ -57,7 +57,7 @@ public class DeliciousSpot {
 
     private String contact;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
     private Creator creator;
 
