@@ -71,7 +71,7 @@ public class FestivalService {
 
     @Transactional(readOnly = true)
     public FestivalResDto getFestivalV2(Long id) {
-        Festival findFestival = festivalRepository.findByIdwithCreator(id)
+        Festival findFestival = festivalRepository.findByIdWithCreator(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
 
         return FestivalResDto.fromEntity(findFestival, false);
@@ -81,7 +81,7 @@ public class FestivalService {
     public FestivalResDto getUserFestivalV2(Long id, Long userId) {
         validUserId(userId);
 
-        Festival findFestival = festivalRepository.findByIdwithCreator(id)
+        Festival findFestival = festivalRepository.findByIdWithCreator(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
 
         boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.FESTIVAL, findFestival.getId());
