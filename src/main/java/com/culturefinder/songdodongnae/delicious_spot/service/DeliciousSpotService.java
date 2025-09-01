@@ -5,7 +5,6 @@ import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
 import com.culturefinder.songdodongnae.curation.repository.CurationDeliciousSpotRepository;
-import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
@@ -30,7 +29,6 @@ import static com.culturefinder.songdodongnae.exception.ErrorCode.FORBIDDEN;
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class DeliciousSpotService {
 
@@ -41,6 +39,7 @@ public class DeliciousSpotService {
     private final CreatorRepository creatorRepository;
     private final CurationDeliciousSpotRepository curationDeliciousSpotRepository;
 
+    @Transactional
     public DeliciousSpotResDto createDeliciousSpot(DeliciousSpotReqDto deliciousSpotReqDto, Long userId) {
         isAdmin(userId);
         Creator findCreator = creatorRepository.findByName(deliciousSpotReqDto.getCreatorName())
@@ -57,6 +56,7 @@ public class DeliciousSpotService {
         return DeliciousSpotResDto.fromEntity(deliciousSpot, false);
     }
 
+    @Transactional(readOnly = true)
     public DeliciousSpotResDto getUserDeliciousSpot(Long id, Long userId) {
         validUserId(userId);
 
@@ -66,6 +66,24 @@ public class DeliciousSpotService {
         return DeliciousSpotResDto.fromEntity(deliciousSpot, isBookmarked);
     }
 
+    @Transactional(readOnly = true)
+    public DeliciousSpotResDto getDeliciousSpotByIdV2(Long id) {
+        DeliciousSpot deliciousSpot = deliciousSpotRepository.findByIdWithCreator(id)
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
+        return DeliciousSpotResDto.fromEntity(deliciousSpot, false);
+    }
+
+    @Transactional(readOnly = true)
+    public DeliciousSpotResDto getUserDeliciousSpotV2(Long id, Long userId) {
+        validUserId(userId);
+
+        DeliciousSpot deliciousSpot = deliciousSpotRepository.findByIdWithCreator(id)
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
+        boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.DELICIOUS_SPOT, id);
+        return DeliciousSpotResDto.fromEntity(deliciousSpot, isBookmarked);
+    }
+
+    @Transactional(readOnly = true)
     public CustomPage<DeliciousSpotThumbnailResDto> getAllDeliciousSpots(int currentPage, int pageSize) {
         int offset = (currentPage - 1) * pageSize;
         long totalElements = deliciousSpotRepository.countDeliciousSpot();
@@ -79,6 +97,7 @@ public class DeliciousSpotService {
         return CustomPage.of(dtos, currentPage, pageSize, totalElements);
     }
 
+    @Transactional(readOnly = true)
     public CustomPage<DeliciousSpotThumbnailResDto> getUserAllDeliciousSpots(Long userId, int currentPage, int pageSize) {
         validUserId(userId);
 
@@ -103,6 +122,7 @@ public class DeliciousSpotService {
 
     }
 
+    @Transactional
     public DeliciousSpotResDto updateDeliciousSpot(Long id, DeliciousSpotReqDto deliciousSpotReqDto, Long userId) {
         isAdmin(userId);
 
@@ -128,6 +148,7 @@ public class DeliciousSpotService {
         return DeliciousSpotResDto.fromEntity(findDeliciousSpot, false);
     }
 
+    @Transactional
     public void deleteDeliciousSpot(Long id, Long userId) {
         isAdmin(userId);
 

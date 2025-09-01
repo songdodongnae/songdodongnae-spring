@@ -31,6 +31,16 @@ public class DeliciousSpotRepository {
         return Optional.ofNullable(deliciousSpot);
     }
 
+    public Optional<DeliciousSpot> findByIdWithCreator(Long id) {
+        List<DeliciousSpot> result = em.createQuery(
+                        "SELECT d FROM DeliciousSpot d " +
+                                "JOIN FETCH d.creator " +
+                                "WHERE d.id = :id", DeliciousSpot.class)
+                .setParameter("id", id)
+                .getResultList();
+
+        return result.stream().findFirst();
+    }
 
     public List<DeliciousSpot> findAllById(List<Long> idList) {
         if (idList == null || idList.isEmpty()) {

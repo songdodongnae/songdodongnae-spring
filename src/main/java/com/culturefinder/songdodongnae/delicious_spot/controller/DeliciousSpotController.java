@@ -67,6 +67,27 @@ public class DeliciousSpotController {
 
     }
 
+    @Operation(summary = "맛집 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "맛집 조회 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class))),
+            @ApiResponse(responseCode = "404", description = "맛집을 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorDto.class)))
+    })
+    @GetMapping("/{id}/v2")
+    public ResponseEntity<ResponseContainer<DeliciousSpotResDto>> readDeliciousSpotV2(
+            @Parameter(description = "맛집 ID", required = true) @PathVariable Long id) {
+
+        if (!authService.isAuthenticatedUser()) {
+            DeliciousSpotResDto dto = deliciousSpotService.getDeliciousSpotByIdV2(id);
+            return ResponseContainer.create(HttpStatus.OK, "맛집 조회 성공", dto);
+        }
+        else {
+            Long userId = authService.getAuthenticatedUserId();
+            DeliciousSpotResDto dto = deliciousSpotService.getUserDeliciousSpotV2(id, userId);
+            return ResponseContainer.create(HttpStatus.OK, "맛집 조회 성공", dto);
+        }
+
+    }
+
     @Operation(summary = "모든 맛집 조회")
     @ApiResponse(responseCode = "200", description = "모든 맛집 조회 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class)))
     @GetMapping
