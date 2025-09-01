@@ -17,15 +17,14 @@ import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.s3.S3UploadService;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
 
 
-@Transactional
 @RequiredArgsConstructor
 @Service
 public class FestivalService {
@@ -37,6 +36,7 @@ public class FestivalService {
     private final CreatorRepository creatorRepository;
     private final CurationFestivalRepository curationFestivalRepository;
 
+    @Transactional
     public FestivalResDto createFestival(FestivalReqDto festivalReqDto, Long userId) {
         isAdmin(userId);
 
@@ -49,6 +49,7 @@ public class FestivalService {
         return FestivalResDto.fromEntity(savedFestival, false);
     }
 
+    @Transactional(readOnly = true)
     public FestivalResDto getFestival(Long id) {
         Festival findFestival = festivalRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
@@ -56,17 +57,39 @@ public class FestivalService {
         return FestivalResDto.fromEntity(findFestival, false);
     }
 
+    @Transactional(readOnly = true)
     public FestivalResDto getUserFestival(Long id, Long userId) {
+        validUserId(userId);
+
         Festival findFestival = festivalRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-        userRepository.findById(userId)
-                .orElseThrow(()-> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
 
         boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.FESTIVAL, findFestival.getId());
 
         return FestivalResDto.fromEntity(findFestival, isBookmarked);
     }
 
+    @Transactional(readOnly = true)
+    public FestivalResDto getFestivalV2(Long id) {
+        Festival findFestival = festivalRepository.findByIdwithCreator(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        return FestivalResDto.fromEntity(findFestival, false);
+    }
+
+    @Transactional(readOnly = true)
+    public FestivalResDto getUserFestivalV2(Long id, Long userId) {
+        validUserId(userId);
+
+        Festival findFestival = festivalRepository.findByIdwithCreator(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.FESTIVAL, findFestival.getId());
+
+        return FestivalResDto.fromEntity(findFestival, isBookmarked);
+    }
+
+    @Transactional(readOnly = true)
     public List<FestivalThumbnailResDto> getFestivalsByYearAndMonth(int year, int month) {
         LocalDate startOfMonth = LocalDate.of(year, month, 1);
         LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
@@ -80,14 +103,15 @@ public class FestivalService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<FestivalThumbnailResDto> getFestivalsUserByYearAndMonth(int year, int month, Long userId) {
+        validUserId(userId);
+
         LocalDate startOfMonth = LocalDate.of(year, month, 1);
         LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
         List<Festival> findFestivalsByYearAndMonth = festivalRepository.findByYearAndMonth(startOfMonth, endOfMonth);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(()-> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-        Set<Long> bookmarkedFestivalIds = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(user.getId(), BookmarkType.FESTIVAL));
+        Set<Long> bookmarkedFestivalIds = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.FESTIVAL));
 
         return findFestivalsByYearAndMonth.stream()
                 .map(festival -> FestivalThumbnailResDto.fromEntity(
@@ -98,7 +122,7 @@ public class FestivalService {
                 .toList();
     }
 
-
+    @Transactional(readOnly = true)
     public CustomPage<FestivalThumbnailResDto> getAllFestival(int currentPage, int pageSize) {
         int offset = (currentPage - 1) * pageSize;
         Long totalElements = festivalRepository.countFestivals();
@@ -116,10 +140,11 @@ public class FestivalService {
 
     }
 
+    @Transactional(readOnly = true)
     public CustomPage<FestivalThumbnailResDto> getAllUserFestival(int currentPage, int pageSize, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(()-> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-        Set<Long> bookmarkedFestivalIds = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(user.getId(), BookmarkType.FESTIVAL));
+        validUserId(userId);
+
+        Set<Long> bookmarkedFestivalIds = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.FESTIVAL));
 
         int offset = (currentPage - 1) * pageSize;
         Long totalElements = festivalRepository.countFestivals();
@@ -137,7 +162,7 @@ public class FestivalService {
         );
 
     }
-
+    @Transactional
     public FestivalResDto updateFestival(Long id, FestivalReqDto festivalReqDto, Long userId) {
         isAdmin(userId);
 
@@ -160,6 +185,7 @@ public class FestivalService {
         return FestivalResDto.fromEntity(findFestival, false);
     }
 
+    @Transactional
     public FestivalResDto deleteFestival(Long id, Long userId) {
         isAdmin(userId);
 
@@ -185,6 +211,11 @@ public class FestivalService {
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
         if (findUser.getRole() != Role.ROLE_ADMIN)
             throw new CustomException(ErrorCode.FORBIDDEN);
+    }
+
+    private void validUserId(Long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
     }
 
 }

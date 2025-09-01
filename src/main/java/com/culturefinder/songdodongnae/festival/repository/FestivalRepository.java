@@ -30,6 +30,17 @@ public class FestivalRepository {
         return Optional.ofNullable(festival);
     }
 
+    public Optional<Festival> findByIdWithCreator(Long id) {
+        List<Festival> result = em.createQuery(
+                        "SELECT f FROM Festival f " +
+                                "JOIN FETCH f.creator " +
+                                "WHERE f.id = :id", Festival.class)
+                .setParameter("id", id)
+                .getResultList();
+
+        return result.stream().findFirst();
+    }
+
     public List<Festival> findAll(int offset, int limit) {
         return em.createQuery("SELECT f from Festival f ORDER BY f.id", Festival.class)
                 .setFirstResult(offset)

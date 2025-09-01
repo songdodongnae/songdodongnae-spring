@@ -69,8 +69,7 @@ public class SearchService {
     }
 
     public CustomPage<FestivalThumbnailResDto> searchUserFestivals(String keyword, int currentPage, int pageSize, Long userId) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+        validUserId(userId);
 
         int offset = (currentPage - 1) * pageSize;
         long totalElements = festivalRepository.countSearchFestivals(keyword);
@@ -106,8 +105,7 @@ public class SearchService {
     }
 
     public CustomPage<DeliciousSpotThumbnailResDto> searchUserDeliciousSpots(String keyword, int currentPage, int pageSize, Long userId) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+        validUserId(userId);
 
         int offset = (currentPage - 1) * pageSize;
         long totalElements = deliciousSpotRepository.countSearchDeliciousSpot(keyword);
@@ -143,8 +141,7 @@ public class SearchService {
     }
 
     public CustomPage<CurationThumbnailResDto> searchUserCuration(String keyword, int currentPage, int pageSize, Long userId) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+        validUserId(userId);
 
         int offset = (currentPage - 1) * pageSize;
         long totalElements = curationRepository.countSearchCurations(keyword);
@@ -162,4 +159,10 @@ public class SearchService {
                 totalElements
         );
     }
+
+    private void validUserId(Long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+    }
+
 }

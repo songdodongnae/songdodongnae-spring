@@ -33,7 +33,7 @@ public class Creator {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(length = 40000)
+    @Column(length = 2000)
     private String imageUrl;
 
     @CreationTimestamp

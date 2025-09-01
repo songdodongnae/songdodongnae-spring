@@ -47,6 +47,7 @@ public class CreatorService {
         return CreatorResDto.fromEntity(savedCreator);
     }
 
+
     @Transactional(readOnly = true)
     public CursorPage<CreatorThumbnailResDto> getAllCreators(Long cursor, int size) {
         List<CreatorThumbnailResDto> dtos = creatorRepository.findAll(cursor, size)

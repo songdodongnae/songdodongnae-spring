@@ -67,10 +67,13 @@ public class CurationService {
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
         Creator creator = creatorRepository.findByName(curationById.getCreator().getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
         return CurationResDto.fromEntity(curationById, creator, false);
     }
 
     public CurationResDto getUserCuration(Long userId, Long id) {
+        validUserId(userId);
+
         Boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.CURATION, id);
         Set<Long> bookmarkedDeliciousSpots = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.DELICIOUS_SPOT));
         Set<Long> bookmarkedFestivals = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.FESTIVAL));
@@ -79,6 +82,7 @@ public class CurationService {
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
         Creator creator = creatorRepository.findByName(curationById.getCreator().getName())
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
         return CurationResDto.fromEntity(curationById, creator, bookmarkedDeliciousSpots, bookmarkedFestivals, isBookmarked);
     }
 
@@ -100,6 +104,8 @@ public class CurationService {
     }
 
     public CustomPage<CurationThumbnailResDto> getAllUserCuration(Long userId, int currentPage, int pageSize) {
+        validUserId(userId);
+
         List<Long> targetIdsByUserAndType = bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.CURATION);
         Set<Long> bookmarkedSet = new HashSet<>(targetIdsByUserAndType);
 
@@ -141,6 +147,8 @@ public class CurationService {
     }
 
     public CustomPage<CurationThumbnailResDto> getAllUserCurationByType(Long userId, int currentPage, int pageSize, CurationType type) {
+        validUserId(userId);
+
         List<Long> targetIdsByUserAndType = bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.CURATION);
         Set<Long> bookmarkedSet = new HashSet<>(targetIdsByUserAndType);
 
@@ -214,6 +222,10 @@ public class CurationService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
         if (user.getRole() != Role.ROLE_ADMIN) throw new CustomException(ErrorCode.FORBIDDEN);
+    }
+
+    private void validUserId(Long userId) {
+        userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
     }
 
 }
