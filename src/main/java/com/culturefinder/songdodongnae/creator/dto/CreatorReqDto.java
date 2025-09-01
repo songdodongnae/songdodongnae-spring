@@ -17,7 +17,7 @@ public class CreatorReqDto {
     private String name;
 
     @Schema(description = "크리에이터 소개", example = "매콤한 음식을 좋아하는 크리에이터")
-    private String introduction; 
+    private String introduction;
 
     @Schema(description = "크리에이터 상세 설명")
     private String description;
