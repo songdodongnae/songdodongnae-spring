@@ -24,6 +24,13 @@ public class BookmarkRepository {
         return bookmark;
     }
 
+    public List<Bookmark> findAllByUser(Long userId) {
+        return em.createQuery("SELECT b FROM Bookmark b " +
+                        "WHERE b.user.id = :userId", Bookmark.class)
+                .setParameter("userId", userId)
+                .getResultList();
+    }
+
     public Optional<Bookmark> findBookmarkById(Long id) {
         Bookmark bookmark = em.find(Bookmark.class, id);
         return Optional.ofNullable(bookmark);

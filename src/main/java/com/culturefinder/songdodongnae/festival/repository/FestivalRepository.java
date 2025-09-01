@@ -2,6 +2,7 @@ package com.culturefinder.songdodongnae.festival.repository;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.dto.FestivalWithBookmarkDto;
+import com.culturefinder.songdodongnae.festival.dto.FestivalThumbnailResDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,17 @@ public class FestivalRepository {
     public Optional<Festival> findById(Long id) {
         Festival festival = em.find(Festival.class, id);
         return Optional.ofNullable(festival);
+    }
+
+    public Optional<Festival> findByIdWithCreator(Long id) {
+        List<Festival> result = em.createQuery(
+                        "SELECT f FROM Festival f " +
+                                "JOIN FETCH f.creator " +
+                                "WHERE f.id = :id", Festival.class)
+                .setParameter("id", id)
+                .getResultList();
+
+        return result.stream().findFirst();
     }
 
     public List<Festival> findAll(int offset, int limit) {

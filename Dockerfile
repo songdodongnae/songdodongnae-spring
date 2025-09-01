@@ -1,7 +1,7 @@
 FROM bellsoft/liberica-openjdk-alpine:17 AS builder
 WORKDIR /app
 COPY . .
-RUN ./gradlew clean bootJar -x test
+RUN ./gradlew clean build -x test
 
 FROM bellsoft/liberica-openjdk-alpine:17
 WORKDIR /app

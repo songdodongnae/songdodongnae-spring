@@ -17,9 +17,9 @@ import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.s3.S3UploadService;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -68,6 +68,26 @@ public class FestivalService {
 
         return FestivalResDto.fromEntity(findFestival, isBookmarked);
     }
+  
+    @Transactional(readOnly = true)
+    public FestivalResDto getFestivalV2(Long id) {
+        Festival findFestival = festivalRepository.findByIdWithCreator(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        return FestivalResDto.fromEntity(findFestival, false);
+    }
+
+    @Transactional(readOnly = true)
+    public FestivalResDto getUserFestivalV2(Long id, Long userId) {
+        validUserId(userId);
+      
+        Festival findFestival = festivalRepository.findByIdWithCreator(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.FESTIVAL, findFestival.getId());
+
+        return FestivalResDto.fromEntity(findFestival, isBookmarked);
+    }
 
     @Transactional(readOnly = true)
     public List<FestivalThumbnailResDto> getFestivalsByYearAndMonth(int year, int month) {
@@ -101,7 +121,6 @@ public class FestivalService {
                 ))
                 .toList();
     }
-
 
     @Transactional(readOnly = true)
     public CustomPage<FestivalThumbnailResDto> getAllFestival(int currentPage, int pageSize) {
