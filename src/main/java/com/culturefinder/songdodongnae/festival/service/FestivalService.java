@@ -68,7 +68,7 @@ public class FestivalService {
 
         return FestivalResDto.fromEntity(findFestival, isBookmarked);
     }
-
+  
     @Transactional(readOnly = true)
     public FestivalResDto getFestivalV2(Long id) {
         Festival findFestival = festivalRepository.findByIdWithCreator(id)
@@ -162,6 +162,48 @@ public class FestivalService {
         );
 
     }
+
+    @Transactional(readOnly=true)
+    public CustomPage<FestivalThumbnailResDto> getAllFestivalV2(int currentPage, int pageSize) {
+        int offset = (currentPage - 1) * pageSize;
+        Long totalElements = festivalRepository.countFestivals();
+
+        List<FestivalThumbnailResDto> festivals = festivalRepository.findAllWithCreator(offset, pageSize);
+
+        return CustomPage.of(
+                festivals,
+                currentPage,
+                pageSize,
+                totalElements
+        );
+
+    }
+
+    @Transactional(readOnly=true)
+    public CustomPage<FestivalThumbnailResDto> getAllUserFestivalV2(int currentPage, int pageSize, Long userId) {
+        validUserId(userId);
+
+        Set<Long> bookmarkedFestivalIds = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.FESTIVAL));
+
+        int offset = (currentPage - 1) * pageSize;
+        Long totalElements = festivalRepository.countFestivals();
+
+        List<FestivalThumbnailResDto> festivals = festivalRepository.findAllWithCreator(offset, pageSize).stream()
+                .map(dto -> {
+                    boolean liked = bookmarkedFestivalIds.contains(dto.getId());
+                    return dto.withLiked(liked);
+                })
+                .toList();
+
+        return CustomPage.of(
+                festivals,
+                currentPage,
+                pageSize,
+                totalElements
+        );
+
+    }
+
     @Transactional
     public FestivalResDto updateFestival(Long id, FestivalReqDto festivalReqDto, Long userId) {
         isAdmin(userId);

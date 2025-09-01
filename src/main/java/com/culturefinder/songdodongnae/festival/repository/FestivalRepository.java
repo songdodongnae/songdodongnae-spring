@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.festival.repository;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
+import com.culturefinder.songdodongnae.festival.dto.FestivalThumbnailResDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,20 @@ public class FestivalRepository {
 
     public List<Festival> findAll(int offset, int limit) {
         return em.createQuery("SELECT f from Festival f ORDER BY f.id", Festival.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+    public List<FestivalThumbnailResDto> findAllWithCreator(int offset, int limit) {
+        return em.createQuery("""
+            SELECT new com.culturefinder.songdodongnae.festival.dto.FestivalThumbnailResDto(
+            f.id, c.name, false, f.title, f.createdAt, f.thumbnailImageUrl
+        )
+        FROM Festival f
+        JOIN f.creator c
+        ORDER BY f.createdAt
+        """, FestivalThumbnailResDto.class)
                 .setFirstResult(offset)
                 .setMaxResults(limit)
                 .getResultList();

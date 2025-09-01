@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.creator.service;
 
+import com.culturefinder.songdodongnae.bookmark.domain.Bookmark;
 import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.creator.domain.Creator;
@@ -29,7 +30,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Transactional
 @RequiredArgsConstructor
 @Service
 public class CreatorService {
@@ -39,6 +39,7 @@ public class CreatorService {
     private final UserRepository userRepository;
     private final BookmarkRepository bookmarkRepository;
 
+    @Transactional
     public CreatorResDto createCreator(CreatorReqDto creatorReqDto, Long userId) {
         isAdmin(userId);
 
@@ -46,7 +47,6 @@ public class CreatorService {
         Creator savedCreator = creatorRepository.saveCreator(creator);
         return CreatorResDto.fromEntity(savedCreator);
     }
-
 
     @Transactional(readOnly = true)
     public CursorPage<CreatorThumbnailResDto> getAllCreators(Long cursor, int size) {
@@ -66,6 +66,7 @@ public class CreatorService {
         return CursorPage.of(dtos, nextCursor, hasNext);
     }
 
+    @Transactional(readOnly = true)
     public CreatorResDto getCreator(Long id) {
         Creator findCreator = creatorRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
@@ -85,6 +86,27 @@ public class CreatorService {
         return CreatorResDto.fromEntity(findCreator, deliciousSpots, festivals, curations);
     }
 
+    @Transactional(readOnly = true)
+    public CreatorResDto getCreatorV2(Long id) {
+        Creator findCreator = creatorRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        List<DeliciousSpotThumbnailResDto> deliciousSpots = findCreator.getDeliciousSpots().stream()
+                .map(deliciousSpot -> DeliciousSpotThumbnailResDto.fromEntity(deliciousSpot, findCreator.getName(), false))
+                .toList();
+
+        List<FestivalThumbnailResDto> festivals = findCreator.getFestivals().stream()
+                .map(festival -> FestivalThumbnailResDto.fromEntity(festival, findCreator.getName(), false))
+                .toList();
+
+        List<CurationThumbnailResDto> curations = findCreator.getCurations().stream()
+                .map(curation -> CurationThumbnailResDto.fromEntity(curation, false))
+                .toList();
+
+        return CreatorResDto.fromEntity(findCreator, deliciousSpots, festivals, curations);
+    }
+
+    @Transactional(readOnly = true)
     public CreatorResDto getCreator(Long id, Long userId) {
 
         Creator findCreator = creatorRepository.findById(id)
@@ -114,7 +136,56 @@ public class CreatorService {
         return CreatorResDto.fromEntity(findCreator, deliciousSpots, festivals, curations);
     }
 
+    @Transactional(readOnly = true)
+    public CreatorResDto getCreatorV2(Long id, Long userId) {
 
+        Creator findCreator = creatorRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        List<Bookmark> userBookmarks = bookmarkRepository.findAllByUser(userId);
+
+        Set<Long> deliciousIds = userBookmarks.stream()
+                .filter(b -> b.getBookmarkType() == BookmarkType.DELICIOUS_SPOT)
+                .map(Bookmark::getTargetId)
+                .collect(Collectors.toSet());
+
+        Set<Long> festivalIds = userBookmarks.stream()
+                .filter(b -> b.getBookmarkType()== BookmarkType.FESTIVAL)
+                .map(Bookmark::getTargetId)
+                .collect(Collectors.toSet());
+
+        Set<Long> curationIds = userBookmarks.stream()
+                .filter(b -> b.getBookmarkType() == BookmarkType.CURATION)
+                .map(Bookmark::getTargetId)
+                .collect(Collectors.toSet());
+
+        List<DeliciousSpotThumbnailResDto> deliciousSpots = findCreator.getDeliciousSpots().stream()
+                .map(deliciousSpot -> DeliciousSpotThumbnailResDto.fromEntity(
+                        deliciousSpot,
+                        findCreator.getName(),
+                        deliciousIds.contains(deliciousSpot.getId())
+                ))
+                .toList();
+
+        List<FestivalThumbnailResDto> festivals = findCreator.getFestivals().stream()
+                .map(festival -> FestivalThumbnailResDto.fromEntity(
+                        festival,
+                        findCreator.getName(),
+                        festivalIds.contains(festival.getId())
+                ))
+                .toList();
+
+        List<CurationThumbnailResDto> curations = findCreator.getCurations().stream()
+                .map(curation -> CurationThumbnailResDto.fromEntity(
+                        curation,
+                        curationIds.contains(curation.getId())
+                ))
+                .toList();
+
+        return CreatorResDto.fromEntity(findCreator, deliciousSpots, festivals, curations);
+    }
+
+    @Transactional
     public CreatorResDto updateCreator(Long id, CreatorReqDto creatorReqDto, Long userId) {
         isAdmin(userId);
         Creator findCreator = creatorRepository.findById(id)
@@ -128,6 +199,7 @@ public class CreatorService {
         return CreatorResDto.fromEntity(findCreator);
     }
 
+    @Transactional
     public CreatorResDto deleteCreator(Long id, Long userId) {
         isAdmin(userId);
         Creator findCreator = creatorRepository.findById(id)
