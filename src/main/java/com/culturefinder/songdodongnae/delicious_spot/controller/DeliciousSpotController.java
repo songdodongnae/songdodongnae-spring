@@ -52,7 +52,7 @@ public class DeliciousSpotController {
             @ApiResponse(responseCode = "404", description = "맛집을 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseContainer<DeliciousSpotResDto>> readDeliciousSpot(
+    public ResponseEntity<ResponseContainer<DeliciousSpotResDto>> getDeliciousSpot(
             @Parameter(description = "맛집 ID", required = true) @PathVariable Long id) {
 
         if (!authService.isAuthenticatedUser()) {
@@ -64,7 +64,21 @@ public class DeliciousSpotController {
             DeliciousSpotResDto dto = deliciousSpotService.getUserDeliciousSpot(id, userId);
             return ResponseContainer.create(HttpStatus.OK, "맛집 조회 성공", dto);
         }
+    }
 
+    @GetMapping("/{id}/v2")
+    public ResponseEntity<ResponseContainer<DeliciousSpotResDto>> getDeliciousSpotV2(
+            @Parameter(description = "맛집 ID", required = true) @PathVariable Long id) {
+
+        if (!authService.isAuthenticatedUser()) {
+            DeliciousSpotResDto dto = deliciousSpotService.getDeliciousSpotV2(id);
+            return ResponseContainer.create(HttpStatus.OK, "맛집 조회 성공", dto);
+        }
+        else {
+            Long userId = authService.getAuthenticatedUserId();
+            DeliciousSpotResDto dto = deliciousSpotService.getUserDeliciousSpotV2(id, userId);
+            return ResponseContainer.create(HttpStatus.OK, "맛집 조회 성공", dto);
+        }
     }
 
     @Operation(summary = "모든 맛집 조회")

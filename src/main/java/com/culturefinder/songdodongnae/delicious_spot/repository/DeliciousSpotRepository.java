@@ -1,8 +1,6 @@
 package com.culturefinder.songdodongnae.delicious_spot.repository;
 
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
-import com.culturefinder.songdodongnae.exception.CustomException;
-import com.culturefinder.songdodongnae.exception.ErrorCode;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +29,16 @@ public class DeliciousSpotRepository {
         return Optional.ofNullable(deliciousSpot);
     }
 
+    public Optional<DeliciousSpot> findByIdWithCreator(Long id) {
+        DeliciousSpot deliciousSpot = em.createQuery(
+                        "select d from DeliciousSpot d join fetch d.creator where d.id = :id",
+                        DeliciousSpot.class
+                )
+                .setParameter("id", id)
+                .getSingleResult();
+
+        return Optional.ofNullable(deliciousSpot);
+    }
 
     public List<DeliciousSpot> findAllById(List<Long> idList) {
         if (idList == null || idList.isEmpty()) {

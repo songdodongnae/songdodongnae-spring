@@ -5,7 +5,6 @@ import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
 import com.culturefinder.songdodongnae.curation.repository.CurationDeliciousSpotRepository;
-import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
@@ -61,6 +60,23 @@ public class DeliciousSpotService {
         validUserId(userId);
 
         DeliciousSpot deliciousSpot = deliciousSpotRepository.findById(id)
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
+        boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.DELICIOUS_SPOT, id);
+        return DeliciousSpotResDto.fromEntity(deliciousSpot, isBookmarked);
+    }
+
+    @Transactional(readOnly = true)
+    public DeliciousSpotResDto getDeliciousSpotV2(Long id) {
+        DeliciousSpot deliciousSpot = deliciousSpotRepository.findByIdWithCreator(id)
+                .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
+        return DeliciousSpotResDto.fromEntity(deliciousSpot, false);
+    }
+
+    @Transactional(readOnly = true)
+    public DeliciousSpotResDto getUserDeliciousSpotV2(Long id, Long userId) {
+        validUserId(userId);
+
+        DeliciousSpot deliciousSpot = deliciousSpotRepository.findByIdWithCreator(id)
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
         boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.DELICIOUS_SPOT, id);
         return DeliciousSpotResDto.fromEntity(deliciousSpot, isBookmarked);
