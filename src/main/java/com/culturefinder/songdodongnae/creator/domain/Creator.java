@@ -5,6 +5,7 @@ import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -42,16 +43,19 @@ public class Creator {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @BatchSize(size = 50)
     @Builder.Default
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY,
             orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Curation> curations = new ArrayList<>();
 
+    @BatchSize(size = 50)
     @Builder.Default
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY,
             orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Festival> festivals = new ArrayList<>();
 
+    @BatchSize(size = 50)
     @Builder.Default
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY,
             orphanRemoval = true, cascade = CascadeType.ALL)

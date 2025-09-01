@@ -70,9 +70,10 @@ public class BookmarkRepository {
 
     public List<BookmarkDto> findAllBookmarksByUser(Long userId) {
         return em.createQuery(
-                "SELECT b.bookmarkType, b.targetId FROM Bookmark b " +
-                "WHERE b.user.id = :userId " +
-                "ORDER BY b.createdAt DESC", BookmarkDto.class)
+                "SELECT new com.culturefinder.songdodongnae.bookmark.dto.BookmarkDto(b.targetId, b.bookmarkType) " +
+                        "FROM Bookmark b " +
+                        "WHERE b.user.id = :userId " +
+                        "ORDER BY b.createdAt DESC", BookmarkDto.class)
                 .setParameter("userId", userId)
                 .getResultList();
     }
