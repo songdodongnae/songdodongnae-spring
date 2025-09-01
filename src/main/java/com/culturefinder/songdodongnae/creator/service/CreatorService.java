@@ -17,10 +17,11 @@ import com.culturefinder.songdodongnae.user.domain.Role;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import com.culturefinder.songdodongnae.utils.CustomPage;
-import jakarta.transaction.Transactional;
+import com.culturefinder.songdodongnae.utils.CursorPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -46,14 +47,23 @@ public class CreatorService {
         return CreatorResDto.fromEntity(savedCreator);
     }
 
-    public CustomPage<CreatorThumbnailResDto> getAllCreator(int currentPage, int pageSize) {
-        int offset = (currentPage - 1) * pageSize;
-        long totalCreatorSize = creatorRepository.countCreator();
-        List<CreatorThumbnailResDto> dtos = creatorRepository.findAll(offset, pageSize)
-                .stream()
-                .map(CreatorThumbnailResDto::fromThumbEntity)
-                .collect(Collectors.toList());
-        return CustomPage.of(dtos, currentPage, pageSize, totalCreatorSize);
+
+    @Transactional(readOnly = true)
+    public CursorPage<CreatorThumbnailResDto> getAllCreators(Long cursor, int size) {
+        List<CreatorThumbnailResDto> dtos = creatorRepository.findAll(cursor, size)
+                                        .stream()
+                                        .map(CreatorThumbnailResDto::fromThumbEntity)
+                                        .toList();
+
+        boolean hasNext = dtos.size() > size;
+        if (hasNext) {
+            dtos = dtos.subList(0, size);
+        }
+
+        String nextCursor = hasNext && !dtos.isEmpty() ?
+            String.valueOf(dtos.get(dtos.size() - 1).getId()) : null;
+
+        return CursorPage.of(dtos, nextCursor, hasNext);
     }
 
     public CreatorResDto getCreator(Long id) {
