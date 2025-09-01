@@ -18,6 +18,7 @@ import com.culturefinder.songdodongnae.user.domain.Role;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import com.culturefinder.songdodongnae.utils.CustomPage;
+import com.culturefinder.songdodongnae.utils.CursorPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,15 +49,21 @@ public class CreatorService {
     }
 
     @Transactional(readOnly = true)
-    public CustomPage<CreatorThumbnailResDto> getAllCreator(int currentPage, int pageSize) {
-        int offset = (currentPage - 1) * pageSize;
-        long totalElements = creatorRepository.countCreator();
+    public CursorPage<CreatorThumbnailResDto> getAllCreators(Long cursor, int size) {
+        List<CreatorThumbnailResDto> dtos = creatorRepository.findAll(cursor, size)
+                                        .stream()
+                                        .map(CreatorThumbnailResDto::fromThumbEntity)
+                                        .toList();
 
-        List<CreatorThumbnailResDto> dtos = creatorRepository.findAll(offset, pageSize).stream()
-                .map(CreatorThumbnailResDto::fromThumbEntity)
-                .collect(Collectors.toList());
+        boolean hasNext = dtos.size() > size;
+        if (hasNext) {
+            dtos = dtos.subList(0, size);
+        }
 
-        return CustomPage.of(dtos, currentPage, pageSize, totalElements);
+        String nextCursor = hasNext && !dtos.isEmpty() ?
+            String.valueOf(dtos.get(dtos.size() - 1).getId()) : null;
+
+        return CursorPage.of(dtos, nextCursor, hasNext);
     }
 
     @Transactional(readOnly = true)

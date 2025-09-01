@@ -49,7 +49,7 @@ public class FestivalService {
         return FestivalResDto.fromEntity(savedFestival, false);
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public FestivalResDto getFestival(Long id) {
         Festival findFestival = festivalRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
@@ -57,7 +57,7 @@ public class FestivalService {
         return FestivalResDto.fromEntity(findFestival, false);
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public FestivalResDto getUserFestival(Long id, Long userId) {
         validUserId(userId);
 
@@ -68,8 +68,28 @@ public class FestivalService {
 
         return FestivalResDto.fromEntity(findFestival, isBookmarked);
     }
+  
+    @Transactional(readOnly = true)
+    public FestivalResDto getFestivalV2(Long id) {
+        Festival findFestival = festivalRepository.findByIdWithCreator(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
 
-    @Transactional(readOnly=true)
+        return FestivalResDto.fromEntity(findFestival, false);
+    }
+
+    @Transactional(readOnly = true)
+    public FestivalResDto getUserFestivalV2(Long id, Long userId) {
+        validUserId(userId);
+
+        Festival findFestival = festivalRepository.findByIdWithCreator(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        boolean isBookmarked = bookmarkRepository.existsByUserAndTypeAndTargetId(userId, BookmarkType.FESTIVAL, findFestival.getId());
+
+        return FestivalResDto.fromEntity(findFestival, isBookmarked);
+    }
+
+    @Transactional(readOnly = true)
     public List<FestivalThumbnailResDto> getFestivalsByYearAndMonth(int year, int month) {
         LocalDate startOfMonth = LocalDate.of(year, month, 1);
         LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
@@ -83,7 +103,7 @@ public class FestivalService {
                 .toList();
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<FestivalThumbnailResDto> getFestivalsUserByYearAndMonth(int year, int month, Long userId) {
         validUserId(userId);
 
@@ -102,7 +122,7 @@ public class FestivalService {
                 .toList();
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public CustomPage<FestivalThumbnailResDto> getAllFestival(int currentPage, int pageSize) {
         int offset = (currentPage - 1) * pageSize;
         Long totalElements = festivalRepository.countFestivals();
@@ -120,7 +140,7 @@ public class FestivalService {
 
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public CustomPage<FestivalThumbnailResDto> getAllUserFestival(int currentPage, int pageSize, Long userId) {
         validUserId(userId);
 
