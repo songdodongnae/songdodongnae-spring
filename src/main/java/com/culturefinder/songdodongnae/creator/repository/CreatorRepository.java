@@ -24,30 +24,12 @@ public class CreatorRepository {
         return creator;
     }
 
-    public List<Creator> findAll(int offset, int pageSize) {
-        return em.createQuery("SELECT c from Creator c", Creator.class)
-                .setFirstResult(offset)
-                .setMaxResults(pageSize)
+    public List<Creator> findAll(Long cursor, int size) {
+        return em.createQuery("SELECT c from Creator c  where c.id > :cursor order by c.id asc", Creator.class)
+                .setParameter("cursor", cursor != null ? cursor : 0L)
+                .setMaxResults(size + 1)
                 .getResultList();
     }
-
-    public List<CreatorThumbnailResDto> findAllV2(int offset, int pageSize) {
-        String jpql = """
-        select new com.culturefinder.songdodongnae.creator.dto.CreatorThumbnailResDto(
-            c.id, c.name, c.introduction, c.imageUrl
-        )
-        from Creator c
-        order by c.id asc
-        """;
-
-        return em.createQuery(jpql, CreatorThumbnailResDto.class)
-                .setFirstResult(offset)
-                .setMaxResults(pageSize)
-                .setHint("org.hibernate.fetchSize", pageSize)
-                .setHint("org.hibernate.readOnly", true)
-                .getResultList();
-    }
-
 
     public Optional<Creator> findById(Long id) {
         Creator creator = em.find(Creator.class, id);
@@ -71,43 +53,8 @@ public class CreatorRepository {
     }
 
     public long countCreator() {
-        return em.createQuery(
-                        "SELECT COUNT(c) FROM Creator c",
-                        Long.class
-                )
-                .setHint("org.hibernate.cacheable", true)
+        return em.createQuery("SELECT COUNT(c) FROM Creator c", Long.class)
                 .getSingleResult();
     }
 
-    public List<CreatorThumbnailResDto> findAllByCursor(Long cursor, int size) {
-        String jpql = """
-        select new com.culturefinder.songdodongnae.creator.dto.CreatorThumbnailResDto(
-            c.id, c.name, c.introduction, c.imageUrl
-        )
-        from Creator c
-        where c.id > :cursor
-        order by c.id asc
-        """;
-        return em.createQuery(jpql, CreatorThumbnailResDto.class)
-                .setParameter("cursor", cursor != null ? cursor : 0L)
-                .setMaxResults(size + 1)
-                .setHint("org.hibernate.fetchSize", size)
-                .setHint("org.hibernate.readOnly", true)
-                .getResultList();
-    }
-
-    public List<CreatorThumbnailResDto> findFirstPage(int size) {
-        String jpql = """
-        select new com.culturefinder.songdodongnae.creator.dto.CreatorThumbnailResDto(
-            c.id, c.name, c.introduction, c.imageUrl
-        )
-        from Creator c
-        order by c.id asc
-        """;
-        return em.createQuery(jpql, CreatorThumbnailResDto.class)
-                .setMaxResults(size + 1)
-                .setHint("org.hibernate.fetchSize", size)
-                .setHint("org.hibernate.readOnly", true)
-                .getResultList();
-    }
 }

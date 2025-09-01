@@ -20,7 +20,6 @@ import com.culturefinder.songdodongnae.utils.CustomPage;
 import com.culturefinder.songdodongnae.utils.CursorPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,49 +47,22 @@ public class CreatorService {
         return CreatorResDto.fromEntity(savedCreator);
     }
 
-    public CustomPage<CreatorThumbnailResDto> getAllCreator(int currentPage, int pageSize) {
-        int offset = (currentPage - 1) * pageSize;
-        long totalElements = creatorRepository.countCreator();
-
-        List<CreatorThumbnailResDto> dtos = creatorRepository.findAll(offset, pageSize).stream()
-                .map(CreatorThumbnailResDto::fromThumbEntity)
-                .collect(Collectors.toList());
-
-        return CustomPage.of(dtos, currentPage, pageSize, totalElements);
-    }
-
-    public CustomPage<CreatorThumbnailResDto> getAllCreatorV2(int currentPage, int pageSize) {
-        int offset = (currentPage - 1) * pageSize;
-        long totalElements = getCreatorCount();
-
-        List<CreatorThumbnailResDto> dtos = creatorRepository.findAllV2(offset, pageSize);
-
-        return CustomPage.of(dtos, currentPage, pageSize, totalElements);
-    }
-
-    @Cacheable(value = "creators:count", sync = true)
     @Transactional(readOnly = true)
-    public long getCreatorCount() {
-        long count = creatorRepository.countCreator();
-        return count;
-    }
+    public CursorPage<CreatorThumbnailResDto> getAllCreators(Long cursor, int size) {
+        List<CreatorThumbnailResDto> dtos = creatorRepository.findAll(cursor, size)
+                                        .stream()
+                                        .map(CreatorThumbnailResDto::fromThumbEntity)
+                                        .toList();
 
-    public CursorPage<CreatorThumbnailResDto> getAllCreatorsByCursor(Long cursor, int size) {
-        
-        List<CreatorThumbnailResDto> results =
-                cursor == null ?
-                        creatorRepository.findFirstPage(size) :
-                        creatorRepository.findAllByCursor(cursor, size);
-
-        boolean hasNext = results.size() > size;
+        boolean hasNext = dtos.size() > size;
         if (hasNext) {
-            results = results.subList(0, size);
+            dtos = dtos.subList(0, size);
         }
 
-        String nextCursor = hasNext && !results.isEmpty() ? 
-            String.valueOf(results.get(results.size() - 1).getId()) : null;
+        String nextCursor = hasNext && !dtos.isEmpty() ?
+            String.valueOf(dtos.get(dtos.size() - 1).getId()) : null;
 
-        return CursorPage.of(results, nextCursor, hasNext);
+        return CursorPage.of(dtos, nextCursor, hasNext);
     }
 
     public CreatorResDto getCreator(Long id) {

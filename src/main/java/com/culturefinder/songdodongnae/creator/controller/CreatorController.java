@@ -45,29 +45,11 @@ public class CreatorController {
     @Operation(summary = "크리에이터 모두 조회")
     @ApiResponse(responseCode = "200", description = "크리에이터 썸네일 목록 조회 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class)))
     @GetMapping
-    public ResponseEntity<ResponseContainer<CustomPage<CreatorThumbnailResDto>>> getAllCreator(
-            @Parameter(description = "현재 페이지 번호", example = "1") @RequestParam(defaultValue = "1") int currentPage,
-            @Parameter(description = "페이지 크기", example = "10") @RequestParam(defaultValue = "10") int pageSize
-    ) {
-        CustomPage<CreatorThumbnailResDto> dtos = creatorService.getAllCreator(currentPage, pageSize);
-        return ResponseContainer.create(HttpStatus.OK, "크리에이터 썸네일 목록 조회 성공", dtos);
-    }
-
-    @GetMapping("/v2")
-    public ResponseEntity<ResponseContainer<CustomPage<CreatorThumbnailResDto>>> getAllCreatorV2(
-            @Parameter(description = "현재 페이지 번호", example = "1") @RequestParam(defaultValue = "1") int currentPage,
-            @Parameter(description = "페이지 크기", example = "10") @RequestParam(defaultValue = "10") int pageSize
-    ) {
-        CustomPage<CreatorThumbnailResDto> dtos = creatorService.getAllCreatorV2(currentPage, pageSize);
-        return ResponseContainer.create(HttpStatus.OK, "크리에이터 썸네일 목록 V2 페이지네이션 조회 성공", dtos);
-    }
-
-    @GetMapping("/cursor")
     public ResponseEntity<ResponseContainer<CursorPage<CreatorThumbnailResDto>>> getAllCreatorsByCursor(
             @Parameter(description = "커서 (이전 페이지의 마지막 ID)", example = "20") @RequestParam(required = false) Long cursor,
-            @Parameter(description = "페이지 크기", example = "10") @RequestParam(defaultValue = "10") int size
+            @Parameter(description = "페이지 크기", example = "10") @RequestParam(defaultValue = "10") int pageSize
     ) {
-        CursorPage<CreatorThumbnailResDto> dtos = creatorService.getAllCreatorsByCursor(cursor, size);
+        CursorPage<CreatorThumbnailResDto> dtos = creatorService.getAllCreators(cursor, pageSize);
         return ResponseContainer.create(HttpStatus.OK, "크리에이터 썸네일 목록 커서 기반 조회 성공", dtos);
     }
 
