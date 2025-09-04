@@ -38,7 +38,8 @@ out/
 
 ### Custom ###
 logs/
-src/main/resources
+src/main/resources/static
+src/main/resources/bootsecurity.p12
 .pem
 *.pem
 /.run
