@@ -127,48 +127,6 @@ public class FestivalService {
         int offset = (currentPage - 1) * pageSize;
         long totalElements = festivalRepository.countFestivals();
 
-        List<FestivalThumbnailResDto> festivals = festivalRepository.findAll(offset, pageSize).stream()
-                .map(festival -> FestivalThumbnailResDto.fromEntity(festival, festival.getCreator().getName(), false))
-                .toList();
-
-        return CustomPage.of(
-                festivals,
-                currentPage,
-                pageSize,
-                totalElements
-        );
-
-    }
-
-    @Transactional(readOnly = true)
-    public CustomPage<FestivalThumbnailResDto> getAllUserFestival(int currentPage, int pageSize, Long userId) {
-        validUserId(userId);
-
-        Set<Long> bookmarkedFestivalIds = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.FESTIVAL));
-
-        int offset = (currentPage - 1) * pageSize;
-        long totalElements = festivalRepository.countFestivals();
-
-        List<FestivalThumbnailResDto> festivals = festivalRepository.findAll(offset, pageSize).stream()
-                .map(festival -> FestivalThumbnailResDto.fromEntity(festival,
-                        festival.getCreator().getName(),
-                        bookmarkedFestivalIds.contains(festival.getId())))
-                .toList();
-
-        return CustomPage.of(
-                festivals,
-                currentPage,
-                pageSize,
-                totalElements
-        );
-
-    }
-
-    @Transactional(readOnly = true)
-    public CustomPage<FestivalThumbnailResDto> getAllFestivalV2(int currentPage, int pageSize) {
-        int offset = (currentPage - 1) * pageSize;
-        long totalElements = festivalRepository.countFestivals();
-
         List<FestivalThumbnailResDto> festivals = festivalRepository.findAllWithCreator(offset, pageSize).stream()
                 .map(festival -> FestivalThumbnailResDto.fromEntity(festival, festival.getCreator().getName(), false))
                 .toList();
@@ -182,7 +140,7 @@ public class FestivalService {
     }
 
     @Transactional(readOnly = true)
-    public CustomPage<FestivalThumbnailResDto> getAllUserFestivalV2(int currentPage, int pageSize, Long userId) {
+    public CustomPage<FestivalThumbnailResDto> getAllUserFestival(int currentPage, int pageSize, Long userId) {
         validUserId(userId);
 
         int offset = (currentPage - 1) * pageSize;
