@@ -34,6 +34,16 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             echo "SSH 연결 성공! 서버에 배포 시작"
+            
+            # SSH 키 Secret이 제대로 전달되었는지 확인합니다.
+            # 이 키는 appleboy/ssh-action에 의해 별도의 파일로 처리됩니다.
+            # 따라서 키 값의 일부가 아닌, 키의 존재 여부만 확인하는 것이 안전합니다.
+            if [ -n "${{ secrets.SSH_KEY }}" ]; then
+              echo "SSH 키 Secret이 성공적으로 전달되었습니다."
+              echo "전달된 SSH_KEY Secret 길이: ${#secrets.SSH_KEY}"
+            else
+              echo "SSH 키 Secret이 비어있거나 전달되지 않았습니다."
+            fi
     
             # 기존 컨테이너 중지 및 삭제 (오류 무시)
             # Amazon Linux에서도 동일한 Docker 명령어가 사용됩니다.
