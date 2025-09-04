@@ -67,6 +67,9 @@ jobs:
               -e MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }} \
               -e DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} \
               -e DATABASE_PASSWORD='${{ secrets.DATABASE_PASSWORD }}' \
+              -e spring.datasource.url="jdbc:mysql://${{ secrets.MYSQL_HOST }}:${{ secrets.MYSQL_PORT }}/${{ secrets.MYSQL_DATABASE }}" \
+              -e spring.datasource.username=${{ secrets.DATABASE_USERNAME }} \
+              -e spring.datasource.password=${{ secrets.DATABASE_PASSWORD }} \
               suee97/spring:deploy
             
             echo "배포가 성공적으로 완료되었습니다!"
