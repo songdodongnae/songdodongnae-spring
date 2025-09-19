@@ -40,6 +40,9 @@ out/
 logs/
 src/main/resources/static
 src/main/resources/bootsecurity.p12
+src/main/resources/application-local.yml
+src/main/resources/application-prod.yml
+
 .pem
 *.pem
 /.run
