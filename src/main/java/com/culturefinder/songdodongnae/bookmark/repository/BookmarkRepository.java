@@ -31,9 +31,13 @@ public class BookmarkRepository {
                 .getResultList();
     }
 
-    public Optional<Bookmark> findBookmarkById(Long id) {
-        Bookmark bookmark = em.find(Bookmark.class, id);
-        return Optional.ofNullable(bookmark);
+    public Optional<Bookmark> findBookmarkByBookmarkTypeAndTargetId(Long targetId, BookmarkType bookmarkType, Long userId) {
+        return Optional.ofNullable(em.createQuery("SELECT b FROM Bookmark b " +
+                        "WHERE b.user.id = :userId AND b.bookmarkType = :bookmarkType AND b.targetId = :targetId", Bookmark.class)
+                .setParameter("userId", userId)
+                .setParameter("bookmarkType", bookmarkType)
+                .setParameter("targetId", targetId)
+                .getSingleResult());
     }
 
     public void deleteBookmark(Long id) {
