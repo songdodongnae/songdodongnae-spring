@@ -50,3 +50,4 @@ src/main/resources/bootsecurity.p12
 *.md
 .env
 docker-compose.yml
+application-local.yml

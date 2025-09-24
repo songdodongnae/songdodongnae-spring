@@ -25,6 +25,9 @@ public class BookmarkService {
         if (bookmarkReqDto.getTargetId() == null) {
             throw new CustomException(ErrorCode.INVALID_PARAMETER);
         }
+        if (bookmarkRepository.existsByUserAndTypeAndTargetId(userId, bookmarkReqDto.getBookmarkType(), bookmarkReqDto.getTargetId())) {
+            throw new CustomException(ErrorCode.DUPLICATE_BOOKMARK);
+        }
 
         Bookmark bookmark = Bookmark.builder()
                 .user(user)
