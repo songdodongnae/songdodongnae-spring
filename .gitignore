@@ -51,3 +51,4 @@ src/main/resources/bootsecurity.p12
 .env
 docker-compose.yml
 application-local.yml
+application-prod.yml
