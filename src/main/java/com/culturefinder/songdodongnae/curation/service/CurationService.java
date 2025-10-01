@@ -5,6 +5,7 @@ import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.creator.domain.Creator;
 import com.culturefinder.songdodongnae.creator.repository.CreatorRepository;
 import com.culturefinder.songdodongnae.curation.domain.Curation;
+import com.culturefinder.songdodongnae.curation.domain.CurationSortType;
 import com.culturefinder.songdodongnae.curation.domain.CurationType;
 import com.culturefinder.songdodongnae.curation.dto.CurationReqDto;
 import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
@@ -86,9 +87,9 @@ public class CurationService {
         return CurationResDto.fromEntity(curationById, creator, bookmarkedDeliciousSpots, bookmarkedFestivals, isBookmarked);
     }
 
-    public CustomPage<CurationThumbnailResDto> getAllCuration(int currentPage, int pageSize) {
+    public CustomPage<CurationThumbnailResDto> getAllCuration(int currentPage, int pageSize, CurationSortType curationSortType) {
         int offset = (currentPage - 1) * pageSize;
-        List<Curation> curations = curationRepository.findAll(offset, pageSize);
+        List<Curation> curations = curationRepository.findAll(offset, pageSize, curationSortType);
         long totalElements = curationRepository.countCuration();
 
         List<CurationThumbnailResDto> curationsDto = curations.stream()
@@ -103,14 +104,14 @@ public class CurationService {
         );
     }
 
-    public CustomPage<CurationThumbnailResDto> getAllUserCuration(Long userId, int currentPage, int pageSize) {
+    public CustomPage<CurationThumbnailResDto> getAllUserCuration(Long userId, int currentPage, int pageSize, CurationSortType curationSortType) {
         validUserId(userId);
 
         List<Long> targetIdsByUserAndType = bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.CURATION);
         Set<Long> bookmarkedSet = new HashSet<>(targetIdsByUserAndType);
 
         int offset = (currentPage - 1) * pageSize;
-        List<Curation> curations = curationRepository.findAll(offset, pageSize);
+        List<Curation> curations = curationRepository.findAll(offset, pageSize, curationSortType);
         long totalElements = curationRepository.countCuration();
 
         List<CurationThumbnailResDto> curationsDto = curations.stream()
@@ -130,7 +131,7 @@ public class CurationService {
 
     public CustomPage<CurationThumbnailResDto> getAllCurationByType(int currentPage, int pageSize, CurationType type) {
         int offset = (currentPage - 1) * pageSize;
-        List<Curation> curations = curationRepository.findAll(offset, pageSize);
+        List<Curation> curations = curationRepository.findAll(offset, pageSize, CurationSortType.CREATED_AT);
         long totalElements = curationRepository.countCuration();
 
         List<CurationThumbnailResDto> curationsDto = curations.stream()
@@ -153,7 +154,7 @@ public class CurationService {
         Set<Long> bookmarkedSet = new HashSet<>(targetIdsByUserAndType);
 
         int offset = (currentPage - 1) * pageSize;
-        List<Curation> curations = curationRepository.findAll(offset, pageSize);
+        List<Curation> curations = curationRepository.findAll(offset, pageSize, CurationSortType.CREATED_AT);
         long totalElements = curationRepository.countCuration();
 
         List<CurationThumbnailResDto> curationsDto = curations.stream()

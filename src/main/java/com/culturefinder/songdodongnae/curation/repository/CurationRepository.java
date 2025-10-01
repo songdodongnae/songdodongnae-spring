@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.curation.repository;
 
 import com.culturefinder.songdodongnae.curation.domain.Curation;
+import com.culturefinder.songdodongnae.curation.domain.CurationSortType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +28,23 @@ public class CurationRepository {
         return Optional.ofNullable(curation);
     }
 
-    public List<Curation> findAll(int offset, int pageSize) {
-        return em.createQuery("SELECT c FROM Curation c", Curation.class)
+    public List<Curation> findAll(int offset, int pageSize, CurationSortType curationSortType) {
+        String query;
+        if (curationSortType == CurationSortType.BOOKMARK) {
+            query = "SELECT c FROM Curation c " +
+                    "ORDER BY (SELECT COUNT(b) FROM Bookmark b WHERE b.targetId = c.id AND b.bookmarkType = 'CURATION') DESC, c.createdAt DESC";
+        } else {
+            query = "SELECT c FROM Curation c ORDER BY c.createdAt DESC";
+        }
+
+        return em.createQuery(query, Curation.class)
                 .setFirstResult(offset)
                 .setMaxResults(pageSize)
                 .getResultList();
+    }
+
+    public List<Curation> findAll(int offset, int pageSize) {
+        return findAll(offset, pageSize, CurationSortType.CREATED_AT);
     }
 
     public List<Curation> findAllById(List<Long> idList) {
