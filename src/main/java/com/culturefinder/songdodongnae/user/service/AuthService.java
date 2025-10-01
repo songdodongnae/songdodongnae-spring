@@ -1,9 +1,5 @@
 package com.culturefinder.songdodongnae.user.service;
 
-import com.culturefinder.songdodongnae.exception.CustomException;
-import com.culturefinder.songdodongnae.exception.ErrorCode;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component

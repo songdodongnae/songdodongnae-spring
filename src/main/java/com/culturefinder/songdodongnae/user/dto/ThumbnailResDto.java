@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.mypage;
+package com.culturefinder.songdodongnae.user.dto;
 
 import com.culturefinder.songdodongnae.curation.domain.Curation;
 import com.culturefinder.songdodongnae.delicious_spot.domain.DeliciousSpot;

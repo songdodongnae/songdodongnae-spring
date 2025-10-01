@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.exception;
+package com.culturefinder.songdodongnae.common.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae;
+package com.culturefinder.songdodongnae.common.config;
 
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import com.culturefinder.songdodongnae.user.service.JwtAuthenticationProcessingFilter;

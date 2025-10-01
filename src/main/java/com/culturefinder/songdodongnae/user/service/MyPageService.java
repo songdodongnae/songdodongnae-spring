@@ -1,15 +1,17 @@
-package com.culturefinder.songdodongnae.mypage;
+package com.culturefinder.songdodongnae.user.service;
 
 import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import com.culturefinder.songdodongnae.bookmark.repository.BookmarkRepository;
 import com.culturefinder.songdodongnae.curation.repository.CurationRepository;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
-import com.culturefinder.songdodongnae.exception.CustomException;
-import com.culturefinder.songdodongnae.exception.ErrorCode;
+import com.culturefinder.songdodongnae.common.exception.CustomException;
+import com.culturefinder.songdodongnae.common.exception.ErrorCode;
 import com.culturefinder.songdodongnae.festival.repository.FestivalRepository;
+import com.culturefinder.songdodongnae.user.dto.NickNameReqDto;
+import com.culturefinder.songdodongnae.user.dto.ThumbnailResDto;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
-import com.culturefinder.songdodongnae.utils.CustomPage;
+import com.culturefinder.songdodongnae.common.utils.CustomPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

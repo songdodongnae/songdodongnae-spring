@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.s3.dto;
+package com.culturefinder.songdodongnae.common.s3.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

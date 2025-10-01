@@ -2,13 +2,13 @@ package com.culturefinder.songdodongnae.search.controller;
 
 import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotThumbnailResDto;
-import com.culturefinder.songdodongnae.exception.ErrorDto;
+import com.culturefinder.songdodongnae.common.exception.ErrorDto;
 import com.culturefinder.songdodongnae.festival.dto.FestivalThumbnailResDto;
 import com.culturefinder.songdodongnae.search.dto.SearchSummaryResDto;
 import com.culturefinder.songdodongnae.search.service.SearchService;
 import com.culturefinder.songdodongnae.user.service.AuthService;
-import com.culturefinder.songdodongnae.utils.CustomPage;
-import com.culturefinder.songdodongnae.utils.ResponseContainer;
+import com.culturefinder.songdodongnae.common.utils.CustomPage;
+import com.culturefinder.songdodongnae.common.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

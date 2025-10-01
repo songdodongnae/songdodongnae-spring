@@ -1,8 +1,8 @@
-package com.culturefinder.songdodongnae.s3.controller;
+package com.culturefinder.songdodongnae.common.s3.controller;
 
-import com.culturefinder.songdodongnae.s3.S3UploadService;
-import com.culturefinder.songdodongnae.s3.dto.PresignedUrlResponseDto;
-import com.culturefinder.songdodongnae.utils.ResponseContainer;
+import com.culturefinder.songdodongnae.common.s3.S3UploadService;
+import com.culturefinder.songdodongnae.common.s3.dto.PresignedUrlResponseDto;
+import com.culturefinder.songdodongnae.common.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

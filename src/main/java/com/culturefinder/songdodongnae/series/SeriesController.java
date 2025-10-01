@@ -8,8 +8,8 @@ import com.culturefinder.songdodongnae.delicious_spot.service.DeliciousSpotServi
 import com.culturefinder.songdodongnae.festival.dto.FestivalThumbnailResDto;
 import com.culturefinder.songdodongnae.festival.service.FestivalService;
 import com.culturefinder.songdodongnae.user.service.AuthService;
-import com.culturefinder.songdodongnae.utils.CustomPage;
-import com.culturefinder.songdodongnae.utils.ResponseContainer;
+import com.culturefinder.songdodongnae.common.utils.CustomPage;
+import com.culturefinder.songdodongnae.common.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

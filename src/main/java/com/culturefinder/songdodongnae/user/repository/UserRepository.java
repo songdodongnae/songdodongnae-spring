@@ -1,7 +1,5 @@
 package com.culturefinder.songdodongnae.user.repository;
 
-import com.culturefinder.songdodongnae.exception.CustomException;
-import com.culturefinder.songdodongnae.exception.ErrorCode;
 import com.culturefinder.songdodongnae.user.domain.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

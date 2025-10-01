@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.exception;
+package com.culturefinder.songdodongnae.common.exception;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;

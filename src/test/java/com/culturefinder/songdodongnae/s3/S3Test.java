@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.s3;
 
+import com.culturefinder.songdodongnae.common.s3.S3UploadService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -7,7 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class S3Test {
 
-    @Autowired S3UploadService s3UploadService;
+    @Autowired
+    S3UploadService s3UploadService;
 
     @Test
     public void deleteImage() {

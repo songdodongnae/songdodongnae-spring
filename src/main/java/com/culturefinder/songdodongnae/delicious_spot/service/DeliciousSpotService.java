@@ -10,13 +10,13 @@ import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotReqDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotResDto;
 import com.culturefinder.songdodongnae.delicious_spot.dto.DeliciousSpotThumbnailResDto;
 import com.culturefinder.songdodongnae.delicious_spot.repository.DeliciousSpotRepository;
-import com.culturefinder.songdodongnae.exception.CustomException;
-import com.culturefinder.songdodongnae.exception.ErrorCode;
+import com.culturefinder.songdodongnae.common.exception.CustomException;
+import com.culturefinder.songdodongnae.common.exception.ErrorCode;
 import com.culturefinder.songdodongnae.user.domain.Role;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
-import com.culturefinder.songdodongnae.utils.CustomPage;
-import com.culturefinder.songdodongnae.s3.S3UploadService;
+import com.culturefinder.songdodongnae.common.utils.CustomPage;
+import com.culturefinder.songdodongnae.common.s3.S3UploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static com.culturefinder.songdodongnae.exception.ErrorCode.ENTITY_NOT_FOUND;
-import static com.culturefinder.songdodongnae.exception.ErrorCode.FORBIDDEN;
+import static com.culturefinder.songdodongnae.common.exception.ErrorCode.ENTITY_NOT_FOUND;
+import static com.culturefinder.songdodongnae.common.exception.ErrorCode.FORBIDDEN;
 
 @Slf4j
 @Service

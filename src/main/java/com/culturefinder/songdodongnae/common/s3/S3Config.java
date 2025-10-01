@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.s3;
+package com.culturefinder.songdodongnae.common.s3;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

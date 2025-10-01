@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.mypage;
+package com.culturefinder.songdodongnae.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import io.swagger.v3.oas.annotations.media.Schema;
