@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.utils;
+package com.culturefinder.songdodongnae.common.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

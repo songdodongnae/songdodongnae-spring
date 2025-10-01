@@ -2,7 +2,7 @@ package com.culturefinder.songdodongnae.user.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.culturefinder.songdodongnae.exception.CustomException;
+import com.culturefinder.songdodongnae.common.exception.CustomException;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.Optional;
 
-import static com.culturefinder.songdodongnae.exception.ErrorCode.RESOURCE_NOT_FOUND;
+import static com.culturefinder.songdodongnae.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
 
 @Getter
 @Service

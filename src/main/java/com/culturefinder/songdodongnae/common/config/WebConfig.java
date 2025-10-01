@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae;
+package com.culturefinder.songdodongnae.common.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

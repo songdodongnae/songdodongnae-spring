@@ -1,9 +1,12 @@
-package com.culturefinder.songdodongnae.mypage;
+package com.culturefinder.songdodongnae.user.controller;
 
 import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
+import com.culturefinder.songdodongnae.user.service.MyPageService;
+import com.culturefinder.songdodongnae.user.dto.NickNameReqDto;
+import com.culturefinder.songdodongnae.user.dto.ThumbnailResDto;
 import com.culturefinder.songdodongnae.user.service.AuthService;
-import com.culturefinder.songdodongnae.utils.CustomPage;
-import com.culturefinder.songdodongnae.utils.ResponseContainer;
+import com.culturefinder.songdodongnae.common.utils.CustomPage;
+import com.culturefinder.songdodongnae.common.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

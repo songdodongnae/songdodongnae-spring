@@ -1,4 +1,4 @@
-package com.culturefinder.songdodongnae.utils;
+package com.culturefinder.songdodongnae.common.utils;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
