@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.curation.controller;
 
+import com.culturefinder.songdodongnae.curation.domain.CurationSortType;
 import com.culturefinder.songdodongnae.curation.dto.CurationReqDto;
 import com.culturefinder.songdodongnae.curation.dto.CurationResDto;
 import com.culturefinder.songdodongnae.curation.dto.CurationThumbnailResDto;
@@ -68,16 +69,17 @@ public class CurationController {
     @GetMapping
     public ResponseEntity<ResponseContainer<CustomPage<CurationThumbnailResDto>>> getCuration(
             @Parameter(description = "현재 페이지 번호", example = "1") @RequestParam(defaultValue = "1") int currentPage,
-            @Parameter(description = "페이지 크기", example = "10") @RequestParam(defaultValue = "10") int pageSize
-    ) {
+            @Parameter(description = "페이지 크기", example = "10") @RequestParam(defaultValue = "10") int pageSize,
+            @Parameter(description = "조회정렬 기준 북마크순 BOOKMARK 또는 시간 순 CREATED_AT ", example = "CREATED_AT") @RequestParam(defaultValue = "CREATED_AT") CurationSortType curationSortType
+            ) {
         boolean authentication = authService.isAuthenticatedUser();
 
         if (!authentication) {
-            CustomPage<CurationThumbnailResDto> allCurations = curationService.getAllCuration(currentPage, pageSize);
+            CustomPage<CurationThumbnailResDto> allCurations = curationService.getAllCuration(currentPage, pageSize, curationSortType);
             return ResponseContainer.create(HttpStatus.OK, "큐레이션 모두 조회 성공", allCurations);
         } else {
             Long userId = authService.getAuthenticatedUserId();
-            CustomPage<CurationThumbnailResDto> allUserCuration = curationService.getAllUserCuration(userId, currentPage, pageSize);
+            CustomPage<CurationThumbnailResDto> allUserCuration = curationService.getAllUserCuration(userId, currentPage, pageSize, curationSortType);
             return ResponseContainer.create(HttpStatus.OK, "큐레이션 모두 조회 성공", allUserCuration);
         }
     }
