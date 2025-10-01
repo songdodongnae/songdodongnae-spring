@@ -53,3 +53,5 @@ src/main/resources/application-prod.yml
 *.md
 .env
 docker-compose.yml
+application-local.yml
+application-prod.yml

@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.bookmark.controller;
 
+import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
 import com.culturefinder.songdodongnae.bookmark.dto.BookmarkReqDto;
 import com.culturefinder.songdodongnae.bookmark.dto.BookmarkResDto;
 import com.culturefinder.songdodongnae.bookmark.service.BookmarkService;
@@ -9,7 +10,6 @@ import com.culturefinder.songdodongnae.utils.ResponseContainer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -43,16 +43,17 @@ public class BookmarkController {
         return ResponseContainer.create(HttpStatus.OK, "북마크 생성 성공", bookmark);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @Operation(summary = "북마크 삭제")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "북마크 삭제 성공", content = @Content(schema = @Schema(implementation = ResponseContainer.class))),
             @ApiResponse(responseCode = "404", description = "해당 북마크를 찾을 수 없거나 북마크의 유저와 접속자가 불일치")
     })
     public ResponseEntity<ResponseContainer<BookmarkResDto>> deleteBookmark(
-            @Parameter(description = "북마크 ID", required = true) @PathVariable Long id) {
+            @Parameter(description = "target ID", required = true) @RequestParam Long targetId,
+            @Parameter(description = "북마크 타입", required = true) @RequestParam BookmarkType bookmarkType ) {
         Long userId = authService.getAuthenticatedUserId();
-        BookmarkResDto bookmark = bookmarkService.deleteBookmark(id, userId);
+        BookmarkResDto bookmark = bookmarkService.deleteBookmark(targetId, bookmarkType, userId);
         return ResponseContainer.create(HttpStatus.OK, "북마크 삭제 성공", bookmark);
     }
 
