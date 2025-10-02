@@ -1,23 +1,36 @@
 package com.culturefinder.songdodongnae.board.domain;
 
+import com.culturefinder.songdodongnae.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Builder
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
 
 
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "board_id")
-    Long id;
+    private Long id;
 
+    private String title;
 
+    private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
 }
