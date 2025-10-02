@@ -1,5 +1,6 @@
 package com.culturefinder.songdodongnae.chat.repository;
 
+import com.culturefinder.songdodongnae.chat.domain.ChatMessage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -15,4 +16,7 @@ public class ChatMessageRepository {
     @PersistenceContext
     private final EntityManager em;
 
+    public void save(ChatMessage chatMessage) {
+        em.persist(chatMessage);
+    }
 }
