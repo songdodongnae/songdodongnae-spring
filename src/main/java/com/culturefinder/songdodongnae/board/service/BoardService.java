@@ -9,12 +9,15 @@ import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static com.culturefinder.songdodongnae.common.exception.ErrorCode.ENTITY_NOT_FOUND;
+import static com.culturefinder.songdodongnae.common.exception.ErrorCode.FORBIDDEN;
 
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class BoardService {
@@ -39,6 +42,18 @@ public class BoardService {
     public BoardResDto getBoard(Long boardId) {
         Board findBoard = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ENTITY_NOT_FOUND));
+        return BoardResDto.from(findBoard);
+    }
+
+
+    public BoardResDto updateBoard(Long boardId, BoardReqDto boardReqDto, Long userId) {
+
+        Board findBoard = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(ENTITY_NOT_FOUND));
+        if (!findBoard.getUser().getId().equals(userId)) {
+            throw new CustomException(FORBIDDEN);
+        }
+        findBoard.update(boardReqDto.getTitle(), boardReqDto.getContent());
         return BoardResDto.from(findBoard);
     }
 

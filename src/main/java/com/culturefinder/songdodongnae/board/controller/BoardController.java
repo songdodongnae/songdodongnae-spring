@@ -42,6 +42,15 @@ public class BoardController {
         return ResponseContainer.create(HttpStatus.OK, "게시글 조회 성공", dto);
     }
 
+    @PutMapping("/{boardId}")
+    public ResponseEntity<ResponseContainer<BoardResDto>> updateBoard(
+            @PathVariable Long boardId, @Valid @RequestBody BoardReqDto boardReqDto
+    ){
+        Long userId = authService.getAuthenticatedUserId();
+        BoardResDto dto = boardService.updateBoard(boardId, boardReqDto, userId);
+        return ResponseContainer.create(HttpStatus.OK, "게시글 수정 성공", dto);
+    }
+
 
 
 

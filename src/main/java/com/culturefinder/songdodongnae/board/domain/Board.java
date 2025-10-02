@@ -33,4 +33,9 @@ public class Board {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
 }
