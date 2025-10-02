@@ -1,7 +1,23 @@
 package com.culturefinder.songdodongnae.board.repository;
 
 import com.culturefinder.songdodongnae.board.domain.Board;
-import org.springframework.data.jpa.repository.JpaRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-public interface BoardRepository extends JpaRepository<Board, Long> {
+@Transactional
+@RequiredArgsConstructor
+@Repository
+public class BoardRepository {
+
+    @PersistenceContext
+    private final EntityManager em;
+
+    public Board saveBoard(Board board) {
+        em.persist(board);
+        return board;
+    }
+
 }
