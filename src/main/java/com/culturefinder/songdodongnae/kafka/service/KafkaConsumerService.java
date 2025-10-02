@@ -24,7 +24,7 @@ public class KafkaConsumerService {
             log.info("Received message from chat.messages topic: {}", message);
 
             ChatMessageDto chatMessageDto = objectMapper.readValue(message, ChatMessageDto.class);
-            checkPermission(chatMessageDto);
+            chatMessageService.checkPermission(chatMessageDto);
             chatMessageService.saveMessage(chatMessageDto);
 
             String roomId = String.valueOf(chatMessageDto.getRoomId());
@@ -35,7 +35,4 @@ public class KafkaConsumerService {
         }
     }
 
-    private void checkPermission(ChatMessageDto chatMessageDto) {
-
-    }
 }

@@ -14,4 +14,8 @@ public class chatMessageService {
     public void saveMessage(ChatMessageDto chatMessageDto) {
 
     }
+
+    public void checkPermission(ChatMessageDto chatMessageDto) {
+
+    }
 }
