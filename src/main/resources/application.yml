@@ -18,6 +18,17 @@ spring:
         format_sql: true
         show_sql: true
 
+  kafka:
+    bootstrap-servers: ${KAFKA_IP}:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: main-server-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: latest
+
   security:
     oauth2:
       client:
