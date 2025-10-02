@@ -5,6 +5,8 @@ import com.culturefinder.songdodongnae.chat.domain.ChatRoom;
 import com.culturefinder.songdodongnae.chat.dto.ChatMessageDto;
 import com.culturefinder.songdodongnae.chat.repository.ChatMessageRepository;
 import com.culturefinder.songdodongnae.chat.repository.ChatRoomRepository;
+import com.culturefinder.songdodongnae.common.exception.CustomException;
+import com.culturefinder.songdodongnae.common.exception.ErrorCode;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +22,9 @@ public class chatMessageService {
 
     public void saveMessage(ChatMessageDto chatMessageDto) {
         User user = userRepository.findById(chatMessageDto.getSenderId())
-                .orElseThrow();
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
         ChatRoom chatRoom = chatRoomRepository.findById(chatMessageDto.getRoomId())
-                .orElseThrow();
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
 
         ChatMessage chatMessage = ChatMessageDto.toEntity(chatMessageDto, chatRoom, user);
         chatMessageRepository.save(chatMessage);
@@ -30,8 +32,8 @@ public class chatMessageService {
 
     public void checkPermission(ChatMessageDto chatMessageDto) {
         userRepository.findById(chatMessageDto.getSenderId())
-                .orElseThrow();
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
         chatRoomRepository.findById(chatMessageDto.getRoomId())
-                .orElseThrow();
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
     }
 }
