@@ -58,4 +58,13 @@ public class BoardService {
     }
 
 
+    public void deleteBoard(Long boardId, Long userId) {
+        Board findBoard = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(ENTITY_NOT_FOUND));
+        if (!findBoard.getUser().getId().equals(userId)) {
+            throw new CustomException(FORBIDDEN);
+        }
+        boardRepository.deleteBoard(findBoard);
+    }
+
 }

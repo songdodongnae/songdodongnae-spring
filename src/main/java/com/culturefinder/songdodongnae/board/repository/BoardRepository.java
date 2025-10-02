@@ -34,6 +34,9 @@ public class BoardRepository {
         return Optional.ofNullable(board);
     }
 
+    public void deleteBoard(Board findBoard) {
+        em.remove(findBoard);
+    }
 
 
 }

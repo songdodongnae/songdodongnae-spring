@@ -52,6 +52,17 @@ public class BoardController {
     }
 
 
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<ResponseContainer<Void>> deleteBoard(
+            @PathVariable Long boardId
+    ){
+        Long userId = authService.getAuthenticatedUserId();
+        boardService.deleteBoard(boardId, userId);
+        return ResponseContainer.create(HttpStatus.OK, "게시글 삭제 성공", null);
+    }
+
+
+
 
 
 
