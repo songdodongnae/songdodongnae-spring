@@ -29,11 +29,18 @@ public class BoardService {
         return BoardResDto.from(savedBoard);
     }
 
-    public List<BoardResDto> getBoard() {
+    public List<BoardResDto> getAllBoard() {
         return boardRepository.findAll()
                 .stream()
                 .map(BoardResDto::from)
                 .toList();
     }
+
+    public BoardResDto getBoard(Long boardId) {
+        Board findBoard = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(ENTITY_NOT_FOUND));
+        return BoardResDto.from(findBoard);
+    }
+
 
 }

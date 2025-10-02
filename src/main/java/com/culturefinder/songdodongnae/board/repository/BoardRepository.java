@@ -1,7 +1,6 @@
 package com.culturefinder.songdodongnae.board.repository;
 
 import com.culturefinder.songdodongnae.board.domain.Board;
-import com.culturefinder.songdodongnae.creator.domain.Creator;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @RequiredArgsConstructor
@@ -29,6 +29,10 @@ public class BoardRepository {
                 .getResultList();
     }
 
+    public Optional<Board> findById(Long id) {
+        Board board = em.find(Board.class, id);
+        return Optional.ofNullable(board);
+    }
 
 
 

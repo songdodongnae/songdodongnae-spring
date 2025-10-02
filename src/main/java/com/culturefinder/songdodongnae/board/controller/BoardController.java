@@ -4,13 +4,7 @@ import com.culturefinder.songdodongnae.board.dto.BoardReqDto;
 import com.culturefinder.songdodongnae.board.dto.BoardResDto;
 import com.culturefinder.songdodongnae.board.service.BoardService;
 import com.culturefinder.songdodongnae.common.utils.ResponseContainer;
-import com.culturefinder.songdodongnae.creator.dto.CreatorReqDto;
-import com.culturefinder.songdodongnae.creator.dto.CreatorResDto;
 import com.culturefinder.songdodongnae.user.service.AuthService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,9 +29,17 @@ public class BoardController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseContainer<List<BoardResDto>>> getBoard() {
-        List<BoardResDto> dto = boardService.getBoard();
-        return ResponseContainer.create(HttpStatus.OK, "게시글 생성 성공", dto);
+    public ResponseEntity<ResponseContainer<List<BoardResDto>>> getAllBoard() {
+        List<BoardResDto> dto = boardService.getAllBoard();
+        return ResponseContainer.create(HttpStatus.OK, "게시글 모두 조회 성공", dto);
+    }
+
+    @GetMapping("/{boardId}")
+    public ResponseEntity<ResponseContainer<BoardResDto>> getBoard(
+            @PathVariable Long boardId
+    ){
+        BoardResDto dto = boardService.getBoard(boardId);
+        return ResponseContainer.create(HttpStatus.OK, "게시글 조회 성공", dto);
     }
 
 
