@@ -15,10 +15,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/board")
@@ -34,6 +33,13 @@ public class BoardController {
         BoardResDto dto = boardService.createBoard(boardReqDto, userId);
         return ResponseContainer.create(HttpStatus.OK, "게시글 생성 성공", dto);
     }
+
+    @GetMapping
+    public ResponseEntity<ResponseContainer<List<BoardResDto>>> getBoard() {
+        List<BoardResDto> dto = boardService.getBoard();
+        return ResponseContainer.create(HttpStatus.OK, "게시글 생성 성공", dto);
+    }
+
 
 
 

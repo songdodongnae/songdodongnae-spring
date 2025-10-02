@@ -10,6 +10,8 @@ import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.culturefinder.songdodongnae.common.exception.ErrorCode.ENTITY_NOT_FOUND;
 
 
@@ -25,6 +27,13 @@ public class BoardService {
                 .orElseThrow(() -> new CustomException(ENTITY_NOT_FOUND));
         Board savedBoard = boardRepository.saveBoard(BoardReqDto.toEntity(boardReqDto, findUser));
         return BoardResDto.from(savedBoard);
+    }
+
+    public List<BoardResDto> getBoard() {
+        return boardRepository.findAll()
+                .stream()
+                .map(BoardResDto::from)
+                .toList();
     }
 
 }
