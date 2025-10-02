@@ -1,9 +1,18 @@
 package com.culturefinder.songdodongnae.chat.repository;
 
-import com.culturefinder.songdodongnae.chat.domain.ChatRoom;
-import org.springframework.data.jpa.repository.JpaRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 
-public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
+@Transactional
+@RequiredArgsConstructor
+@Repository
+public class ChatRoomRepository {
+
+    @PersistenceContext
+    private final EntityManager em;
 
 }
