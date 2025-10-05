@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.user.domain;
 
 import com.culturefinder.songdodongnae.board.domain.Board;
+import com.culturefinder.songdodongnae.chat.domain.ChatRoomUser;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,6 +39,9 @@ public class User {
     private String provider;
 
     private String refreshToken;
+
+    @OneToMany(mappedBy = "user_id", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<ChatRoomUser> chatRoomUser;
 
     public User(UserProfile userProfile) {
         this.nickname = userProfile.getName();

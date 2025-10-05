@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Builder
 @AllArgsConstructor
 @Getter
@@ -23,6 +24,10 @@ public class ChatRoom {
     @Builder.Default
     @OneToMany(mappedBy = "chatroom_id")
     private List<ChatMessage> chatMessages = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "chatroom_id")
+    private List<ChatRoomUser> chatRoomUsers = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime createdAt;
