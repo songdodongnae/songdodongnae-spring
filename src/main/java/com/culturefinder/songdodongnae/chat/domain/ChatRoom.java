@@ -21,7 +21,7 @@ public class ChatRoom {
     private Long id;
 
     @Builder.Default
-    @OneToMany(mappedBy = "chatroom_id")
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
     @CreationTimestamp
