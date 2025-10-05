@@ -1,17 +1,58 @@
 package com.culturefinder.songdodongnae.chat.service;
 
+import com.culturefinder.songdodongnae.board.domain.Board;
+import com.culturefinder.songdodongnae.board.repository.BoardRepository;
+import com.culturefinder.songdodongnae.chat.domain.ChatRoom;
+import com.culturefinder.songdodongnae.chat.domain.ChatRoomUser;
 import com.culturefinder.songdodongnae.chat.dto.ChatRoomResDto;
 import com.culturefinder.songdodongnae.chat.repository.ChatRoomRepository;
+import com.culturefinder.songdodongnae.common.exception.CustomException;
+import com.culturefinder.songdodongnae.common.exception.ErrorCode;
+import com.culturefinder.songdodongnae.user.domain.User;
+import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
+    private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
+    @Transactional
     public ChatRoomResDto createChatRoom(Long userId, Long boardId) {
-        return null;
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        Optional<ChatRoom> existingChatRoom = chatRoomRepository.findByTwoUsersAndBoard(userId, board.getUser().getId(), boardId);
+        if (existingChatRoom.isPresent()) {
+            return ChatRoomResDto.fromEntity(existingChatRoom.get());
+        }
+
+        ChatRoom newChatRoom = ChatRoom.builder()
+                .board(board)
+                .build();
+
+        ChatRoom savedChatRoom = chatRoomRepository.saveChatRoom(newChatRoom);
+
+        ChatRoomUser userA = ChatRoomUser.builder()
+                .chatRoom(savedChatRoom)
+                .user(findUser)
+                .build();
+        savedChatRoom.saveMember(userA);
+        ChatRoomUser userB = ChatRoomUser.builder()
+                .chatRoom(savedChatRoom)
+                .user(board.getUser())
+                .build();
+        savedChatRoom.saveMember(userB);
+        return ChatRoomResDto.fromEntity(savedChatRoom);
     }
 }

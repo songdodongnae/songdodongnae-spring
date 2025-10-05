@@ -23,4 +23,27 @@ public class ChatRoomRepository {
         return Optional.ofNullable(chatRoom);
     }
 
+    public ChatRoom saveChatRoom(ChatRoom chatRoom) {
+        em.persist(chatRoom);
+        return chatRoom;
+    }
+
+    public Optional<ChatRoom> findByTwoUsersAndBoard(Long userId1, Long userId2, Long boardId) {
+        String jpql = "SELECT cr FROM ChatRoom cr " +
+                      "JOIN cr.chatRoomUsers cru1 " +
+                      "JOIN cr.chatRoomUsers cru2 " +
+                      "WHERE cru1.user.id = :userId1 " +
+                      "AND cru2.user.id = :userId2 " +
+                      "AND cru1.id <> cru2.id " +
+                      "AND cr.board.id = :boardId " +
+                      "AND SIZE(cr.chatRoomUsers) = 2";
+
+        return em.createQuery(jpql, ChatRoom.class)
+                .setParameter("userId1", userId1)
+                .setParameter("userId2", userId2)
+                .setParameter("boardId", boardId)
+                .getResultStream()
+                .findFirst();
+    }
+
 }

@@ -15,7 +15,7 @@ public class ChatMessage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chatroom_id")
+    @Column(name = "chatmessage_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
