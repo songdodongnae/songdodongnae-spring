@@ -9,6 +9,7 @@ import com.culturefinder.songdodongnae.chat.repository.ChatRoomRepository;
 import com.culturefinder.songdodongnae.common.exception.CustomException;
 import com.culturefinder.songdodongnae.common.exception.ErrorCode;
 import com.culturefinder.songdodongnae.user.domain.User;
+import com.culturefinder.songdodongnae.user.dto.UserResDto;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class ChatRoomService {
 
         Optional<ChatRoom> existingChatRoom = chatRoomRepository.findByTwoUsersAndBoard(userId, board.getUser().getId(), boardId);
         if (existingChatRoom.isPresent()) {
-            return ChatRoomResDto.fromEntity(existingChatRoom.get());
+            return ChatRoomResDto.fromEntity(existingChatRoom.get(), UserResDto.fromEntity(findUser));
         }
 
         ChatRoom newChatRoom = ChatRoom.builder()
@@ -54,7 +55,7 @@ public class ChatRoomService {
                 .user(board.getUser())
                 .build();
         savedChatRoom.saveMember(userB);
-        return ChatRoomResDto.fromEntity(savedChatRoom);
+        return ChatRoomResDto.fromEntity(savedChatRoom, UserResDto.fromEntity(findUser));
     }
 
     public ChatRoomResDto leaveChatRoom(Long userId, Long chatRoomId) {
@@ -69,12 +70,19 @@ public class ChatRoomService {
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
 
         findChatRoom.leave(chatRoomUser);
-        return ChatRoomResDto.fromEntity(findChatRoom);
+        return ChatRoomResDto.fromEntity(findChatRoom, null);
     }
 
     public List<ChatRoomResDto> getAllChatRoom(Long userId) {
         return chatRoomRepository.findByUserId(userId).stream()
-                .map(ChatRoomResDto::fromEntity)
+                .map(cr -> {
+                    User otherUser = cr.getChatRoomUsers().stream()
+                            .filter(cru -> !cru.getUser().getId().equals(userId))
+                            .findFirst()
+                            .map(ChatRoomUser::getUser)
+                            .orElse(null);
+                    return ChatRoomResDto.fromEntity(cr, otherUser != null ? UserResDto.fromEntity(otherUser) : null);
+                })
                 .toList();
     }
 
@@ -89,6 +97,12 @@ public class ChatRoomService {
                 .findFirst()
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
 
-        return ChatRoomResDto.fromEntity(chatRoom);
+        User otherUser = chatRoom.getChatRoomUsers().stream()
+                .filter(cru -> !cru.getUser().getId().equals(userId))
+                .findFirst()
+                .map(ChatRoomUser::getUser)
+                .orElse(null);
+
+        return ChatRoomResDto.fromEntity(chatRoom, otherUser != null ? UserResDto.fromEntity(otherUser) : null);
     }
 }
