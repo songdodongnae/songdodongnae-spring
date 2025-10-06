@@ -1,13 +1,12 @@
 package com.culturefinder.songdodongnae.user.domain;
 
-import com.culturefinder.songdodongnae.board.domain.Board;
+import com.culturefinder.songdodongnae.chat.domain.ChatRoomUser;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,6 +17,7 @@ import java.util.List;
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     private String nickname;
@@ -38,6 +38,9 @@ public class User {
     private String provider;
 
     private String refreshToken;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<ChatRoomUser> chatRoomUser;
 
     public User(UserProfile userProfile) {
         this.nickname = userProfile.getName();

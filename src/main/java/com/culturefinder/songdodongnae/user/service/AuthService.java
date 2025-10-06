@@ -12,7 +12,7 @@ public class AuthService {
 //                        authentication.getPrincipal().equals("anonymousUser"));
 //        if(!isAuthenticatedUser) throw new CustomException(ErrorCode.FORBIDDEN);
 //        return Long.parseLong(authentication.getName());
-        return 1L;
+        return 3L;
     }
 
     public boolean isAuthenticatedUser() {
