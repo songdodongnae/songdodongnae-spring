@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -26,6 +28,22 @@ public class ChatRoomController {
         Long userId = authService.getAuthenticatedUserId();
         ChatRoomResDto dto = chatRoomService.createChatRoom(userId, boardId);
         return ResponseContainer.create(HttpStatus.OK, "채팅방 생성 성공", dto);
+    }
+
+    @GetMapping("/{chatRoomId}")
+    public ResponseEntity<ResponseContainer<ChatRoomResDto>> getChatRoom(
+            @PathVariable Long chatRoomId
+    ) {
+        Long userId = authService.getAuthenticatedUserId();
+        ChatRoomResDto dto = chatRoomService.getChatRoom(userId, chatRoomId);
+        return ResponseContainer.create(HttpStatus.OK, "채팅방 상세 조회 성공", dto);
+    }
+
+    @GetMapping
+    public ResponseEntity<ResponseContainer<List<ChatRoomResDto>>> getChatRoom() {
+        Long userId = authService.getAuthenticatedUserId();
+        List<ChatRoomResDto> dto = chatRoomService.getAllChatRoom(userId);
+        return ResponseContainer.create(HttpStatus.OK, "채팅방 모두 조회 성공", dto);
     }
 
     @DeleteMapping("/{chatRoomId}")

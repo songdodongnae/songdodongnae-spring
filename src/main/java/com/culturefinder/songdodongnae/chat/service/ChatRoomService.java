@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -69,5 +70,25 @@ public class ChatRoomService {
 
         findChatRoom.leave(chatRoomUser);
         return ChatRoomResDto.fromEntity(findChatRoom);
+    }
+
+    public List<ChatRoomResDto> getAllChatRoom(Long userId) {
+        return chatRoomRepository.findByUserId(userId).stream()
+                .map(ChatRoomResDto::fromEntity)
+                .toList();
+    }
+
+    public ChatRoomResDto getChatRoom(Long userId, Long chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        chatRoom.getChatRoomUsers().stream()
+                .filter(cru -> cru.getUser().equals(findUser))
+                .findFirst()
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        return ChatRoomResDto.fromEntity(chatRoom);
     }
 }

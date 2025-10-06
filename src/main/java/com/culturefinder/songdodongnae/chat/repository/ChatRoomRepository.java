@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -44,6 +45,17 @@ public class ChatRoomRepository {
                 .setParameter("boardId", boardId)
                 .getResultStream()
                 .findFirst();
+    }
+
+    public List<ChatRoom> findByUserId(Long userId) {
+        String jpql = "SELECT DISTINCT cr FROM ChatRoom cr " +
+                      "JOIN FETCH cr.chatRoomUsers cru " +
+                      "WHERE cru.user.id = :userId " +
+                      "ORDER BY cr.updatedAt DESC";
+
+        return em.createQuery(jpql, ChatRoom.class)
+                .setParameter("userId", userId)
+                .getResultList();
     }
 
 }
