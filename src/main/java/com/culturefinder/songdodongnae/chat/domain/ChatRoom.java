@@ -1,6 +1,7 @@
 package com.culturefinder.songdodongnae.chat.domain;
 
 import com.culturefinder.songdodongnae.board.domain.Board;
+import com.culturefinder.songdodongnae.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -44,4 +45,7 @@ public class ChatRoom {
         this.chatRoomUsers.add(user);
     }
 
+    public void leave(ChatRoomUser findUser) {
+        this.chatRoomUsers.remove(findUser);
+    }
 }

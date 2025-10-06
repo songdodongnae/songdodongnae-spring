@@ -28,5 +28,15 @@ public class ChatRoomController {
         return ResponseContainer.create(HttpStatus.OK, "채팅방 생성 성공", dto);
     }
 
+    @DeleteMapping("/{chatRoomId}")
+    public ResponseEntity<ResponseContainer<ChatRoomResDto>> leaveChatRoom(
+            @PathVariable Long chatRoomId
+    ) {
+        Long userId = authService.getAuthenticatedUserId();
+        ChatRoomResDto dto = chatRoomService.leaveChatRoom(userId, chatRoomId);
+        return ResponseContainer.create(HttpStatus.OK, "채팅방 나가기 성공", dto);
+    }
+
+
 
 }

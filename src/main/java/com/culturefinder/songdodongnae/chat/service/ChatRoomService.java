@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class ChatRoomService {
@@ -24,7 +25,6 @@ public class ChatRoomService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
-    @Transactional
     public ChatRoomResDto createChatRoom(Long userId, Long boardId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
@@ -54,5 +54,20 @@ public class ChatRoomService {
                 .build();
         savedChatRoom.saveMember(userB);
         return ChatRoomResDto.fromEntity(savedChatRoom);
+    }
+
+    public ChatRoomResDto leaveChatRoom(Long userId, Long chatRoomId) {
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+        ChatRoom findChatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        ChatRoomUser chatRoomUser = findChatRoom.getChatRoomUsers().stream()
+                .filter(cru -> cru.getUser().equals(findUser))
+                .findFirst()
+                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        findChatRoom.leave(chatRoomUser);
+        return ChatRoomResDto.fromEntity(findChatRoom);
     }
 }
