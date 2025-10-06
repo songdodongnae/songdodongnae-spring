@@ -31,9 +31,14 @@ public class chatMessageService {
     }
 
     public void checkPermission(ChatMessageDto chatMessageDto) {
-        userRepository.findById(chatMessageDto.getSenderId())
+        User findUser = userRepository.findById(chatMessageDto.getSenderId())
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-        chatRoomRepository.findById(chatMessageDto.getRoomId())
+        ChatRoom findChatRoom = chatRoomRepository.findById(chatMessageDto.getRoomId())
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
+
+        findChatRoom.getChatRoomUsers().stream()
+                .filter(cru -> cru.getUser().equals(findUser))
+                .findFirst()
+                .orElseThrow(() -> new CustomException(ErrorCode.FORBIDDEN));
     }
 }
