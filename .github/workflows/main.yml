@@ -78,6 +78,7 @@ jobs:
               -e KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} \
               -e GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
               -e GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }} \
+              -e KAFKA_IP=${{ secrets.KAFKA_IP }} \
               suee97/spring:deploy
             
             echo "배포가 성공적으로 완료되었습니다!"
