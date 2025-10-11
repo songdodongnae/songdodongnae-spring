@@ -58,8 +58,10 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
                 .maxAge(60)
                 .path("/")
                 .httpOnly(false)
-                .secure(true)
-                .sameSite("None")
+                // 임시
+//                .secure(true)
+//                .sameSite("None")
+                .sameSite("Lax")
                 .build();
         return cookie;
     }
