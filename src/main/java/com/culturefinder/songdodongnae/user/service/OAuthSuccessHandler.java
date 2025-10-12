@@ -33,7 +33,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         Optional<User> user = userRepository.findByProviderIdAndProvider(providerId, provider);
         user.ifPresent(u -> loginSuccess(request, response, u.getId()));
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("https://www.songdodongnae.n-e.kr/");
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("http://ec2-13-125-53-0.ap-northeast-2.compute.amazonaws.com/");
         builder.path("auth");
 
         response.sendRedirect(builder.build().toString());
@@ -58,6 +58,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
                 .maxAge(60)
                 .path("/")
                 .httpOnly(false)
+                .secure(false)
                 // 임시
 //                .secure(true)
 //                .sameSite("None")
