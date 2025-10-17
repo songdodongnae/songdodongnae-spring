@@ -1,7 +1,6 @@
 package com.culturefinder.songdodongnae.kafka.service;
 
 import com.culturefinder.songdodongnae.chat.dto.ChatMessageDto;
-import com.culturefinder.songdodongnae.chat.dto.ChatRoomResDto;
 import com.culturefinder.songdodongnae.chat.service.chatMessageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,7 @@ public class KafkaConsumerService {
             chatMessageService.saveMessage(chatMessageDto);
 
             String roomId = String.valueOf(chatMessageDto.getRoomId());
-            kafkaProducerService.sendMessage("chat.messages", roomId, message);
+            kafkaProducerService.sendMessage("chat.broadcast", roomId, message);
 
         } catch (Exception e) {
             log.error("Failed to process chat message: {}", e.getMessage());
