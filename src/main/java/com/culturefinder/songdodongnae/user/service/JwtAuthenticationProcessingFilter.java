@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMap
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -26,6 +27,8 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final String[] whiteList = {"/admin/**", "/swagger-ui/**", "/v3/**", "/api/**", "/ws/**"};
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
+
 
     private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
@@ -109,7 +112,13 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         log.info("security context holder = {}", SecurityContextHolder.getContext().getAuthentication());
     }
 
+//    private boolean isUriInWhiteList(String uri) {
+//        return Arrays.stream(whiteList).anyMatch(pattern -> uri.matches(pattern.replace("**", ".*")));
+//    }
+
     private boolean isUriInWhiteList(String uri) {
-        return Arrays.stream(whiteList).anyMatch(pattern -> uri.matches(pattern.replace("**", ".*")));
+        return Arrays.stream(whiteList)
+                .anyMatch(pattern -> pathMatcher.match(pattern, uri));
     }
+
 }
