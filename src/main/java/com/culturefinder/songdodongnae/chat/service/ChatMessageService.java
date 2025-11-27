@@ -14,31 +14,23 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class chatMessageService {
+public class ChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
     private final UserRepository userRepository;
     private final ChatRoomRepository chatRoomRepository;
 
     public void saveMessage(ChatMessageDto chatMessageDto) {
-        User user = userRepository.findById(chatMessageDto.getSenderId())
+        User findUser = userRepository.findById(chatMessageDto.getSenderId())
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
         ChatRoom chatRoom = chatRoomRepository.findById(chatMessageDto.getRoomId())
                 .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-
-        ChatMessage chatMessage = ChatMessageDto.toEntity(chatMessageDto, chatRoom, user);
-        chatMessageRepository.save(chatMessage);
-    }
-
-    public void checkPermission(ChatMessageDto chatMessageDto) {
-        User findUser = userRepository.findById(chatMessageDto.getSenderId())
-                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-        ChatRoom findChatRoom = chatRoomRepository.findById(chatMessageDto.getRoomId())
-                .orElseThrow(() -> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
-
-        findChatRoom.getChatRoomUsers().stream()
+        chatRoom.getChatRoomUsers().stream()
                 .filter(cru -> cru.getUser().equals(findUser))
                 .findFirst()
                 .orElseThrow(() -> new CustomException(ErrorCode.FORBIDDEN));
+
+        ChatMessage chatMessage = ChatMessageDto.toEntity(chatMessageDto, chatRoom, findUser);
+        chatMessageRepository.save(chatMessage);
     }
 }
