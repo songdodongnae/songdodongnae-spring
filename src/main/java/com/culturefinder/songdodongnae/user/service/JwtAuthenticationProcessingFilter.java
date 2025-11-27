@@ -25,7 +25,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
-    private final String[] whiteList = {"/admin/**", "/swagger-ui/**", "/v3/**", "/api/**"};
+    private final String[] whiteList = {"/admin/**", "/swagger-ui/**", "/v3/**", "/api/**", "/ws/**"};
 
     private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
