@@ -42,7 +42,7 @@ public class SearchService {
         Pageable top3 = PageRequest.of(0, 3);
         List<Festival> top3Festival = festivalRepository.findTop3Festival(query.toLowerCase(), top3);
         List<DeliciousSpot> top3DeliciousSpot = deliciousSpotRepository.findTop3DeliciousSpot(query.toLowerCase(), top3);
-        List<Curation> top3Curation = curationRepository.findTop3Curation(query);
+        List<Curation> top3Curation = curationRepository.findTop3Curation(query.toLowerCase(), top3);
 
         if (userId == null) return SearchSummaryResDto.from(query, top3Festival, top3DeliciousSpot, top3Curation);
         else {
@@ -128,10 +128,10 @@ public class SearchService {
     }
 
     public CustomPage<CurationThumbnailResDto> searchCuration(String keyword, int currentPage, int pageSize) {
-        int offset = (currentPage - 1) * pageSize;
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         long totalElements = curationRepository.countSearchCurations(keyword);
 
-        List<CurationThumbnailResDto> dtos = curationRepository.searchCurations(keyword, offset, pageSize).stream()
+        List<CurationThumbnailResDto> dtos = curationRepository.searchCurations(keyword, pageable).stream()
                 .map(curation -> CurationThumbnailResDto.fromEntity(curation, false))
                 .toList();
 
@@ -146,12 +146,12 @@ public class SearchService {
     public CustomPage<CurationThumbnailResDto> searchUserCuration(String keyword, int currentPage, int pageSize, Long userId) {
         validUserId(userId);
 
-        int offset = (currentPage - 1) * pageSize;
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         long totalElements = curationRepository.countSearchCurations(keyword);
 
         Set<Long> curationIds = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.CURATION));
 
-        List<CurationThumbnailResDto> dtos =  curationRepository.searchCurations(keyword, offset, pageSize).stream()
+        List<CurationThumbnailResDto> dtos = curationRepository.searchCurations(keyword, pageable).stream()
                 .map(curation -> CurationThumbnailResDto.fromEntity(curation, curationIds.contains(curation.getId())))
                 .toList();
 

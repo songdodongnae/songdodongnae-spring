@@ -1,22 +1,18 @@
 package com.culturefinder.songdodongnae.curation.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import lombok.RequiredArgsConstructor;
+import com.culturefinder.songdodongnae.curation.domain.CurationFestival;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-
-@RequiredArgsConstructor
 @Repository
-public class CurationFestivalRepository {
+public interface CurationFestivalRepository extends JpaRepository<CurationFestival, Long> {
 
-    @PersistenceContext
-    private final EntityManager em;
-
-    public void deleteByFestivalId(Long festivalId) {
-        em.createQuery("DELETE FROM CurationFestival cf WHERE cf.festival.id = :festivalId")
-                .setParameter("festivalId", festivalId)
-                .executeUpdate();
-    }
-
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM CurationFestival cf WHERE cf.festival.id = :festivalId")
+    void deleteByFestivalId(@Param("festivalId") Long festivalId);
 }

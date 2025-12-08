@@ -1,22 +1,18 @@
 package com.culturefinder.songdodongnae.curation.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import lombok.RequiredArgsConstructor;
+import com.culturefinder.songdodongnae.curation.domain.CurationDeliciousSpot;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-
-@RequiredArgsConstructor
 @Repository
-public class CurationDeliciousSpotRepository {
+public interface CurationDeliciousSpotRepository extends JpaRepository<CurationDeliciousSpot, Long> {
 
-    @PersistenceContext
-    private final EntityManager em;
-
-    public void deleteByDeliciousSpotId(Long deliciousSpotId) {
-        em.createQuery("DELETE FROM CurationDeliciousSpot cf WHERE cf.deliciousSpot.id = :deliciousSpotId")
-                .setParameter("deliciousSpotId", deliciousSpotId)
-                .executeUpdate();
-    }
-
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM CurationDeliciousSpot cd WHERE cd.deliciousSpot.id = :deliciousSpotId")
+    void deleteByDeliciousSpotId(@Param("deliciousSpotId") Long deliciousSpotId);
 }

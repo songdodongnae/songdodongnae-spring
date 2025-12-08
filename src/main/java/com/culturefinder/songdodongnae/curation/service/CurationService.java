@@ -24,6 +24,8 @@ import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import com.culturefinder.songdodongnae.common.utils.CustomPage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -59,7 +61,7 @@ public class CurationService {
             festivals = festivalRepository.findAllById(curationReqDto.getIds());
 
         Curation curation = CurationReqDto.toEntity(curationReqDto, creator, deliciousSpots, festivals);
-        Curation savedCuration = curationRepository.saveCuration(curation);
+        Curation savedCuration = curationRepository.save(curation);
         return CurationResDto.fromEntity(savedCuration, creator, false);
     }
 
@@ -88,9 +90,16 @@ public class CurationService {
     }
 
     public CustomPage<CurationThumbnailResDto> getAllCuration(int currentPage, int pageSize, CurationSortType curationSortType) {
-        int offset = (currentPage - 1) * pageSize;
-        List<Curation> curations = curationRepository.findAll(offset, pageSize, curationSortType);
-        long totalElements = curationRepository.countCuration();
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        List<Curation> curations;
+
+        if (curationSortType == CurationSortType.BOOKMARK) {
+            curations = curationRepository.findAllByBookmarkCount(pageable);
+        } else {
+            curations = curationRepository.findAllByCreatedAt(pageable);
+        }
+
+        long totalElements = curationRepository.count();
 
         List<CurationThumbnailResDto> curationsDto = curations.stream()
                 .map(curation -> CurationThumbnailResDto.fromEntity(curation, false))
@@ -110,9 +119,16 @@ public class CurationService {
         List<Long> targetIdsByUserAndType = bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.CURATION);
         Set<Long> bookmarkedSet = new HashSet<>(targetIdsByUserAndType);
 
-        int offset = (currentPage - 1) * pageSize;
-        List<Curation> curations = curationRepository.findAll(offset, pageSize, curationSortType);
-        long totalElements = curationRepository.countCuration();
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        List<Curation> curations;
+
+        if (curationSortType == CurationSortType.BOOKMARK) {
+            curations = curationRepository.findAllByBookmarkCount(pageable);
+        } else {
+            curations = curationRepository.findAllByCreatedAt(pageable);
+        }
+
+        long totalElements = curationRepository.count();
 
         List<CurationThumbnailResDto> curationsDto = curations.stream()
                 .map(curation -> {
@@ -130,9 +146,9 @@ public class CurationService {
     }
 
     public CustomPage<CurationThumbnailResDto> getAllCurationByType(int currentPage, int pageSize, CurationType type) {
-        int offset = (currentPage - 1) * pageSize;
-        List<Curation> curations = curationRepository.findAll(offset, pageSize, CurationSortType.CREATED_AT);
-        long totalElements = curationRepository.countCuration();
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        List<Curation> curations = curationRepository.findAllByCreatedAt(pageable);
+        long totalElements = curationRepository.count();
 
         List<CurationThumbnailResDto> curationsDto = curations.stream()
                     .filter(curation -> curation.getType() == type)
@@ -153,9 +169,9 @@ public class CurationService {
         List<Long> targetIdsByUserAndType = bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.CURATION);
         Set<Long> bookmarkedSet = new HashSet<>(targetIdsByUserAndType);
 
-        int offset = (currentPage - 1) * pageSize;
-        List<Curation> curations = curationRepository.findAll(offset, pageSize, CurationSortType.CREATED_AT);
-        long totalElements = curationRepository.countCuration();
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        List<Curation> curations = curationRepository.findAllByCreatedAt(pageable);
+        long totalElements = curationRepository.count();
 
         List<CurationThumbnailResDto> curationsDto = curations.stream()
                 .filter(curation -> curation.getType() == type)
