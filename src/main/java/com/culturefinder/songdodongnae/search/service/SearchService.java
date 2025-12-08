@@ -41,7 +41,7 @@ public class SearchService {
     public SearchSummaryResDto getSearchSummary(@Nullable Long userId, String query) {
         Pageable top3 = PageRequest.of(0, 3);
         List<Festival> top3Festival = festivalRepository.findTop3Festival(query.toLowerCase(), top3);
-        List<DeliciousSpot> top3DeliciousSpot = deliciousSpotRepository.findTop3DeliciousSpot(query);
+        List<DeliciousSpot> top3DeliciousSpot = deliciousSpotRepository.findTop3DeliciousSpot(query.toLowerCase(), top3);
         List<Curation> top3Curation = curationRepository.findTop3Curation(query);
 
         if (userId == null) return SearchSummaryResDto.from(query, top3Festival, top3DeliciousSpot, top3Curation);
@@ -92,10 +92,10 @@ public class SearchService {
     }
 
     public CustomPage<DeliciousSpotThumbnailResDto> searchDeliciousSpots(String keyword, int currentPage, int pageSize) {
-        int offset = (currentPage - 1) * pageSize;
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         long totalElements = deliciousSpotRepository.countSearchDeliciousSpot(keyword);
 
-        List<DeliciousSpotThumbnailResDto> dtos = deliciousSpotRepository.searchDeliciousSpots(keyword, offset, pageSize).stream()
+        List<DeliciousSpotThumbnailResDto> dtos = deliciousSpotRepository.searchDeliciousSpots(keyword, pageable).stream()
                 .map(deliciousSpot -> DeliciousSpotThumbnailResDto.fromEntity(deliciousSpot, deliciousSpot.getCreator().getName(), false))
                 .toList();
 
@@ -110,12 +110,12 @@ public class SearchService {
     public CustomPage<DeliciousSpotThumbnailResDto> searchUserDeliciousSpots(String keyword, int currentPage, int pageSize, Long userId) {
         validUserId(userId);
 
-        int offset = (currentPage - 1) * pageSize;
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         long totalElements = deliciousSpotRepository.countSearchDeliciousSpot(keyword);
 
         Set<Long> deliciousSpotIds = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.DELICIOUS_SPOT));
 
-        List<DeliciousSpotThumbnailResDto> dtos = deliciousSpotRepository.searchDeliciousSpots(keyword, offset, pageSize).stream()
+        List<DeliciousSpotThumbnailResDto> dtos = deliciousSpotRepository.searchDeliciousSpots(keyword, pageable).stream()
                 .map(deliciousSpot -> DeliciousSpotThumbnailResDto.fromEntity(deliciousSpot, deliciousSpot.getCreator().getName() ,deliciousSpotIds.contains(deliciousSpot.getId())))
                 .toList();
 

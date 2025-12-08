@@ -19,6 +19,8 @@ import com.culturefinder.songdodongnae.common.utils.CustomPage;
 import com.culturefinder.songdodongnae.common.s3.S3UploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +48,7 @@ public class DeliciousSpotService {
                 .orElseThrow(()-> new CustomException(ENTITY_NOT_FOUND));
 
         DeliciousSpot deliciousSpot = DeliciousSpotReqDto.toEntity(deliciousSpotReqDto, findCreator);
-        DeliciousSpot savedDeliciousSpot = deliciousSpotRepository.saveDeliciousSpot(deliciousSpot);
+        DeliciousSpot savedDeliciousSpot = deliciousSpotRepository.save(deliciousSpot);
         return DeliciousSpotResDto.fromEntity(savedDeliciousSpot, false);
     }
 
@@ -83,10 +85,10 @@ public class DeliciousSpotService {
     }
 
     public CustomPage<DeliciousSpotThumbnailResDto> getAllDeliciousSpots(int currentPage, int pageSize) {
-        int offset = (currentPage - 1) * pageSize;
-        long totalElements = deliciousSpotRepository.countDeliciousSpot();
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        long totalElements = deliciousSpotRepository.count();
 
-        List<DeliciousSpotThumbnailResDto> dtos = deliciousSpotRepository.findAll(offset, pageSize).stream()
+        List<DeliciousSpotThumbnailResDto> dtos = deliciousSpotRepository.findAll(pageable).getContent().stream()
                 .map(deliciousSpot -> DeliciousSpotThumbnailResDto.fromEntity(deliciousSpot,
                         deliciousSpot.getCreator().getName(),
                         false))
@@ -101,10 +103,10 @@ public class DeliciousSpotService {
         List<Long> deliciousSpotIds = bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.DELICIOUS_SPOT);
         Set<Long> bookmarkedSet = new HashSet<>(deliciousSpotIds);
 
-        int offset = (currentPage - 1) * pageSize;
-        long totalElements = deliciousSpotRepository.countDeliciousSpot();
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        long totalElements = deliciousSpotRepository.count();
 
-        List<DeliciousSpotThumbnailResDto> deliciousSpotsDto =  deliciousSpotRepository.findAll(offset, pageSize).stream()
+        List<DeliciousSpotThumbnailResDto> deliciousSpotsDto = deliciousSpotRepository.findAll(pageable).getContent().stream()
                 .map(deliciousSpot -> DeliciousSpotThumbnailResDto.fromEntity(deliciousSpot,
                         deliciousSpot.getCreator().getName(),
                         bookmarkedSet.contains(deliciousSpot.getId())))
@@ -160,7 +162,7 @@ public class DeliciousSpotService {
         }
         bookmarkRepository.deleteBookmarkByTypeAndTargetId(BookmarkType.DELICIOUS_SPOT, deliciousSpot.getId());
         curationDeliciousSpotRepository.deleteByDeliciousSpotId(deliciousSpot.getId());
-        deliciousSpotRepository.deleteDeliciousSpot(id);
+        deliciousSpotRepository.deleteById(id);
     }
 
 
