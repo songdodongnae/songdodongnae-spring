@@ -18,6 +18,8 @@ import com.culturefinder.songdodongnae.common.s3.S3UploadService;
 import com.culturefinder.songdodongnae.user.domain.User;
 import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +46,7 @@ public class FestivalService {
                 .orElseThrow(()-> new CustomException(ErrorCode.ENTITY_NOT_FOUND));
 
         Festival festival = FestivalReqDto.toEntity(festivalReqDto, findCreator);
-        Festival savedFestival = festivalRepository.saveFestival(festival);
+        Festival savedFestival = festivalRepository.save(festival);
 
         return FestivalResDto.fromEntity(savedFestival, false);
     }
@@ -124,10 +126,10 @@ public class FestivalService {
 
     @Transactional(readOnly = true)
     public CustomPage<FestivalThumbnailResDto> getAllFestival(int currentPage, int pageSize) {
-        int offset = (currentPage - 1) * pageSize;
-        long totalElements = festivalRepository.countFestivals();
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        long totalElements = festivalRepository.count();
 
-        List<FestivalThumbnailResDto> festivals = festivalRepository.findAllWithCreator(offset, pageSize).stream()
+        List<FestivalThumbnailResDto> festivals = festivalRepository.findAllWithCreator(pageable).stream()
                 .map(festival -> FestivalThumbnailResDto.fromEntity(festival, festival.getCreator().getName(), false))
                 .toList();
 
@@ -143,10 +145,10 @@ public class FestivalService {
     public CustomPage<FestivalThumbnailResDto> getAllUserFestival(int currentPage, int pageSize, Long userId) {
         validUserId(userId);
 
-        int offset = (currentPage - 1) * pageSize;
-        long totalElements = festivalRepository.countFestivals();
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+        long totalElements = festivalRepository.count();
 
-        List<FestivalThumbnailResDto> festivals = festivalRepository.findAllWithCreatorAndBookmarkStatus(offset, pageSize, userId)
+        List<FestivalThumbnailResDto> festivals = festivalRepository.findAllWithCreatorAndBookmarkStatus(pageable, userId)
                 .stream()
                 .map(result -> FestivalThumbnailResDto.fromEntity(
                         result.getFestival(),
@@ -202,7 +204,7 @@ public class FestivalService {
         }
         bookmarkRepository.deleteBookmarkByTypeAndTargetId(BookmarkType.FESTIVAL, findFestival.getId());
         curationFestivalRepository.deleteByFestivalId(findFestival.getId());
-        festivalRepository.deleteFestival(id);
+        festivalRepository.deleteById(id);
         return FestivalResDto.fromEntity(findFestival, false);
     }
 

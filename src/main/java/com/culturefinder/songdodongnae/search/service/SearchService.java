@@ -19,6 +19,8 @@ import com.culturefinder.songdodongnae.common.utils.CustomPage;
 import io.micrometer.common.lang.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -37,7 +39,8 @@ public class SearchService {
     private final BookmarkRepository bookmarkRepository;
 
     public SearchSummaryResDto getSearchSummary(@Nullable Long userId, String query) {
-        List<Festival> top3Festival = festivalRepository.findTop3Festival(query);
+        Pageable top3 = PageRequest.of(0, 3);
+        List<Festival> top3Festival = festivalRepository.findTop3Festival(query.toLowerCase(), top3);
         List<DeliciousSpot> top3DeliciousSpot = deliciousSpotRepository.findTop3DeliciousSpot(query);
         List<Curation> top3Curation = curationRepository.findTop3Curation(query);
 
@@ -51,10 +54,10 @@ public class SearchService {
     }
 
     public CustomPage<FestivalThumbnailResDto> searchFestivals(String keyword, int currentPage, int pageSize) {
-        int offset = (currentPage - 1) * pageSize;
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         long totalElements = festivalRepository.countSearchFestivals(keyword);
 
-        List<FestivalThumbnailResDto> dtos = festivalRepository.searchFestivals(keyword, offset, pageSize).stream()
+        List<FestivalThumbnailResDto> dtos = festivalRepository.searchFestivals(keyword, pageable).stream()
                 .map(festival -> FestivalThumbnailResDto.fromEntity(festival,
                         festival.getCreator().getName(),
                         false))
@@ -71,12 +74,12 @@ public class SearchService {
     public CustomPage<FestivalThumbnailResDto> searchUserFestivals(String keyword, int currentPage, int pageSize, Long userId) {
         validUserId(userId);
 
-        int offset = (currentPage - 1) * pageSize;
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         long totalElements = festivalRepository.countSearchFestivals(keyword);
 
         Set<Long> festivalIds = new HashSet<>(bookmarkRepository.findTargetIdsByUserAndType(userId, BookmarkType.FESTIVAL));
 
-        List<FestivalThumbnailResDto> dtos = festivalRepository.searchFestivals(keyword, offset, pageSize).stream()
+        List<FestivalThumbnailResDto> dtos = festivalRepository.searchFestivals(keyword, pageable).stream()
                 .map(festival -> FestivalThumbnailResDto.fromEntity(festival, festival.getCreator().getName() ,festivalIds.contains(festival.getId())))
                 .toList();
 

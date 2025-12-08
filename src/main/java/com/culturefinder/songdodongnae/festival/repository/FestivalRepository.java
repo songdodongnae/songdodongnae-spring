@@ -2,134 +2,41 @@ package com.culturefinder.songdodongnae.festival.repository;
 
 import com.culturefinder.songdodongnae.festival.domain.Festival;
 import com.culturefinder.songdodongnae.festival.dto.FestivalWithBookmarkDto;
-import com.culturefinder.songdodongnae.festival.dto.FestivalThumbnailResDto;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-@Transactional
-@RequiredArgsConstructor
-public class FestivalRepository {
+public interface FestivalRepository extends JpaRepository<Festival, Long> {
 
-    @PersistenceContext
-    private final EntityManager em;
+    @Query("SELECT f FROM Festival f JOIN FETCH f.creator WHERE f.id = :id")
+    Optional<Festival> findByIdWithCreator(@Param("id") Long id);
 
-    public Festival saveFestival(Festival festival) {
-        em.persist(festival);
-        return festival;
-    }
+    @Query("SELECT f FROM Festival f JOIN FETCH f.creator ORDER BY f.createdAt")
+    List<Festival> findAllWithCreator(Pageable pageable);
 
-    public Optional<Festival> findById(Long id) {
-        Festival festival = em.find(Festival.class, id);
-        return Optional.ofNullable(festival);
-    }
+    @Query("SELECT f, CASE WHEN b.id IS NOT NULL THEN true ELSE false END as isBookmarked " +
+           "FROM Festival f " +
+           "JOIN FETCH f.creator " +
+           "LEFT JOIN Bookmark b ON b.targetId = f.id AND b.bookmarkType = 'FESTIVAL' AND b.user.id = :userId " +
+           "ORDER BY f.createdAt")
+    List<FestivalWithBookmarkDto> findAllWithCreatorAndBookmarkStatus(Pageable pageable, @Param("userId") Long userId);
 
-    public Optional<Festival> findByIdWithCreator(Long id) {
-        List<Festival> result = em.createQuery(
-                        "SELECT f FROM Festival f " +
-                                "JOIN FETCH f.creator " +
-                                "WHERE f.id = :id", Festival.class)
-                .setParameter("id", id)
-                .getResultList();
+    @Query("SELECT f FROM Festival f WHERE f.startDate <= :end AND f.endDate >= :start")
+    List<Festival> findByYearAndMonth(@Param("start") LocalDate start, @Param("end") LocalDate end);
 
-        return result.stream().findFirst();
-    }
+    @Query("SELECT f FROM Festival f WHERE f.title LIKE %:keyword% ORDER BY f.createdAt DESC")
+    List<Festival> searchFestivals(@Param("keyword") String keyword, Pageable pageable);
 
-    public List<Festival> findAll(int offset, int limit) {
-        return em.createQuery("SELECT f from Festival f ORDER BY f.id", Festival.class)
-                .setFirstResult(offset)
-                .setMaxResults(limit)
-                .getResultList();
-    }
+    @Query("SELECT COUNT(f) FROM Festival f WHERE f.title LIKE %:keyword%")
+    long countSearchFestivals(@Param("keyword") String keyword);
 
-    public List<Festival> findAllWithCreator(int offset, int limit) {
-        return em.createQuery("SELECT f FROM Festival f JOIN FETCH f.creator ORDER BY f.createdAt", Festival.class)
-                .setFirstResult(offset)
-                .setMaxResults(limit)
-                .getResultList();
-    }
-
-    public List<FestivalWithBookmarkDto> findAllWithCreatorAndBookmarkStatus(int offset, int limit, Long userId) {
-        return em.createQuery(
-                "SELECT f, " +
-                "CASE WHEN b.id IS NOT NULL THEN true ELSE false END as isBookmarked FROM Festival f " +
-                "JOIN FETCH f.creator " +
-                "LEFT JOIN Bookmark b ON b.targetId = f.id AND b.bookmarkType = 'FESTIVAL' AND b.user.id = :userId " +
-                "ORDER BY f.createdAt", FestivalWithBookmarkDto.class)
-                .setParameter("userId", userId)
-                .setFirstResult(offset)
-                .setMaxResults(limit)
-                .getResultList();
-    }
-
-    public List<Festival> findByYearAndMonth(LocalDate start, LocalDate end) {
-        return em.createQuery(
-                        "SELECT f FROM Festival f WHERE f.startDate <= :end AND f.endDate >= :start", Festival.class)
-                .setParameter("start", start)
-                .setParameter("end", end)
-                .getResultList();
-    }
-
-    public List<Festival> findAllById(List<Long> idList) {
-        if (idList == null || idList.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        return em.createQuery(
-                        "SELECT f FROM Festival f WHERE f.id IN :idList", Festival.class)
-                .setParameter("idList", idList)
-                .getResultList();
-    }
-
-    public void deleteFestival(Long id) {
-        Festival findFestival = em.find(Festival.class, id);
-        em.remove(findFestival);
-    }
-
-    public List<Festival> searchFestivals(String keyword, int offset, int pageSize) {
-        return em.createQuery(
-                        "SELECT f FROM Festival f WHERE f.title LIKE :keyword ORDER BY f.createdAt DESC",
-                        Festival.class
-                )
-                .setParameter("keyword", "%" + keyword + "%")
-                .setFirstResult(offset)
-                .setMaxResults(pageSize)
-                .getResultList();
-    }
-
-    public long countSearchFestivals(String keyword) {
-        return em.createQuery(
-                        "SELECT COUNT(f) FROM Festival f WHERE f.title LIKE :keyword",
-                        Long.class
-                )
-                .setParameter("keyword", "%" + keyword + "%")
-                .getSingleResult();
-    }
-
-    public long countFestivals() {
-        return em.createQuery(
-                        "SELECT COUNT(f) FROM Festival f",
-                        Long.class
-                )
-                .getSingleResult();
-    }
-
-    public List<Festival> findTop3Festival(String query) {
-        return em.createQuery("SELECT f FROM Festival f " +
-                                "WHERE Lower(f.title) LIKE :query " +
-                                "ORDER BY f.createdAt DESC",
-                        Festival.class)
-                .setParameter("query", "%" + query.toLowerCase() + "%")
-                .setMaxResults(3)
-                .getResultList();
-    }
-
+    @Query("SELECT f FROM Festival f WHERE LOWER(f.title) LIKE %:query% ORDER BY f.createdAt DESC")
+    List<Festival> findTop3Festival(@Param("query") String query, Pageable pageable);
 }
