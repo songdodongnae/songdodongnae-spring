@@ -2,9 +2,10 @@ package com.culturefinder.songdodongnae.bookmark.repository;
 
 import com.culturefinder.songdodongnae.bookmark.domain.Bookmark;
 import com.culturefinder.songdodongnae.bookmark.domain.BookmarkType;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,69 +13,35 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@Transactional
-@AllArgsConstructor
-public class BookmarkRepository {
+public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
-    @PersistenceContext
-    private final EntityManager em;
+    @Query("SELECT b FROM Bookmark b WHERE b.user.id = :userId")
+    List<Bookmark> findAllByUser(@Param("userId") Long userId);
 
-    public Bookmark createBookmark(Bookmark bookmark) {
-        em.persist(bookmark);
-        return bookmark;
-    }
+    @Query("SELECT b FROM Bookmark b WHERE b.user.id = :userId AND b.bookmarkType = :bookmarkType AND b.targetId = :targetId")
+    Optional<Bookmark> findBookmarkByBookmarkTypeAndTargetId(
+            @Param("targetId") Long targetId,
+            @Param("bookmarkType") BookmarkType bookmarkType,
+            @Param("userId") Long userId
+    );
 
-    public List<Bookmark> findAllByUser(Long userId) {
-        return em.createQuery("SELECT b FROM Bookmark b " +
-                        "WHERE b.user.id = :userId", Bookmark.class)
-                .setParameter("userId", userId)
-                .getResultList();
-    }
+    @Query("SELECT b.targetId FROM Bookmark b WHERE b.user.id = :userId AND b.bookmarkType = :bookmarkType ORDER BY b.createdAt DESC")
+    List<Long> findTargetIdsByUserAndType(@Param("userId") Long userId, @Param("bookmarkType") BookmarkType bookmarkType);
 
-    public Optional<Bookmark> findBookmarkByBookmarkTypeAndTargetId(Long targetId, BookmarkType bookmarkType, Long userId) {
-        return Optional.ofNullable(em.createQuery("SELECT b FROM Bookmark b " +
-                        "WHERE b.user.id = :userId AND b.bookmarkType = :bookmarkType AND b.targetId = :targetId", Bookmark.class)
-                .setParameter("userId", userId)
-                .setParameter("bookmarkType", bookmarkType)
-                .setParameter("targetId", targetId)
-                .getSingleResult());
-    }
+    @Query("SELECT COUNT(b) > 0 FROM Bookmark b WHERE b.user.id = :userId AND b.bookmarkType = :bookmarkType AND b.targetId = :targetId")
+    Boolean existsByUserAndTypeAndTargetId(
+            @Param("userId") Long userId,
+            @Param("bookmarkType") BookmarkType bookmarkType,
+            @Param("targetId") Long targetId
+    );
 
-    public void deleteBookmark(Long id) {
-        Bookmark bookmark = em.find(Bookmark.class, id);
-        em.remove(bookmark);
-    }
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Bookmark b WHERE b.user.id = :userId")
+    void deleteUserBookmarks(@Param("userId") Long userId);
 
-    public List<Long> findTargetIdsByUserAndType(Long userId, BookmarkType bookmarkType) {
-        return em.createQuery("SELECT b.targetId FROM Bookmark b " +
-                        "WHERE b.user.id = :userId AND b.bookmarkType = :bookmarkType " +
-                        "ORDER BY b.createdAt DESC", Long.class)
-                .setParameter("userId", userId)
-                .setParameter("bookmarkType", bookmarkType)
-                .getResultList();
-    }
-
-    public Boolean existsByUserAndTypeAndTargetId(Long userId, BookmarkType bookmarkType, Long targetId) {
-        Long count = em.createQuery("SELECT count(b) FROM Bookmark b " +
-                        "WHERE b.user.id = :userId AND b.bookmarkType = :bookmarkType " +
-                        "AND b.targetId = :targetId", Long.class)
-                .setParameter("userId", userId)
-                .setParameter("bookmarkType", bookmarkType)
-                .setParameter("targetId", targetId)
-                .getSingleResult();
-        return count > 0;
-     
-    }
-
-    public void deleteUserBookmarks(Long userId) {
-        em.createQuery("DELETE FROM Bookmark b WHERE b.user.id = :userId")
-                .setParameter("userId", userId)
-                .executeUpdate();
-    }
-
-    public void deleteBookmarkByTypeAndTargetId(BookmarkType bookmarkType, Long targetId) {
-        em.createQuery("DELETE FROM Bookmark b WHERE b.bookmarkType = :bookmarkType AND b.targetId = :targetId")
-                .setParameter("bookmarkType", bookmarkType)
-                .setParameter("targetId", targetId);
-    }
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Bookmark b WHERE b.bookmarkType = :bookmarkType AND b.targetId = :targetId")
+    void deleteBookmarkByTypeAndTargetId(@Param("bookmarkType") BookmarkType bookmarkType, @Param("targetId") Long targetId);
 }

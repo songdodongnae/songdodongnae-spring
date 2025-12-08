@@ -43,7 +43,7 @@ public class ChatRoomService {
                 .board(board)
                 .build();
 
-        ChatRoom savedChatRoom = chatRoomRepository.saveChatRoom(newChatRoom);
+        ChatRoom savedChatRoom = chatRoomRepository.save(newChatRoom);
 
         ChatRoomUser userA = ChatRoomUser.builder()
                 .chatRoom(savedChatRoom)

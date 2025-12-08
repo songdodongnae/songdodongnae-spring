@@ -35,7 +35,7 @@ public class BookmarkService {
                 .bookmarkType(bookmarkReqDto.getBookmarkType())
                 .targetId(bookmarkReqDto.getTargetId())
                 .build();
-        bookmarkRepository.createBookmark(bookmark);
+        bookmarkRepository.save(bookmark);
         return BookmarkResDto.fromEntity(bookmark);
     }
 
@@ -47,7 +47,7 @@ public class BookmarkService {
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
 
-        bookmarkRepository.deleteBookmark(bookmarkById.getId());
+        bookmarkRepository.deleteById(bookmarkById.getId());
         return BookmarkResDto.fromEntity(bookmarkById);
     }
 
