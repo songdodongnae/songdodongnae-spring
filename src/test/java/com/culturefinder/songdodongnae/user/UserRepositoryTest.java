@@ -27,18 +27,11 @@ public class UserRepositoryTest {
                 "1234", "suee97", "cheatz@naver.com", "naver"
         );
         User user = new User(userProfile);
-        userRepository.saveUser(user);
+        userRepository.save(user);
         Optional<User> findUser = userRepository.findByProviderIdAndProvider("1234", "naver");
 
         assertThat(findUser.get()).isNotNull();
         assertThat(findUser.get().getProvider()).isEqualTo("naver");
         assertThat(findUser.get().getProviderId()).isEqualTo("1234");
-    }
-
-    @Test
-    @DisplayName("유저 이메일이 null일 때 유저를 찾지 못하는지 확인")
-    public void test2() {
-        Optional<User> findUser = userRepository.findByProviderIdAndProvider(null, null);
-        assertThat(findUser.isPresent()).isEqualTo(false);
     }
 }

@@ -48,10 +48,12 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
         Optional<User> findUser = userRepository.findByProviderIdAndProvider(user.getProviderId(), user.getProvider());
 
         if (findUser.isEmpty()) {
-            userRepository.saveUser(user);
+            userRepository.save(user);
             log.info("유저 저장 유저 = {}", user);
         } else {
-            userRepository.updateUser(findUser.get());
+            User existingUser = findUser.get();
+            existingUser.update(user.getNickname(), user.getEmail());
+            userRepository.save(existingUser);
         }
 
         return new DefaultOAuth2User(

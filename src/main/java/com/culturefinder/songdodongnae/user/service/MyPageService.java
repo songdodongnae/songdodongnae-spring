@@ -80,7 +80,7 @@ public class MyPageService {
 
     public void deleteUser(Long userId) {
         bookmarkRepository.deleteUserBookmarks(userId);
-        userRepository.deleteUser(userId);
+        userRepository.deleteById(userId);
     }
 
 }

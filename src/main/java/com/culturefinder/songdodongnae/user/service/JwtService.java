@@ -108,7 +108,7 @@ public class JwtService {
                 .orElseThrow(() -> new CustomException(RESOURCE_NOT_FOUND));
 
         user.setRefreshToken(refreshToken);
-        userRepository.saveUser(user);
+        userRepository.save(user);
         log.info("유저 refreshToken 저장 = {}", user);
     }
 
