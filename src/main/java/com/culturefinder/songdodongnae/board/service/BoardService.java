@@ -28,7 +28,7 @@ public class BoardService {
     public BoardResDto createBoard(BoardReqDto boardReqDto, Long userId) {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ENTITY_NOT_FOUND));
-        Board savedBoard = boardRepository.saveBoard(BoardReqDto.toEntity(boardReqDto, findUser));
+        Board savedBoard = boardRepository.save(BoardReqDto.toEntity(boardReqDto, findUser));
         return BoardResDto.from(savedBoard);
     }
 
@@ -64,7 +64,7 @@ public class BoardService {
         if (!findBoard.getUser().getId().equals(userId)) {
             throw new CustomException(FORBIDDEN);
         }
-        boardRepository.deleteBoard(findBoard);
+        boardRepository.delete(findBoard);
     }
 
 }
