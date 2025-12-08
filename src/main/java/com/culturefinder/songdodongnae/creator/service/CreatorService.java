@@ -20,6 +20,8 @@ import com.culturefinder.songdodongnae.user.repository.UserRepository;
 import com.culturefinder.songdodongnae.common.utils.CursorPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,13 +45,16 @@ public class CreatorService {
         isAdmin(userId);
 
         Creator creator = CreatorReqDto.toEntity(creatorReqDto);
-        Creator savedCreator = creatorRepository.saveCreator(creator);
+        Creator savedCreator = creatorRepository.save(creator);
         return CreatorResDto.fromEntity(savedCreator);
     }
 
     @Transactional(readOnly = true)
     public CursorPage<CreatorThumbnailResDto> getAllCreators(Long cursor, int size) {
-        List<CreatorThumbnailResDto> dtos = creatorRepository.findAll(cursor, size)
+        Long actualCursor = cursor != null ? cursor : 0L;
+        Pageable pageable = PageRequest.of(0, size + 1);
+
+        List<CreatorThumbnailResDto> dtos = creatorRepository.findAllByCursor(actualCursor, pageable)
                                         .stream()
                                         .map(CreatorThumbnailResDto::fromThumbEntity)
                                         .toList();
